@@ -7,27 +7,32 @@ import {
   Clock, Hash, Award
 } from 'lucide-react'
 
-// Detection engines - 8 Anomaly (All), 4 Content (Protect+), 4 AI (Enforce+)
+// Detection engines - v16: 11 Discover → 15 Protect → 21 Enforce → 21 Comply (+evidence)
 const detectionEngines = [
-  // 8 Anomaly Engines (All tiers)
-  { name: 'Loop Killer', description: 'Catches infinite loops before they burn tokens', icon: GitBranch, tier: 'All' },
-  { name: 'Velocity Limit', description: 'Rate spike detection', icon: Clock, tier: 'All' },
-  { name: 'Cost Velocity', description: 'Spending spike detection', icon: Zap, tier: 'All' },
-  { name: 'Token Growth', description: 'Anomalous token expansion', icon: AlertTriangle, tier: 'All' },
-  { name: 'Depth Guard', description: 'Recursion depth limits', icon: GitBranch, tier: 'All' },
-  { name: 'Session Timeout', description: 'Long-running session detection', icon: Clock, tier: 'All' },
-  { name: 'Error Cascade', description: 'Repeated failure patterns', icon: AlertTriangle, tier: 'All' },
-  { name: 'Tool Abuse', description: 'Excessive tool invocations', icon: AlertTriangle, tier: 'All' },
-  // 4 Content Engines (Protect+)
-  { name: 'PII Scanner', description: '67+ patterns across 3 tiers', icon: Scan, tier: 'Protect+' },
-  { name: 'Secrets Detection', description: 'API keys, passwords, tokens', icon: Lock, tier: 'Protect+' },
-  { name: 'Command Firewall', description: 'Blocks DROP, DELETE, rm -rf', icon: ShieldAlert, tier: 'Protect+' },
-  { name: 'URL Blocklist', description: 'Malicious URL detection', icon: ShieldAlert, tier: 'Protect+' },
-  // 4 AI-Powered Engines (Enforce+)
-  { name: 'Prompt Injection', description: 'Pattern + semantic detection', icon: Brain, tier: 'Enforce+' },
-  { name: 'Jailbreak Defense', description: 'LLM manipulation attempts', icon: Brain, tier: 'Enforce+' },
-  { name: 'Hallucination Flag', description: 'Confidence scoring on outputs', icon: Brain, tier: 'Enforce+' },
-  { name: 'Behavioral Drift', description: 'Agent personality changes', icon: Brain, tier: 'Enforce+' },
+  // 11 Discover Engines (alert only, cannot block)
+  { name: 'Loop Killer', description: '5 identical requests in 60s', icon: GitBranch, tier: 'Discover' },
+  { name: 'Velocity', description: '100 req/60s threshold', icon: Clock, tier: 'Discover' },
+  { name: 'Oscillation', description: 'A→B→A→B cycle detection', icon: GitBranch, tier: 'Discover' },
+  { name: 'Token Growth', description: '50% growth in 3 requests', icon: AlertTriangle, tier: 'Discover' },
+  { name: 'Cost Velocity', description: '$5/min spending threshold', icon: Zap, tier: 'Discover' },
+  { name: 'Error Rate', description: '50% error rate detection', icon: AlertTriangle, tier: 'Discover' },
+  { name: 'Budget Caps', description: 'Session/daily/monthly limits', icon: Zap, tier: 'Discover' },
+  { name: 'Context Expansion', description: '>50% growth or >50K tokens', icon: AlertTriangle, tier: 'Discover' },
+  { name: 'PII Scanner', description: '88 patterns (alert only)', icon: Scan, tier: 'Discover' },
+  { name: 'Session Duration', description: '4hr default limit', icon: Clock, tier: 'Discover' },
+  { name: 'Session Actions', description: '500 actions/session limit', icon: Clock, tier: 'Discover' },
+  // +4 Protect Engines (can block)
+  { name: 'Command Firewall', description: '55+ shell/SQL/code patterns', icon: ShieldAlert, tier: 'Protect+' },
+  { name: 'Blocked Phrases', description: 'Org-configured blacklist', icon: ShieldAlert, tier: 'Protect+' },
+  { name: 'Secrets Scanner', description: '50+ patterns (AWS, GCP, etc.)', icon: Lock, tier: 'Protect+' },
+  { name: 'PII Blocking', description: 'Upgraded: now blocks', icon: Scan, tier: 'Protect+' },
+  // +6 Enforce Engines (AI-powered)
+  { name: 'Prompt Injection', description: '40+ patterns, ≥0.85 confidence', icon: Brain, tier: 'Enforce+' },
+  { name: 'Jailbreak Detector', description: '30+ patterns (DAN, STAN)', icon: Brain, tier: 'Enforce+' },
+  { name: 'Semantic Firewall', description: 'Embedding-based detection', icon: Brain, tier: 'Enforce+' },
+  { name: 'A2A Depth', description: 'Warn depth 3, block depth 5', icon: GitBranch, tier: 'Enforce+' },
+  { name: 'Hallucination', description: '3-layer detection pipeline', icon: Brain, tier: 'Enforce+' },
+  { name: 'Reasoning Drift', description: 'LLM reasoning quality check', icon: Brain, tier: 'Enforce+' },
 ]
 
 // Integration methods
@@ -80,19 +85,20 @@ const governanceFeatures = [
   },
 ]
 
-// Tier features
+// Tier features (v16 Golden Spec)
 const tierFeatures = {
-  observe: {
-    name: 'Observe',
+  discover: {
+    name: 'Discover',
     price: 'Free',
     tagline: 'See everything',
     color: 'slate',
     features: [
       'Trace capture (5K/mo)',
-      'Session tracking',
-      'Agent inventory',
-      '8 anomaly detections (alert only)',
-      'Dashboard access',
+      '11 detection engines (alert only)',
+      'Platform Discovery (CLI, GitHub, GitLab)',
+      'Agent inventory & coverage dashboard',
+      '4 basic policies',
+      'Discord & Telegram alerts',
       '3-day retention',
       '1 seat',
     ]
@@ -103,49 +109,52 @@ const tierFeatures = {
     tagline: 'Block threats',
     color: 'blue',
     features: [
-      'Everything in Observe',
-      '25K traces/month',
-      '12 detection engines',
-      'Real-time blocking',
-      '5 basic policies',
-      '30-day retention',
+      'Everything in Discover',
+      '20K traces/month',
+      '15 detection engines (can block)',
+      'Real-time blocking mode',
+      '16 policies (11 types)',
+      'New agent alerts (Shadow AI)',
       'Slack/Email alerts',
+      '30-day retention',
       '3 seats',
     ]
   },
   enforce: {
     name: 'Enforce',
     price: '$99/mo',
-    tagline: 'Policies + Lock',
+    tagline: 'AI + MCP + Control',
     color: 'purple',
     features: [
       'Everything in Protect',
       '100K traces/month',
-      '16 engines (AI-powered)',
-      '20+ advanced policies',
-      'Agent DNA fingerprints',
-      'Drift detection',
-      'Agent Lock',
+      '21 engines (AI-powered)',
+      '50 policies (20 types)',
+      'MCP full suite',
+      'Agent DNA + Lock',
+      'Drift & expansion alerts',
+      'Webhook integrations',
       '1-year retention',
       '5 seats',
     ]
   },
-  govern: {
-    name: 'Govern',
-    price: '$499/mo',
+  comply: {
+    name: 'Comply',
+    price: 'Contact Us',
     tagline: 'Evidence Packs',
     color: 'amber',
     features: [
       'Everything in Enforce',
-      '500K traces/month',
-      '14-layer verification',
-      'Evidence Packs',
+      '500K+ traces/month',
+      '21 engines + evidence artifacts',
+      '14-layer governance engine',
+      'Evidence Packs & Verifier',
       'Governance certificates',
-      'Blockchain anchoring',
-      'Compliance exports',
+      'Blockchain anchoring (export)',
+      'Compliance exports (EU AI Act, etc.)',
       '3-year retention',
       'Unlimited seats',
-      'Priority support',
+      'Priority support + SSO',
     ]
   }
 }
@@ -198,8 +207,8 @@ export default function FeaturesPage() {
       <section className="py-24 bg-slate-900/30">
         <div className="section-container">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">16 Detection Engines</h2>
-            <p className="text-slate-400">8 anomaly (all tiers) + 4 content (Protect+) + 4 AI-powered (Enforce+)</p>
+            <h2 className="text-3xl font-bold mb-4">21 Detection Engines</h2>
+            <p className="text-slate-400">11 Discover (alert) + 4 Protect (block) + 6 Enforce (AI-powered)</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -220,7 +229,7 @@ export default function FeaturesPage() {
           </div>
 
           <div className="text-center mt-8">
-            <span className="text-slate-500 text-sm">All 16 engines. OWASP Agentic Top 10 aligned.</span>
+            <span className="text-slate-500 text-sm">All 21 engines. OWASP Agentic Top 10 aligned.</span>
           </div>
         </div>
       </section>
@@ -269,7 +278,7 @@ export default function FeaturesPage() {
 
           <div className="grid md:grid-cols-4 gap-6">
             {Object.values(tierFeatures).map((tier, i) => (
-              <div key={i} className={`card ${tier.name === 'Govern' ? 'border-amber-500/50 glow' : ''}`}>
+              <div key={i} className={`card ${tier.name === 'Comply' ? 'border-amber-500/50 glow' : ''}`}>
                 <div className="mb-4">
                   <h3 className="font-semibold text-lg">{tier.name}</h3>
                   <p className="text-slate-500 text-sm">{tier.tagline}</p>

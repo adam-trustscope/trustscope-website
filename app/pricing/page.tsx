@@ -3,7 +3,7 @@ import { CheckCircle, X, ArrowRight, Zap, HelpCircle } from 'lucide-react'
 
 const tiers = [
   {
-    name: 'Observe',
+    name: 'Discover',
     price: 'Free',
     period: '',
     description: 'See what your AI agents are doing',
@@ -12,10 +12,12 @@ const tiers = [
     features: {
       traces: '5,000/month',
       retention: '3 days',
-      detections: '8 anomaly (alert only)',
+      detections: '11 engines (alert only)',
       seats: '1 seat',
+      policies: '4 policies',
       blocking: false,
-      policies: false,
+      discovery: true,
+      mcpBasic: true,
       agentDna: false,
       agentLock: false,
       evidencePacks: false,
@@ -32,12 +34,14 @@ const tiers = [
     highlight: false,
     cta: 'Start Trial',
     features: {
-      traces: '25,000/month',
+      traces: '20,000/month',
       retention: '30 days',
-      detections: '12 engines (blocking)',
+      detections: '15 engines (can block)',
       seats: '3 seats',
+      policies: '16 policies',
       blocking: true,
-      policies: true,
+      discovery: true,
+      mcpBasic: true,
       agentDna: false,
       agentLock: false,
       evidencePacks: false,
@@ -50,38 +54,42 @@ const tiers = [
     name: 'Enforce',
     price: '$99',
     period: '/month',
-    description: 'Custom policies and agent control',
+    description: 'AI-powered security and agent control',
     highlight: true,
     cta: 'Start Trial',
     features: {
       traces: '100,000/month',
       retention: '1 year',
-      detections: '16 engines (AI-powered)',
+      detections: '21 engines (AI-powered)',
       seats: '5 seats',
+      policies: '50 policies',
       blocking: true,
-      policies: true,
+      discovery: true,
+      mcpFull: true,
       agentDna: true,
       agentLock: true,
       evidencePacks: false,
-      certificates: false,
-      blockchainAnchoring: false,
+      certificates: 'Preview',
+      blockchainAnchoring: 'Badge',
       support: 'Email',
     }
   },
   {
-    name: 'Govern',
-    price: '$499',
-    period: '/month',
+    name: 'Comply',
+    price: 'Contact Us',
+    period: '',
     description: 'Evidence Packs for compliance and audit',
     highlight: false,
     cta: 'Contact Sales',
     features: {
-      traces: '500,000/month',
+      traces: '500,000+/month',
       retention: '3 years',
-      detections: '16 engines + docs',
+      detections: '21 engines + evidence',
       seats: 'Unlimited',
+      policies: 'Unlimited',
       blocking: true,
-      policies: true,
+      discovery: true,
+      mcpFull: true,
       agentDna: true,
       agentLock: true,
       evidencePacks: true,
@@ -97,8 +105,11 @@ const featureLabels: { [key: string]: string } = {
   retention: 'Data retention',
   detections: 'Detection engines',
   seats: 'Team seats',
+  policies: 'Policy limit',
   blocking: 'Real-time blocking',
-  policies: 'Custom policies',
+  discovery: 'Platform Discovery',
+  mcpBasic: 'MCP Integration (basic)',
+  mcpFull: 'MCP Full Suite',
   agentDna: 'Agent DNA fingerprints',
   agentLock: 'Agent Lock',
   evidencePacks: 'Evidence Packs',
@@ -118,11 +129,11 @@ const faqs = [
   },
   {
     question: 'What happens if I exceed my trace limit?',
-    answer: 'We\'ll notify you at 80% and 100% usage. Beyond your limit, you can purchase additional traces at overage rates ($1.50/1K for Protect, $1/1K for Enforce, $0.80/1K for Govern).'
+    answer: 'We\'ll notify you at 80% and 100% usage. Discover has a hard cap. Paid tiers can purchase additional traces at overage rates ($1.50/1K for Protect, $1.00/1K for Enforce, $0.80/1K for Comply).'
   },
   {
     question: 'Do you offer annual billing?',
-    answer: 'Yes. Annual billing saves 20%. Contact sales for annual pricing on Enforce and Govern tiers.'
+    answer: 'Yes. Annual billing saves 20%. Contact sales for annual pricing on Enforce and Comply tiers.'
   },
   {
     question: 'Is there a free trial for paid tiers?',
@@ -182,8 +193,8 @@ export default function PricingPage() {
                   </span>
                 </div>
                 
-                <Link 
-                  href={tier.name === 'Govern' ? '/contact' : 'https://app.trustscope.ai'}
+                <Link
+                  href={tier.name === 'Comply' ? '/contact' : 'https://app.trustscope.ai'}
                   className={`block text-center py-3 rounded-lg font-semibold transition-colors mb-6 ${
                     tier.highlight
                       ? 'bg-white text-blue-600 hover:bg-blue-50'
@@ -228,26 +239,38 @@ export default function PricingPage() {
                 </tr>
               </thead>
               <tbody>
-                {Object.keys(featureLabels).map((key, i) => (
-                  <tr key={i} className="border-b border-slate-800">
-                    <td className="py-4 px-4 text-slate-400">{featureLabels[key]}</td>
-                    {tiers.map((tier, j) => (
-                      <td key={j} className="text-center py-4 px-4">
-                        {typeof tier.features[key as keyof typeof tier.features] === 'boolean' ? (
-                          tier.features[key as keyof typeof tier.features] ? (
-                            <CheckCircle className="w-5 h-5 text-emerald-500 mx-auto" />
-                          ) : (
-                            <X className="w-5 h-5 text-slate-600 mx-auto" />
-                          )
-                        ) : (
-                          <span className="text-slate-300 text-sm">
-                            {tier.features[key as keyof typeof tier.features]}
-                          </span>
-                        )}
+                {Object.keys(featureLabels).map((key, i) => {
+                  // Skip mcpBasic row if any tier has mcpFull
+                  if (key === 'mcpBasic') return null;
+                  const displayKey = key === 'mcpFull' ? 'MCP' : key;
+                  return (
+                    <tr key={i} className="border-b border-slate-800">
+                      <td className="py-4 px-4 text-slate-400">
+                        {key === 'mcpFull' ? 'MCP Integration' : featureLabels[key]}
                       </td>
-                    ))}
-                  </tr>
-                ))}
+                      {tiers.map((tier, j) => {
+                        const value = key === 'mcpFull'
+                          ? (tier.features.mcpFull ? 'Full Suite' : (tier.features.mcpBasic ? 'Basic' : false))
+                          : tier.features[key as keyof typeof tier.features];
+                        return (
+                          <td key={j} className="text-center py-4 px-4">
+                            {typeof value === 'boolean' ? (
+                              value ? (
+                                <CheckCircle className="w-5 h-5 text-emerald-500 mx-auto" />
+                              ) : (
+                                <X className="w-5 h-5 text-slate-600 mx-auto" />
+                              )
+                            ) : (
+                              <span className="text-slate-300 text-sm">
+                                {value}
+                              </span>
+                            )}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
