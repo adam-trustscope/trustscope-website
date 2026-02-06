@@ -57,13 +57,13 @@ const integrations = [
   },
 ]
 
-// Governance features
+// Governance features - v16 with DNA endpoints
 const governanceFeatures = [
-  { 
-    name: 'Agent DNA', 
-    description: 'Behavioral fingerprints for every agent. Detect drift before disasters.',
+  {
+    name: 'Agent DNA (8 Strands, 13 Endpoints)',
+    description: '8-strand behavioral fingerprints with Ed25519 attestation. /verify and /history endpoints for cryptographic proof.',
     icon: Fingerprint,
-    details: ['System prompt hashing', 'Tool inventory tracking', 'Behavioral baselines', 'Drift detection']
+    details: ['8 DNA strands', '13 API endpoints', '/verify attestation', '/history audit trail']
   },
   { 
     name: 'Hash Chain Audit Trail', 
@@ -130,10 +130,10 @@ const tierFeatures = {
       '100K traces/month',
       '21 engines (AI-powered)',
       '50 policies (20 types)',
-      'MCP full suite',
-      'Agent DNA + Lock',
-      'Drift & expansion alerts',
-      'Webhook integrations',
+      'MCP Trust Scoring (6-factor)',
+      'Agent DNA + Lock + /history',
+      'Delegation policies (v16)',
+      'Per-agent API keys',
       '1-year retention',
       '5 seats',
     ]
@@ -146,12 +146,12 @@ const tierFeatures = {
     features: [
       'Everything in Enforce',
       '500K+ traces/month',
-      '21 engines + evidence artifacts',
+      '23 policy types (unlimited)',
       '14-layer governance engine',
-      'Evidence Packs & Verifier',
-      'Governance certificates',
+      'DNA /verify (Ed25519 attestation)',
+      'Evidence Packs + hash chains',
       'Blockchain anchoring (export)',
-      'Compliance exports (EU AI Act, etc.)',
+      'Framework exports (4 frameworks)',
       '3-year retention',
       'Unlimited seats',
       'Priority support + SSO',

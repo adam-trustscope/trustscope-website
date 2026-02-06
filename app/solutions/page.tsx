@@ -21,7 +21,7 @@ const useCases = [
     title: 'Prevent Data Leaks',
     problem: '"It leaked our API keys in a response"',
     description: 'PII in outputs. Credentials in context. Sensitive data where it shouldn\'t be.',
-    features: ['PII Scanner (67+ patterns)', 'Secrets Scanner', 'Command Firewall', 'Data Boundary Enforcement'],
+    features: ['PII Scanner (88 patterns)', 'Secrets Scanner (50+)', 'Command Firewall (55+)', 'Data Boundary Enforcement'],
     color: 'amber',
   },
   {
@@ -176,10 +176,10 @@ export default function SolutionsPage() {
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-4 gap-4">
               {[
-                { tier: 'Observe', price: 'Free', desc: 'See what agents are doing', icon: Bug },
-                { tier: 'Protect', price: '$29', desc: 'Block dangerous actions', icon: Shield },
-                { tier: 'Enforce', price: '$99', desc: 'Policy controls + AI detection', icon: Zap },
-                { tier: 'Govern', price: '$499', desc: 'Evidence Packs for auditors', icon: FileCheck },
+                { tier: 'Discover', price: 'Free', desc: '11 engines, see everything', icon: Bug },
+                { tier: 'Protect', price: '$29', desc: '15 engines, block threats', icon: Shield },
+                { tier: 'Enforce', price: '$99', desc: '21 engines + AI + MCP', icon: Zap },
+                { tier: 'Comply', price: 'Contact Us', desc: 'Evidence Packs + certificates', icon: FileCheck },
               ].map((t, i) => (
                 <div key={i} className="relative">
                   {i < 3 && (
@@ -196,7 +196,7 @@ export default function SolutionsPage() {
             </div>
             
             <p className="text-center text-slate-500 text-sm mt-8">
-              Most teams start at Observe or Protect, then upgrade when compliance requirements kick in.
+              Most teams start at Discover or Protect, then upgrade when compliance requirements kick in.
             </p>
           </div>
         </div>

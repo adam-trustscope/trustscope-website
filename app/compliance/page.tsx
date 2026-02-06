@@ -123,7 +123,7 @@ export default function CompliancePage() {
                   <div className="flex items-center gap-2">
                     {fw.urgent && (
                       <span className="px-2 py-1 bg-amber-500/10 text-amber-400 text-xs rounded">
-                        Aug 2026 Deadline
+                        Aug 2025 Enforcement
                       </span>
                     )}
                     <span className="px-2 py-1 bg-slate-700 text-slate-300 text-xs rounded">
@@ -174,8 +174,8 @@ export default function CompliancePage() {
             <FileCheck className="w-12 h-12 text-blue-400 mx-auto mb-6" />
             <h2 className="text-3xl font-bold mb-4">Evidence Packs</h2>
             <p className="text-slate-400 mb-8">
-              The Govern tier ($499/mo) includes pre-built Evidence Pack templates that bundle 
-              all generated evidence with framework control mappings. Export as PDF or structured data.
+              The Comply tier (Contact Us) includes pre-built Evidence Pack templates with hash chains,
+              Ed25519 signatures, and blockchain anchoring. Export as PDF or structured data.
             </p>
             
             <div className="grid md:grid-cols-2 gap-4 text-left">

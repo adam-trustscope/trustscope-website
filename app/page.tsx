@@ -14,53 +14,53 @@ const stats = [
   { value: '6%', label: 'of global revenue at risk', source: 'EU AI Act Article 99' },
 ]
 
-// Horror stories
+// Horror stories - Classic + v16 stories
 const horrorStories = [
-  { 
-    company: 'Air Canada', 
+  {
+    company: 'Air Canada',
     incident: 'Chatbot promised discount that didn\'t exist',
     outcome: '$800 judgment against airline',
     icon: '✈️'
   },
-  { 
-    company: 'Booking.com', 
-    incident: 'AI agent changed prices overnight',
-    outcome: '$2,000+ overcharges to customers',
-    icon: '🏨'
+  {
+    company: 'MCP Supply Chain',
+    incident: 'Malicious tool description modification',
+    outcome: '10,000 customer records breached',
+    icon: '🔗'
   },
-  { 
-    company: 'Developer', 
-    incident: '"Clean up old data" interpreted as DROP',
-    outcome: 'Entire database wiped',
-    icon: '💾'
+  {
+    company: 'Multi-Agent Platform',
+    incident: 'Rogue delegation spawned 100 child agents',
+    outcome: '$50,000 unauthorized transactions',
+    icon: '🤖'
   },
 ]
 
-// Features
+// Features - v16 tier structure
 const features = [
   {
     icon: Eye,
-    title: 'Observe Everything',
-    description: 'Capture every agent action through Gateway, SDK, or MCP integration. 8 anomaly detections with alerts.',
+    title: 'Discover',
+    description: '11 detection engines with alerts. Platform Discovery finds ungoverned agents. Free forever.',
     tier: 'Free',
   },
   {
     icon: Shield,
-    title: 'Protect Against Threats',
-    description: '12 detection engines with real-time blocking. PII, secrets, command firewall.',
+    title: 'Protect',
+    description: '15 detection engines with real-time blocking. PII, secrets, command firewall.',
     tier: '$29/mo',
   },
   {
     icon: Lock,
-    title: 'Enforce Policies',
-    description: '16 engines including AI-powered detection. Agent DNA, Lock, and drift alerts.',
+    title: 'Enforce',
+    description: '21 engines including AI-powered detection. Agent DNA, MCP Trust Scoring, delegation policies.',
     tier: '$99/mo',
   },
   {
     icon: FileCheck,
-    title: 'Govern with Evidence',
-    description: 'Cryptographically signed Evidence Packs mapped to NIST, SOC 2, and EU AI Act.',
-    tier: '$499/mo',
+    title: 'Comply',
+    description: 'Evidence Packs with hash chains, blockchain anchoring, and certificates. Audit-ready.',
+    tier: 'Contact Us',
   },
 ]
 
@@ -128,7 +128,7 @@ export default function HomePage() {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/30 mb-8">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-sm text-blue-300">Now with EU AI Act Evidence Packs</span>
+              <span className="text-sm text-blue-300">v16: 21 Detection Engines + MCP Trust Scoring</span>
             </div>
 
             {/* Main headline */}
@@ -281,8 +281,8 @@ export default function HomePage() {
       <section className="py-24">
         <div className="section-container">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Four Tiers. Progressive Unlock.</h2>
-            <p className="text-xl text-slate-400">Start free. Upgrade when you need blocking. Govern when auditors come knocking.</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Discover. Protect. Enforce. Comply.</h2>
+            <p className="text-xl text-slate-400">Start free with 11 engines. Scale to 21 engines + AI detection. Get Evidence Packs when auditors come knocking.</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
