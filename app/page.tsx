@@ -6,33 +6,33 @@ import {
   ExternalLink
 } from 'lucide-react'
 
-// Stats data
+// Stats data - product focused
 const stats = [
-  { value: '47%', label: 'of enterprises made decisions based on hallucinated AI content', source: 'IBM 2025' },
-  { value: '76%', label: 'require human-in-the-loop for AI outputs', source: 'IBM 2025' },
-  { value: '€35M', label: 'maximum EU AI Act fine for violations', source: 'EU AI Act' },
-  { value: '6%', label: 'of global revenue at risk', source: 'EU AI Act Article 99' },
+  { value: '21', label: 'detection engines to protect your agents', source: '' },
+  { value: '<50ms', label: 'latency overhead on requests', source: '' },
+  { value: '4', label: 'compliance frameworks mapped', source: '' },
+  { value: '274', label: 'patent claims protecting this technology', source: '' },
 ]
 
-// Horror stories - Classic + v16 stories
-const horrorStories = [
+// Common AI agent incidents
+const agentIncidents = [
   {
-    company: 'Air Canada',
-    incident: 'Chatbot promised discount that didn\'t exist',
-    outcome: '$800 judgment against airline',
-    icon: '✈️'
+    title: 'The Runaway Loop',
+    incident: 'Agent got stuck in a retry loop overnight',
+    outcome: '$10,000+ API bill discovered Monday morning',
+    icon: '🔄'
   },
   {
-    company: 'MCP Supply Chain',
-    incident: 'Malicious tool description modification',
-    outcome: '10,000 customer records breached',
-    icon: '🔗'
+    title: 'The Helpful Delete',
+    incident: '"Clean up old data" interpreted as DROP TABLE',
+    outcome: 'Production database wiped, 4hr recovery',
+    icon: '💾'
   },
   {
-    company: 'Multi-Agent Platform',
-    incident: 'Rogue delegation spawned 100 child agents',
-    outcome: '$50,000 unauthorized transactions',
-    icon: '🤖'
+    title: 'The Leaked Secret',
+    incident: 'Agent included API keys in a response',
+    outcome: 'Emergency credential rotation required',
+    icon: '🔑'
   },
 ]
 
@@ -64,11 +64,11 @@ const features = [
   },
 ]
 
-// Comparison
+// Comparison - without competitor names
 const comparison = {
   grc: {
-    title: 'GRC Tools',
-    subtitle: '(Vanta, Drata)',
+    title: 'GRC Platforms',
+    subtitle: 'Compliance tracking',
     items: [
       { text: 'Track compliance journey', bad: true },
       { text: 'Checklist progress', bad: true },
@@ -77,8 +77,8 @@ const comparison = {
     ]
   },
   observability: {
-    title: 'Observability',
-    subtitle: '(LangSmith, Helicone)',
+    title: 'Observability Tools',
+    subtitle: 'LLM monitoring',
     items: [
       { text: 'See what happened', bad: true },
       { text: 'Debug after the fact', bad: true },
@@ -128,7 +128,7 @@ export default function HomePage() {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/30 mb-8">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-sm text-blue-300">v16: 21 Detection Engines + MCP Trust Scoring</span>
+              <span className="text-sm text-blue-300">Free tier available — no credit card required</span>
             </div>
 
             {/* Main headline */}
@@ -186,28 +186,27 @@ export default function HomePage() {
               <div key={i} className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-blue-400 mb-2">{stat.value}</div>
                 <div className="text-sm text-slate-400">{stat.label}</div>
-                <div className="text-xs text-slate-600 mt-1">{stat.source}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Problem Section - Horror Stories */}
+      {/* Problem Section - Common Incidents */}
       <section className="py-24">
         <div className="section-container">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">AI Agents Are Breaking Things</h2>
-            <p className="text-xl text-slate-400">Every week there's a new disaster. The question isn't IF—it's whether you can document you had safeguards.</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">AI Agents Need Guardrails</h2>
+            <p className="text-xl text-slate-400">These scenarios happen every day. TrustScope helps you prevent them—and prove you had safeguards in place.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {horrorStories.map((story, i) => (
-              <div key={i} className="card bg-red-500/5 border-red-500/20">
-                <div className="text-4xl mb-4">{story.icon}</div>
-                <h3 className="font-semibold text-lg mb-2">{story.company}</h3>
-                <p className="text-slate-400 text-sm mb-4">{story.incident}</p>
-                <p className="text-red-400 text-sm font-medium">{story.outcome}</p>
+            {agentIncidents.map((incident, i) => (
+              <div key={i} className="card bg-slate-800/50 border-slate-700/50">
+                <div className="text-4xl mb-4">{incident.icon}</div>
+                <h3 className="font-semibold text-lg mb-2">{incident.title}</h3>
+                <p className="text-slate-400 text-sm mb-4">{incident.incident}</p>
+                <p className="text-amber-400 text-sm font-medium">{incident.outcome}</p>
               </div>
             ))}
           </div>
