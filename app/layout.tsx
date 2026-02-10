@@ -1,26 +1,24 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'TrustScope - Evidence Infrastructure for AI Agents',
-  description: 'Document that your AI agents followed policy with cryptographically signed evidence. Not a score. Not a checklist. Evidence.',
-  keywords: 'AI governance, AI compliance, AI agents, EU AI Act, SOC 2, NIST AI RMF, audit trail',
+  title: 'TrustScope - Safe Mode for AI Agents',
+  description: 'See what your AI agents are really doing. Then prove it. Request early access to the private beta.',
+  keywords: 'AI governance, AI compliance, AI agents, AI safety, audit trail',
   openGraph: {
-    title: 'TrustScope - Evidence Infrastructure for AI Agents',
-    description: 'Document that your AI agents followed policy with cryptographically signed evidence.',
+    title: 'TrustScope - Safe Mode for AI Agents',
+    description: 'See what your AI agents are really doing. Then prove it.',
     url: 'https://trustscope.ai',
     siteName: 'TrustScope',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TrustScope - Evidence Infrastructure for AI Agents',
-    description: 'Document that your AI agents followed policy with cryptographically signed evidence.',
+    title: 'TrustScope - Safe Mode for AI Agents',
+    description: 'See what your AI agents are really doing. Then prove it.',
   },
 }
 
@@ -32,9 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   )
