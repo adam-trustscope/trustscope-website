@@ -1,504 +1,537 @@
-import Link from 'next/link'
-import { 
-  Shield, ShieldCheck, Lock, FileCheck, Zap, Eye, 
-  AlertTriangle, CheckCircle, ArrowRight, Play,
-  Building2, Stethoscope, Landmark, ShoppingCart,
-  ExternalLink
-} from 'lucide-react'
+"use client";
 
-// Stats data - product focused
-const stats = [
-  { value: '21', label: 'detection engines to protect your agents', source: '' },
-  { value: '<50ms', label: 'latency overhead on requests', source: '' },
-  { value: '4', label: 'compliance frameworks mapped', source: '' },
-  { value: '274', label: 'patent claims protecting this technology', source: '' },
-]
-
-// Common AI agent incidents
-const agentIncidents = [
-  {
-    title: 'The Runaway Loop',
-    incident: 'Agent got stuck in a retry loop overnight',
-    outcome: '$10,000+ API bill discovered Monday morning',
-    icon: '🔄'
-  },
-  {
-    title: 'The Helpful Delete',
-    incident: '"Clean up old data" interpreted as DROP TABLE',
-    outcome: 'Production database wiped, 4hr recovery',
-    icon: '💾'
-  },
-  {
-    title: 'The Leaked Secret',
-    incident: 'Agent included API keys in a response',
-    outcome: 'Emergency credential rotation required',
-    icon: '🔑'
-  },
-]
-
-// Features - v16 tier structure
-const features = [
-  {
-    icon: Eye,
-    title: 'Discover',
-    description: '11 detection engines with alerts. Platform Discovery finds ungoverned agents. Free forever.',
-    tier: 'Free',
-  },
-  {
-    icon: Shield,
-    title: 'Protect',
-    description: '15 detection engines with real-time blocking. PII, secrets, command firewall.',
-    tier: '$29/mo',
-  },
-  {
-    icon: Lock,
-    title: 'Enforce',
-    description: '21 engines including AI-powered detection. Agent DNA, MCP Trust Scoring, delegation policies.',
-    tier: '$99/mo',
-  },
-  {
-    icon: FileCheck,
-    title: 'Comply',
-    description: 'Evidence Packs with hash chains, blockchain anchoring, and certificates. Audit-ready.',
-    tier: 'Contact Us',
-  },
-]
-
-// Comparison - without competitor names
-const comparison = {
-  grc: {
-    title: 'GRC Platforms',
-    subtitle: 'Compliance tracking',
-    items: [
-      { text: 'Track compliance journey', bad: true },
-      { text: 'Checklist progress', bad: true },
-      { text: 'Manual evidence collection', bad: true },
-      { text: 'Generic compliance', bad: true },
-    ]
-  },
-  observability: {
-    title: 'Observability Tools',
-    subtitle: 'LLM monitoring',
-    items: [
-      { text: 'See what happened', bad: true },
-      { text: 'Debug after the fact', bad: true },
-      { text: 'Logs for engineers', bad: true },
-      { text: 'No compliance mapping', bad: true },
-    ]
-  },
-  trustscope: {
-    title: 'TrustScope',
-    subtitle: 'Evidence Infrastructure',
-    items: [
-      { text: 'Document what ran', bad: false },
-      { text: 'Block before damage', bad: false },
-      { text: 'Evidence for auditors', bad: false },
-      { text: 'Framework-mapped exports', bad: false },
-    ]
-  }
-}
-
-// Frameworks
-const frameworks = [
-  { name: 'EU AI Act', status: 'Mapped', controls: '8 of 10 requirements' },
-  { name: 'NIST AI RMF', status: 'Mapped', controls: '39 of 63 controls' },
-  { name: 'SOC 2 Type II', status: 'Mapped', controls: '6 of 10 controls' },
-  { name: 'ISO 42001', status: 'Mapped', controls: '18 of 26 controls' },
-]
-
-// Industries
-const industries = [
-  { icon: Landmark, name: 'Financial Services', description: 'Trading, lending, and compliance' },
-  { icon: Stethoscope, name: 'Healthcare', description: 'HIPAA-ready AI governance' },
-  { icon: Building2, name: 'Enterprise', description: 'SOC 2 and audit-ready' },
-  { icon: ShoppingCart, name: 'E-commerce', description: 'Customer-facing AI safety' },
-]
+import { useState, useEffect } from "react";
+import {
+  Shield,
+  Lock,
+  Eye,
+  Fingerprint,
+  Server,
+  FileCheck,
+  ChevronRight,
+  Sparkles,
+  Users,
+  Code2,
+  ArrowRight,
+  Activity,
+  Zap,
+  Check,
+  X,
+} from "lucide-react";
 
 export default function HomePage() {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
+  const [waitlistCount, setWaitlistCount] = useState(0);
+
+  // Partner form state
+  const [partnerOpen, setPartnerOpen] = useState(false);
+  const [partnerData, setPartnerData] = useState({
+    name: "",
+    email: "",
+    company: "",
+    useCase: "",
+  });
+  const [partnerLoading, setPartnerLoading] = useState(false);
+  const [partnerSubmitted, setPartnerSubmitted] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/waitlist")
+      .then((res) => res.json())
+      .then((data) => setWaitlistCount(data.count || 0))
+      .catch(() => {});
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, type: "waitlist" }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubmitted(true);
+        setWaitlistCount(data.count || waitlistCount + 1);
+      } else {
+        setError(data.message || "Something went wrong");
+      }
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePartnerSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!partnerData.email || !partnerData.name) return;
+
+    setPartnerLoading(true);
+
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...partnerData, type: "partner" }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPartnerSubmitted(true);
+      }
+    } catch {
+      // Fail silently
+    } finally {
+      setPartnerLoading(false);
+    }
+  };
+
   return (
-    <div className="pt-20">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-600/10 via-transparent to-transparent" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/5 rounded-full blur-3xl" />
-        
-        <div className="section-container relative py-24 md:py-32">
-          <div className="max-w-4xl mx-auto text-center">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/30 mb-8">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-sm text-blue-300">Free tier available — no credit card required</span>
-            </div>
+    <div className="min-h-screen bg-slate-950 text-white">
+      {/* Gradient background */}
+      <div className="fixed inset-0 bg-gradient-to-b from-blue-950/20 via-slate-950 to-slate-950 pointer-events-none" />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent pointer-events-none" />
 
-            {/* Main headline */}
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              Evidence Infrastructure
-              <br />
-              <span className="gradient-text">for AI Agents</span>
-            </h1>
+      {/* Header */}
+      <header className="relative z-10 border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Shield className="w-8 h-8 text-blue-500" />
+            <span className="text-xl font-bold">TrustScope</span>
+          </div>
+          <button
+            onClick={() => setPartnerOpen(true)}
+            className="px-4 py-2 border border-white/10 rounded-lg text-sm hover:bg-white/5 transition"
+          >
+            Become a Partner
+          </button>
+        </div>
+      </header>
 
-            {/* Tagline */}
-            <p className="text-xl md:text-2xl text-slate-400 mb-4">
-              Not a score. Not a checklist. <span className="text-white font-semibold">Evidence.</span>
+      {/* Hero */}
+      <section className="relative z-10 pt-20 pb-24 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 rounded-full px-4 py-2 mb-8">
+            <Sparkles className="w-4 h-4 text-blue-400" />
+            <span className="text-blue-400 text-sm font-medium">
+              359 Patent Claims | Private Beta
+            </span>
+          </div>
+
+          {/* Headline */}
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent">
+            Safe Mode for AI Agents
+          </h1>
+
+          {/* Subhead */}
+          <p className="text-xl md:text-2xl text-slate-400 mb-10 max-w-2xl mx-auto">
+            See what your AI agents are really doing. Then prove it.
+          </p>
+
+          {/* Waitlist form */}
+          <div className="max-w-md mx-auto mb-6">
+            {submitted ? (
+              <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-6 text-center">
+                <Check className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
+                <p className="text-emerald-400 font-medium">You&apos;re on the list!</p>
+                <p className="text-slate-400 text-sm mt-1">We&apos;ll be in touch soon.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="flex gap-2">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@company.com"
+                  className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500/50"
+                  required
+                />
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-lg font-medium transition disabled:opacity-50"
+                >
+                  {loading ? "..." : "Request Access"}
+                </button>
+              </form>
+            )}
+            {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
+          </div>
+
+          {/* Social proof */}
+          {waitlistCount > 0 && (
+            <p className="text-slate-500 text-sm">
+              Join {waitlistCount.toLocaleString()}+ teams on the waitlist
             </p>
+          )}
 
-            {/* Subtext */}
-            <p className="text-lg text-slate-500 max-w-2xl mx-auto mb-12">
-              When an auditor asks "show me your AI agents followed policy," 
-              TrustScope gives you cryptographically signed evidence to answer.
+          {/* Partner CTA */}
+          <button
+            onClick={() => setPartnerOpen(true)}
+            className="mt-8 text-blue-400 hover:text-blue-300 transition inline-flex items-center gap-1"
+          >
+            Become a Design Partner
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      </section>
+
+      {/* Problem Section */}
+      <section className="relative z-10 py-20 px-6 border-t border-white/5">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            Your AI agents are taking thousands of actions.
+            <br />
+            <span className="text-slate-500">Can you prove what governance ran?</span>
+          </h2>
+          <p className="text-lg text-slate-500 max-w-2xl mx-auto">
+            Auditors and regulators are starting to ask. The companies that can answer will win.
+          </p>
+        </div>
+      </section>
+
+      {/* Data Hook */}
+      <section className="relative z-10 py-16 px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-white/10 rounded-2xl p-8 text-center">
+            <p className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
+              73%
             </p>
-
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-              <Link href="https://app.trustscope.ai" className="btn-primary text-lg px-8 py-4 flex items-center justify-center gap-2">
-                Start Free Trial <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link href="#demo" className="btn-secondary text-lg px-8 py-4 flex items-center justify-center gap-2">
-                <Play className="w-5 h-5" /> Watch Demo
-              </Link>
-            </div>
-
-            {/* Trust badges */}
-            <div className="flex flex-wrap items-center justify-center gap-6 text-slate-500 text-sm">
-              <span className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-emerald-500" />
-                SOC 2 Type II
-              </span>
-              <span className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-emerald-500" />
-                274 Patent Claims
-              </span>
-              <span className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-emerald-500" />
-                Blockchain Anchored
-              </span>
-            </div>
+            <p className="text-slate-400 text-lg">
+              of agents in our beta exceeded their declared scope
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Stats Bar */}
-      <section className="border-y border-slate-800 bg-slate-900/30">
-        <div className="section-container py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, i) => (
-              <div key={i} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-blue-400 mb-2">{stat.value}</div>
-                <div className="text-sm text-slate-400">{stat.label}</div>
+      {/* Solution: 4 Tiers */}
+      <section className="relative z-10 py-20 px-6 border-t border-white/5">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+            Four Tiers of Governance
+          </h2>
+          <p className="text-slate-500 text-center mb-12 max-w-2xl mx-auto">
+            Start free. Scale to cryptographic proof.
+          </p>
+
+          <div className="grid md:grid-cols-4 gap-6">
+            {[
+              {
+                name: "Monitor",
+                price: "$0",
+                desc: "See everything",
+                icon: Eye,
+                color: "text-slate-400",
+              },
+              {
+                name: "Protect",
+                price: "$49",
+                desc: "Block threats",
+                icon: Shield,
+                color: "text-blue-400",
+              },
+              {
+                name: "Enforce",
+                price: "$149",
+                desc: "Policies + MCP",
+                icon: Lock,
+                color: "text-purple-400",
+              },
+              {
+                name: "Govern",
+                price: "$699",
+                desc: "Cryptographic proof",
+                icon: FileCheck,
+                color: "text-emerald-400",
+              },
+            ].map((tier) => (
+              <div
+                key={tier.name}
+                className="bg-white/5 border border-white/10 rounded-xl p-6 text-center hover:bg-white/[0.07] transition"
+              >
+                <tier.icon className={`w-8 h-8 ${tier.color} mx-auto mb-4`} />
+                <h3 className="text-xl font-bold mb-1">{tier.name}</h3>
+                <p className="text-2xl font-bold text-white/80 mb-2">
+                  {tier.price}
+                  {tier.price !== "$0" && <span className="text-sm text-slate-500">/mo</span>}
+                </p>
+                <p className="text-slate-500 text-sm">{tier.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Problem Section - Common Incidents */}
-      <section className="py-24">
-        <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">AI Agents Need Guardrails</h2>
-            <p className="text-xl text-slate-400">These scenarios happen every day. TrustScope helps you prevent them—and prove you had safeguards in place.</p>
+      {/* Integration Section */}
+      <section className="relative z-10 py-20 px-6 border-t border-white/5">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              One Integration. Every Framework.
+            </h2>
+            <p className="text-slate-500 max-w-2xl mx-auto">
+              Unified Ingestion Engine for SDK, Gateway, MCP, and OpenTelemetry
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {agentIncidents.map((incident, i) => (
-              <div key={i} className="card bg-slate-800/50 border-slate-700/50">
-                <div className="text-4xl mb-4">{incident.icon}</div>
-                <h3 className="font-semibold text-lg mb-2">{incident.title}</h3>
-                <p className="text-slate-400 text-sm mb-4">{incident.incident}</p>
-                <p className="text-amber-400 text-sm font-medium">{incident.outcome}</p>
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
+            {["LangChain", "LangGraph", "CrewAI", "AutoGen", "OpenAI Agents", "Claude", "Gemini"].map(
+              (fw) => (
+                <div
+                  key={fw}
+                  className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm text-slate-400"
+                >
+                  {fw}
+                </div>
+              )
+            )}
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-4">
+            {[
+              { icon: Code2, label: "Python SDK" },
+              { icon: Code2, label: "Node SDK" },
+              { icon: Server, label: "Zero-Code Gateway" },
+              { icon: Zap, label: "MCP Native" },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="bg-white/5 border border-white/10 rounded-xl p-4 text-center"
+              >
+                <item.icon className="w-6 h-6 text-blue-400 mx-auto mb-2" />
+                <span className="text-sm text-slate-400">{item.label}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Comparison Section */}
-      <section className="py-24 bg-slate-900/30">
-        <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">The Gap in the Market</h2>
-            <p className="text-xl text-slate-400">GRC tools don't understand agents. Observability tools don't generate evidence.</p>
-          </div>
+      {/* Features Grid */}
+      <section className="relative z-10 py-20 px-6 border-t border-white/5">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+            Built for Serious AI Governance
+          </h2>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {/* GRC Tools */}
-            <div className="card bg-red-500/5 border-red-500/20">
-              <h3 className="font-semibold text-lg mb-1">{comparison.grc.title}</h3>
-              <p className="text-slate-500 text-sm mb-6">{comparison.grc.subtitle}</p>
-              <ul className="space-y-3">
-                {comparison.grc.items.map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 text-slate-400 text-sm">
-                    <span className="text-red-400">✗</span>
-                    {item.text}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-6 pt-6 border-t border-red-500/20 text-center">
-                <span className="text-slate-500 text-sm">CAMERAS</span>
-              </div>
-            </div>
-
-            {/* Observability */}
-            <div className="card bg-amber-500/5 border-amber-500/20">
-              <h3 className="font-semibold text-lg mb-1">{comparison.observability.title}</h3>
-              <p className="text-slate-500 text-sm mb-6">{comparison.observability.subtitle}</p>
-              <ul className="space-y-3">
-                {comparison.observability.items.map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 text-slate-400 text-sm">
-                    <span className="text-amber-400">~</span>
-                    {item.text}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-6 pt-6 border-t border-amber-500/20 text-center">
-                <span className="text-slate-500 text-sm">DASHBOARDS</span>
-              </div>
-            </div>
-
-            {/* TrustScope */}
-            <div className="card bg-emerald-500/10 border-emerald-500/30 glow">
-              <h3 className="font-semibold text-lg mb-1 text-emerald-400">{comparison.trustscope.title}</h3>
-              <p className="text-slate-500 text-sm mb-6">{comparison.trustscope.subtitle}</p>
-              <ul className="space-y-3">
-                {comparison.trustscope.items.map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 text-slate-300 text-sm">
-                    <span className="text-emerald-400">✓</span>
-                    {item.text}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-6 pt-6 border-t border-emerald-500/30 text-center">
-                <span className="text-emerald-400 font-semibold text-sm">BRAKES</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-24">
-        <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Discover. Protect. Enforce. Comply.</h2>
-            <p className="text-xl text-slate-400">Start free with 11 engines. Scale to 21 engines + AI detection. Get Evidence Packs when auditors come knocking.</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, i) => (
-              <div key={i} className="card group hover:glow">
-                <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4 group-hover:bg-blue-500/20 transition-colors">
-                  <feature.icon className="w-6 h-6 text-blue-400" />
-                </div>
-                <div className="text-xs text-slate-500 mb-2">{feature.tier}</div>
-                <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
-                <p className="text-slate-400 text-sm">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <Link href="/features" className="btn-secondary inline-flex items-center gap-2">
-              See All Features <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Dual Audience Section */}
-      <section className="py-24 bg-slate-900/30">
-        <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Built for developers. Ready for compliance.</h2>
-            <p className="text-xl text-slate-400">Start with debugging and safety. Scale to evidence when auditors come knocking.</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* Developer Card */}
-            <div className="card p-8 border-emerald-500/30 bg-emerald-500/5">
-              <div className="text-emerald-400 text-sm font-medium mb-4">FOR DEVELOPERS</div>
-              <h3 className="text-2xl font-bold mb-4">Stop debugging in production</h3>
-              <ul className="space-y-3 mb-6">
-                <li className="flex items-center gap-3 text-slate-300">
-                  <span className="text-emerald-400">→</span>
-                  <span>"Why is my OpenAI bill $10K?" — <span className="text-emerald-400">Loop detection kills it at iteration 10</span></span>
-                </li>
-                <li className="flex items-center gap-3 text-slate-300">
-                  <span className="text-emerald-400">→</span>
-                  <span>"It ran DROP TABLE" — <span className="text-emerald-400">Command firewall blocks destructive ops</span></span>
-                </li>
-                <li className="flex items-center gap-3 text-slate-300">
-                  <span className="text-emerald-400">→</span>
-                  <span>"Why did my agent do that?" — <span className="text-emerald-400">Full trace capture, CLI replay</span></span>
-                </li>
-              </ul>
-              <div className="bg-slate-950 rounded-lg p-4 font-mono text-sm mb-6">
-                <span className="text-slate-500">$ </span>
-                <span className="text-emerald-400">pip install trustscope-cli</span>
-              </div>
-              <Link href="/developers" className="text-emerald-400 hover:text-emerald-300 flex items-center gap-2">
-                Developer docs <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-
-            {/* Compliance Card */}
-            <div className="card p-8 border-blue-500/30 bg-blue-500/5">
-              <div className="text-blue-400 text-sm font-medium mb-4">FOR COMPLIANCE</div>
-              <h3 className="text-2xl font-bold mb-4">Evidence, not dashboards</h3>
-              <ul className="space-y-3 mb-6">
-                <li className="flex items-center gap-3 text-slate-300">
-                  <span className="text-blue-400">→</span>
-                  <span>"Document PII checks ran" — <span className="text-blue-400">Signed receipts with hash chain</span></span>
-                </li>
-                <li className="flex items-center gap-3 text-slate-300">
-                  <span className="text-blue-400">→</span>
-                  <span>"Show me CC8.1 evidence" — <span className="text-blue-400">One-click Evidence Pack export</span></span>
-                </li>
-                <li className="flex items-center gap-3 text-slate-300">
-                  <span className="text-blue-400">→</span>
-                  <span>"Article 17 QMS?" — <span className="text-blue-400">8 of 10 requirements covered</span></span>
-                </li>
-              </ul>
-              <div className="flex flex-wrap gap-2 mb-6">
-                <span className="px-3 py-1 bg-slate-800 rounded text-sm text-slate-300">NIST AI RMF</span>
-                <span className="px-3 py-1 bg-slate-800 rounded text-sm text-slate-300">SOC 2</span>
-                <span className="px-3 py-1 bg-slate-800 rounded text-sm text-slate-300">EU AI Act</span>
-                <span className="px-3 py-1 bg-slate-800 rounded text-sm text-slate-300">ISO 42001</span>
-              </div>
-              <Link href="/compliance" className="text-blue-400 hover:text-blue-300 flex items-center gap-2">
-                Compliance mapping <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Evidence Demo Section */}
-      <section id="demo" className="py-24">
-        <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Every Action Creates Evidence</h2>
-            <p className="text-xl text-slate-400">Not just logs. Cryptographically signed, tamper-evident evidence.</p>
-          </div>
-
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-slate-950 border border-slate-700 rounded-xl overflow-hidden">
-              <div className="bg-slate-800 px-4 py-3 border-b border-slate-700 flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-red-500" />
-                <span className="w-3 h-3 rounded-full bg-yellow-500" />
-                <span className="w-3 h-3 rounded-full bg-green-500" />
-                <span className="text-slate-400 text-sm ml-4">Evidence Pack - SOC 2 CC8.1</span>
-              </div>
-              <pre className="p-6 text-sm overflow-x-auto">
-                <code className="text-slate-300">{`{
-  "evidence_pack_id": "ep_2026_01_soc2_cc8",
-  "framework": "SOC 2 Type II",
-  "control": "CC8.1 - Change Management",
-  "generated_at": "2026-01-30T14:23:01Z",
-  
-  "evidence_items": [
-    {
-      "type": "agent_inventory",
-      "count": 47,
-      "includes": ["fingerprints", "tools", "permissions"]
-    },
-    {
-      "type": "policy_enforcement_logs",
-      "count": 12453,
-      "blocked": 234
-    },
-    {
-      "type": "drift_detection_reports",
-      "alerts": 3,
-      "resolved": 3
-    }
-  ],
-  
-  "verification": {
-    "hash_chain_verified": true,
-    "signatures_valid": true,
-    "blockchain_anchor": "block 923847",
-    "certificate_id": "cert_7a8b9c2d"
-  }
-}`}</code>
-              </pre>
-            </div>
-
-            <p className="text-center text-slate-400 mt-6">
-              Hash-chained. Ed25519 signed. Blockchain-anchored.
-              <span className="text-white font-semibold"> Hand this to your auditor.</span>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Frameworks Section */}
-      <section className="py-24">
-        <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Compliance-Ready Evidence</h2>
-            <p className="text-xl text-slate-400">Evidence Packs mapped to major regulatory frameworks</p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {frameworks.map((framework, i) => (
-              <div key={i} className="card text-center">
-                <h3 className="font-semibold mb-2">{framework.name}</h3>
-                <div className="text-emerald-400 text-sm mb-1">{framework.status}</div>
-                <div className="text-slate-500 text-xs">{framework.controls}</div>
+            {[
+              {
+                icon: Fingerprint,
+                title: "Agent DNA Fingerprinting",
+                desc: "Behavioral identity for every agent. Detect drift, freeze rogues.",
+              },
+              {
+                icon: Shield,
+                title: "21 Detection Engines",
+                desc: "From prompt injection to hallucination. Block before damage.",
+              },
+              {
+                icon: Lock,
+                title: "26 Policy Types",
+                desc: "Rate limits to human approval workflows. Full control.",
+              },
+              {
+                icon: Server,
+                title: "MCP Security",
+                desc: "6-Factor Trust Scoring. Jaccard tampering detection.",
+              },
+              {
+                icon: Activity,
+                title: "Blockchain Audit Trail",
+                desc: "Tamper-proof, legally admissible, independently verifiable.",
+              },
+              {
+                icon: FileCheck,
+                title: "Governance Certificates",
+                desc: "Signed proof for auditors. Answer the hard questions.",
+              },
+            ].map((feature) => (
+              <div
+                key={feature.title}
+                className="bg-white/5 border border-white/10 rounded-xl p-6 hover:bg-white/[0.07] transition"
+              >
+                <feature.icon className="w-8 h-8 text-blue-400 mb-4" />
+                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+                <p className="text-slate-500 text-sm">{feature.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Industries Section */}
-      <section className="py-24 bg-slate-900/30">
-        <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Built for Regulated Industries</h2>
-            <p className="text-xl text-slate-400">Where AI governance isn't optional—it's required</p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {industries.map((industry, i) => (
-              <div key={i} className="card text-center group hover:glow">
-                <industry.icon className="w-8 h-8 text-blue-400 mx-auto mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="font-semibold mb-1">{industry.name}</h3>
-                <p className="text-slate-500 text-sm">{industry.description}</p>
-              </div>
-            ))}
+      {/* Partner Section */}
+      <section className="relative z-10 py-20 px-6 border-t border-white/5">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-white/10 rounded-2xl p-8 md:p-12 text-center">
+            <Users className="w-12 h-12 text-blue-400 mx-auto mb-6" />
+            <h2 className="text-3xl font-bold mb-4">Become a Design Partner</h2>
+            <p className="text-slate-400 mb-8 max-w-lg mx-auto">
+              Shape the future of AI governance. Get early access and influence the roadmap.
+              Limited to 50 companies.
+            </p>
+            <button
+              onClick={() => setPartnerOpen(true)}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 px-8 py-4 rounded-lg text-lg font-medium transition inline-flex items-center gap-2"
+            >
+              Apply Now
+              <ArrowRight className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24">
-        <div className="section-container">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Ready to document your AI is under control?
-            </h2>
-            <p className="text-xl text-slate-400 mb-12">
-              Start with observability. Upgrade when you need blocking. 
-              Get Evidence Packs when auditors come knocking.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="https://app.trustscope.ai" className="btn-primary text-lg px-8 py-4 flex items-center justify-center gap-2">
-                Start Free Trial <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link href="/pricing" className="btn-secondary text-lg px-8 py-4">
-                View Pricing
-              </Link>
+      {/* Final CTA */}
+      <section className="relative z-10 py-24 px-6 border-t border-white/5">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            Request Early Access
+          </h2>
+          <p className="text-slate-500 mb-8">
+            Limited spots in our private beta. Join the waitlist.
+          </p>
+          {submitted ? (
+            <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-6 text-center max-w-md mx-auto">
+              <Check className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
+              <p className="text-emerald-400 font-medium">You&apos;re on the list!</p>
             </div>
-
-            <p className="text-slate-500 text-sm mt-8">
-              No credit card required. Free tier includes 5,000 traces/month.
-            </p>
-          </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="flex gap-2 max-w-md mx-auto">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@company.com"
+                className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500/50"
+                required
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-lg font-medium transition disabled:opacity-50"
+              >
+                {loading ? "..." : "Join"}
+              </button>
+            </form>
+          )}
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="relative z-10 border-t border-white/5 py-8 px-6">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3 text-slate-500">
+            <Shield className="w-5 h-5" />
+            <span className="text-sm">© 2026 TrustScope</span>
+          </div>
+          <div className="flex items-center gap-6 text-sm text-slate-500">
+            <a href="mailto:hello@trustscope.ai" className="hover:text-slate-300 transition">
+              hello@trustscope.ai
+            </a>
+          </div>
+        </div>
+      </footer>
+
+      {/* Partner Form Modal */}
+      {partnerOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/70"
+            onClick={() => setPartnerOpen(false)}
+          />
+          <div className="relative bg-slate-900 border border-white/10 rounded-2xl p-8 max-w-md w-full">
+            <button
+              onClick={() => setPartnerOpen(false)}
+              className="absolute top-4 right-4 text-slate-500 hover:text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {partnerSubmitted ? (
+              <div className="text-center py-8">
+                <Check className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
+                <h3 className="text-xl font-bold mb-2">Application Received!</h3>
+                <p className="text-slate-400">
+                  We&apos;ll be in touch about the Design Partner program.
+                </p>
+              </div>
+            ) : (
+              <>
+                <h3 className="text-2xl font-bold mb-2">Design Partner Program</h3>
+                <p className="text-slate-400 mb-6">
+                  Shape the future of AI governance. Limited to 50 companies.
+                </p>
+
+                <form onSubmit={handlePartnerSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-sm text-slate-400 mb-1">Name *</label>
+                    <input
+                      type="text"
+                      value={partnerData.name}
+                      onChange={(e) =>
+                        setPartnerData({ ...partnerData, name: e.target.value })
+                      }
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500/50"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-slate-400 mb-1">Work Email *</label>
+                    <input
+                      type="email"
+                      value={partnerData.email}
+                      onChange={(e) =>
+                        setPartnerData({ ...partnerData, email: e.target.value })
+                      }
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500/50"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-slate-400 mb-1">Company</label>
+                    <input
+                      type="text"
+                      value={partnerData.company}
+                      onChange={(e) =>
+                        setPartnerData({ ...partnerData, company: e.target.value })
+                      }
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-slate-400 mb-1">
+                      What are you building?
+                    </label>
+                    <textarea
+                      value={partnerData.useCase}
+                      onChange={(e) =>
+                        setPartnerData({ ...partnerData, useCase: e.target.value })
+                      }
+                      rows={3}
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 resize-none"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={partnerLoading}
+                    className="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-lg font-medium transition disabled:opacity-50"
+                  >
+                    {partnerLoading ? "Submitting..." : "Apply for Partner Program"}
+                  </button>
+                </form>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
-  )
+  );
 }
