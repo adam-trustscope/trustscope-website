@@ -38,13 +38,41 @@ const SEVERITY_CONFIG: Record<FindingSeverity, { icon: typeof AlertTriangle; lab
   },
 };
 
-const ENGINE_CONFIG: Record<FindingEngine, { icon: typeof Shield; label: string; description: string }> = {
+// Engine configuration - supports both new and legacy engine names
+const ENGINE_CONFIG: Partial<Record<string, { icon: typeof Shield; label: string; description: string }>> = {
+  // New engine names
+  pii_scanner: { icon: Shield, label: 'PII', description: '90 patterns in 10 categories' },
+  secrets_scanner: { icon: Key, label: 'Secrets', description: '60 patterns in 9 categories' },
+  prompt_injection: { icon: AlertTriangle, label: 'Injection', description: '57 patterns in 8 categories' },
+  jailbreak_detector: { icon: AlertTriangle, label: 'Jailbreak', description: '46 patterns in 6 categories' },
+  command_firewall: { icon: Shield, label: 'Commands', description: '56 dangerous patterns' },
+  toxicity_filter: { icon: MessageSquare, label: 'Content', description: '6 toxicity categories' },
+  loop_killer: { icon: RefreshCw, label: 'Loops', description: 'Infinite loop detection' },
+  cost_velocity: { icon: DollarSign, label: 'Cost', description: 'Rapid cost increases' },
+  oscillation: { icon: RefreshCw, label: 'Oscillation', description: 'A-B-A-B patterns' },
+  velocity: { icon: RefreshCw, label: 'Velocity', description: 'Request rate monitoring' },
+  token_growth: { icon: DollarSign, label: 'Tokens', description: 'Token growth patterns' },
+  // Legacy engine names (for backward compatibility)
   pii: { icon: Shield, label: 'PII', description: 'Personal data like SSNs, emails, phones' },
   secrets: { icon: Key, label: 'Secrets', description: 'API keys, tokens, credentials' },
   cost: { icon: DollarSign, label: 'Cost', description: 'Unusual spending patterns' },
   loop: { icon: RefreshCw, label: 'Loops', description: 'Repetitive or stuck behavior' },
   toxicity: { icon: MessageSquare, label: 'Content', description: 'Problematic language' },
 };
+
+// Default config for unknown engines
+const DEFAULT_ENGINE = { icon: Shield, label: 'Detection', description: 'Security detection' };
+
+// Get config with fallback
+const getEngineConfig = (engine: string) => ENGINE_CONFIG[engine] || DEFAULT_ENGINE;
+
+// Prioritized list of engines to display
+const DISPLAY_ENGINES = [
+  'secrets_scanner', 'pii_scanner', 'prompt_injection', 'jailbreak_detector',
+  'command_firewall', 'toxicity_filter', 'loop_killer', 'cost_velocity',
+  // Legacy fallbacks
+  'secrets', 'pii', 'cost', 'loop', 'toxicity'
+];
 
 export default function ResultsSummary({ summary }: ResultsSummaryProps) {
   const hasFindings = summary.totalFindings > 0;
@@ -132,22 +160,25 @@ export default function ResultsSummary({ summary }: ResultsSummaryProps) {
               By Detection Type
             </h4>
             <div className="grid grid-cols-5 gap-3">
-              {(Object.keys(ENGINE_CONFIG) as FindingEngine[]).map((engine) => {
-                const config = ENGINE_CONFIG[engine];
-                const count = summary.byEngine[engine];
-                const Icon = config.icon;
+              {DISPLAY_ENGINES
+                .filter(engine => summary.byEngine[engine as FindingEngine] !== undefined)
+                .slice(0, 5)
+                .map((engine) => {
+                  const config = getEngineConfig(engine);
+                  const count = summary.byEngine[engine as FindingEngine] || 0;
+                  const Icon = config.icon;
 
-                return (
-                  <div
-                    key={engine}
-                    className={`bg-white/5 border border-white/10 rounded-xl p-3 text-center ${count === 0 ? 'opacity-40' : ''}`}
-                  >
-                    <Icon className="w-5 h-5 text-blue-400 mx-auto mb-1" />
-                    <p className="text-lg font-bold text-white">{count}</p>
-                    <p className="text-xs text-slate-500">{config.label}</p>
-                  </div>
-                );
-              })}
+                  return (
+                    <div
+                      key={engine}
+                      className={`bg-white/5 border border-white/10 rounded-xl p-3 text-center ${count === 0 ? 'opacity-40' : ''}`}
+                    >
+                      <Icon className="w-5 h-5 text-blue-400 mx-auto mb-1" />
+                      <p className="text-lg font-bold text-white">{count}</p>
+                      <p className="text-xs text-slate-500">{config.label}</p>
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </>

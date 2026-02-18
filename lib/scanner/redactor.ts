@@ -89,19 +89,22 @@ export function redactContent(content: string): RedactionResult {
 export function redactFromFindings(content: string, findings: Finding[]): string {
   let redacted = content;
 
-  // Get unique PII/secret findings
-  const piiAndSecrets = findings.filter(f => f.engine === 'pii' || f.engine === 'secrets');
+  // Get unique PII/secret findings (support both new and legacy engine names)
+  const piiAndSecrets = findings.filter(f =>
+    f.engine === 'pii_scanner' || f.engine === 'secrets_scanner' ||
+    (f.engine as string) === 'pii' || (f.engine as string) === 'secrets'
+  );
 
   // Group by category to use correct redaction text
   const redactionMap = new Map<string, string>();
 
   for (const finding of piiAndSecrets) {
-    if (finding.engine === 'pii') {
+    if (finding.engine === 'pii_scanner' || (finding.engine as string) === 'pii') {
       const pattern = PII_PATTERNS[finding.category];
       if (pattern) {
         redactionMap.set(finding.matchedValue, pattern.redactTo);
       }
-    } else if (finding.engine === 'secrets') {
+    } else if (finding.engine === 'secrets_scanner' || (finding.engine as string) === 'secrets') {
       const pattern = SECRET_PATTERNS[finding.category];
       if (pattern) {
         // For secrets, we have masked values, so we need to use pattern-based replacement

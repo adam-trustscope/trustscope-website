@@ -13,7 +13,55 @@ export type DetectedFormat =
   | 'json-array'
   | 'unknown';
 
-export type FindingEngine = 'pii' | 'secrets' | 'cost' | 'loop' | 'toxicity';
+// Statistical engines (10)
+export type StatisticalEngine =
+  | 'loop_killer'
+  | 'velocity'
+  | 'oscillation'
+  | 'token_growth'
+  | 'cost_velocity'
+  | 'error_rate'
+  | 'budget_caps'
+  | 'context_expansion'
+  | 'session_duration'
+  | 'session_action_limit';
+
+// Content engines (10)
+export type ContentEngine =
+  | 'pii_scanner'
+  | 'secrets_scanner'
+  | 'command_firewall'
+  | 'blocked_phrases'
+  | 'data_exfiltration'
+  | 'prompt_injection'
+  | 'jailbreak_detector'
+  | 'action_label_mismatch'
+  | 'toxicity_filter'
+  | 'content_policy';
+
+// AI Hybrid engines (7) - server only
+export type AIHybridEngine =
+  | 'semantic_firewall'
+  | 'hallucination_detector'
+  | 'reasoning_drift'
+  | 'intent_classifier'
+  | 'context_relevance'
+  | 'output_consistency'
+  | 'hate_speech_detector';
+
+export type FindingEngine = StatisticalEngine | ContentEngine | AIHybridEngine;
+
+// Legacy aliases for backward compatibility
+export type LegacyEngine = 'pii' | 'secrets' | 'cost' | 'loop' | 'toxicity';
+
+// Map legacy engine names to new names
+export const LEGACY_ENGINE_MAP: Record<LegacyEngine, FindingEngine> = {
+  pii: 'pii_scanner',
+  secrets: 'secrets_scanner',
+  cost: 'cost_velocity',
+  loop: 'loop_killer',
+  toxicity: 'toxicity_filter',
+};
 
 export type FindingSeverity = 'critical' | 'high' | 'medium' | 'low';
 
@@ -23,11 +71,15 @@ export type ScanPhase =
   | 'detecting'
   | 'extracting'
   | 'classifying'
+  | 'scanning_statistical'
   | 'scanning_pii'
   | 'scanning_secrets'
+  | 'scanning_injection'
+  | 'scanning_jailbreak'
+  | 'scanning_commands'
+  | 'scanning_toxicity'
   | 'scanning_cost'
   | 'scanning_loops'
-  | 'scanning_toxicity'
   | 'redacting'
   | 'complete';
 

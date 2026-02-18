@@ -117,7 +117,21 @@ export function generatePdfReport(data: ReportData): Blob {
   addText('Findings by Detection Engine:', 11, 'bold');
   y += 2;
 
-  const engineLabels: Record<FindingEngine, string> = {
+  const engineLabels: Partial<Record<string, string>> = {
+    // New engine names
+    pii_scanner: 'PII Detection',
+    secrets_scanner: 'Secrets Detection',
+    prompt_injection: 'Prompt Injection',
+    jailbreak_detector: 'Jailbreak Detection',
+    command_firewall: 'Command Firewall',
+    toxicity_filter: 'Content Safety',
+    loop_killer: 'Loop Detection',
+    cost_velocity: 'Cost Anomalies',
+    oscillation: 'Oscillation Detection',
+    velocity: 'Velocity Monitor',
+    token_growth: 'Token Growth',
+    data_exfiltration: 'Data Exfiltration',
+    // Legacy engine names
     pii: 'PII Detection',
     secrets: 'Secrets Detection',
     cost: 'Cost Anomalies',
@@ -125,9 +139,12 @@ export function generatePdfReport(data: ReportData): Blob {
     toxicity: 'Content Safety',
   };
 
-  for (const engine of Object.keys(engineLabels) as FindingEngine[]) {
-    const count = data.summary.byEngine[engine];
-    addText(`  • ${engineLabels[engine]}: ${count} finding${count !== 1 ? 's' : ''}`);
+  // Display engines with findings
+  for (const [engine, count] of Object.entries(data.summary.byEngine)) {
+    if (count > 0) {
+      const label = engineLabels[engine] || engine;
+      addText(`  • ${label}: ${count} finding${count !== 1 ? 's' : ''}`);
+    }
   }
 
   // Content Classification
@@ -175,7 +192,7 @@ export function generatePdfReport(data: ReportData): Blob {
 
     for (const [engine, categories] of Object.entries(grouped)) {
       checkPageBreak(30);
-      addText(`${engineLabels[engine as FindingEngine]}`, 12, 'bold');
+      addText(`${engineLabels[engine] || engine}`, 12, 'bold');
 
       for (const [category, findings] of Object.entries(categories)) {
         checkPageBreak(20);

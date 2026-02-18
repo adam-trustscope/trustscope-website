@@ -30,11 +30,15 @@ const PHASE_LABELS: Record<ScanPhase, string> = {
   detecting: 'Detecting format...',
   extracting: 'Extracting traces...',
   classifying: 'Classifying content...',
+  scanning_statistical: 'Running statistical analysis...',
   scanning_pii: 'Scanning for PII...',
   scanning_secrets: 'Scanning for secrets...',
+  scanning_injection: 'Detecting prompt injection...',
+  scanning_jailbreak: 'Detecting jailbreak attempts...',
+  scanning_commands: 'Checking for dangerous commands...',
+  scanning_toxicity: 'Checking content safety...',
   scanning_cost: 'Analyzing costs...',
   scanning_loops: 'Detecting loops...',
-  scanning_toxicity: 'Checking content safety...',
   redacting: 'Preparing redacted output...',
   complete: 'Scan complete',
 };
@@ -243,7 +247,7 @@ function scanForPII(trace: ScannedTrace): Finding[] {
 
         findings.push({
           id: generateId(),
-          engine: 'pii',
+          engine: 'pii_scanner',
           category,
           severity: pattern.severity,
           traceIndex: trace.index,
@@ -282,7 +286,7 @@ function scanForSecrets(trace: ScannedTrace): Finding[] {
 
         findings.push({
           id: generateId(),
-          engine: 'secrets',
+          engine: 'secrets_scanner',
           category,
           severity: pattern.severity,
           traceIndex: trace.index,
@@ -339,7 +343,7 @@ function scanForCostAnomalies(traces: ScannedTrace[]): Finding[] {
     if (totalTokens > COST_ANOMALY_CONFIG.highTokenThreshold) {
       findings.push({
         id: generateId(),
-        engine: 'cost',
+        engine: 'cost_velocity',
         category: 'high_tokens',
         severity: 'medium',
         traceIndex: trace.index,
@@ -353,7 +357,7 @@ function scanForCostAnomalies(traces: ScannedTrace[]): Finding[] {
     if (cost > COST_ANOMALY_CONFIG.highCostThreshold) {
       findings.push({
         id: generateId(),
-        engine: 'cost',
+        engine: 'cost_velocity',
         category: 'high_cost',
         severity: 'high',
         traceIndex: trace.index,
@@ -369,7 +373,7 @@ function scanForCostAnomalies(traces: ScannedTrace[]): Finding[] {
       if (growth > COST_ANOMALY_CONFIG.growthThreshold) {
         findings.push({
           id: generateId(),
-          engine: 'cost',
+          engine: 'cost_velocity',
           category: 'cost_growth',
           severity: 'medium',
           traceIndex: trace.index,
@@ -384,7 +388,7 @@ function scanForCostAnomalies(traces: ScannedTrace[]): Finding[] {
     if (median > 0 && cost > median * COST_ANOMALY_CONFIG.medianMultiplier) {
       findings.push({
         id: generateId(),
-        engine: 'cost',
+        engine: 'cost_velocity',
         category: 'above_median',
         severity: 'low',
         traceIndex: trace.index,
@@ -427,7 +431,7 @@ function scanForLoops(traces: ScannedTrace[]): Finding[] {
       if (consecutiveIdentical >= LOOP_DETECTION_CONFIG.identicalThreshold) {
         findings.push({
           id: generateId(),
-          engine: 'loop',
+          engine: 'loop_killer',
           category: 'identical_inputs',
           severity: 'high',
           traceIndex: identicalStart,
@@ -445,7 +449,7 @@ function scanForLoops(traces: ScannedTrace[]): Finding[] {
   if (consecutiveIdentical >= LOOP_DETECTION_CONFIG.identicalThreshold) {
     findings.push({
       id: generateId(),
-      engine: 'loop',
+      engine: 'loop_killer',
       category: 'identical_inputs',
       severity: 'high',
       traceIndex: identicalStart,
@@ -469,7 +473,7 @@ function scanForLoops(traces: ScannedTrace[]): Finding[] {
         if (consecutiveSimilar >= LOOP_DETECTION_CONFIG.similarThreshold) {
           findings.push({
             id: generateId(),
-            engine: 'loop',
+            engine: 'loop_killer',
             category: 'similar_inputs',
             severity: 'medium',
             traceIndex: similarStart,
@@ -488,7 +492,7 @@ function scanForLoops(traces: ScannedTrace[]): Finding[] {
   if (consecutiveSimilar >= LOOP_DETECTION_CONFIG.similarThreshold) {
     findings.push({
       id: generateId(),
-      engine: 'loop',
+      engine: 'loop_killer',
       category: 'similar_inputs',
       severity: 'medium',
       traceIndex: similarStart,
@@ -519,7 +523,7 @@ function scanForLoops(traces: ScannedTrace[]): Finding[] {
       if (cycles >= LOOP_DETECTION_CONFIG.oscillationMinCycles) {
         findings.push({
           id: generateId(),
-          engine: 'loop',
+          engine: 'loop_killer',
           category: 'oscillation',
           severity: 'high',
           traceIndex: i,
@@ -558,7 +562,7 @@ function scanForToxicContent(trace: ScannedTrace): Finding[] {
 
           findings.push({
             id: generateId(),
-            engine: 'toxicity',
+            engine: 'toxicity_filter',
             category: category as ToxicityCategory,
             severity,
             traceIndex: trace.index,
@@ -603,13 +607,8 @@ function generateRedactedContent(originalContent: string): string {
 
 // Create summary
 function createSummary(findings: Finding[], totalTraces: number, scanDurationMs: number): ScanSummary {
-  const byEngine: Record<FindingEngine, number> = {
-    pii: 0,
-    secrets: 0,
-    cost: 0,
-    loop: 0,
-    toxicity: 0,
-  };
+  // Initialize byEngine dynamically from findings
+  const byEngine: Record<string, number> = {};
 
   const bySeverity: Record<FindingSeverity, number> = {
     critical: 0,
@@ -621,7 +620,7 @@ function createSummary(findings: Finding[], totalTraces: number, scanDurationMs:
   const byCategory: Record<string, number> = {};
 
   for (const finding of findings) {
-    byEngine[finding.engine]++;
+    byEngine[finding.engine] = (byEngine[finding.engine] || 0) + 1;
     bySeverity[finding.severity]++;
     byCategory[finding.category] = (byCategory[finding.category] || 0) + 1;
   }
@@ -629,7 +628,7 @@ function createSummary(findings: Finding[], totalTraces: number, scanDurationMs:
   return {
     totalTraces,
     totalFindings: findings.length,
-    byEngine,
+    byEngine: byEngine as Record<FindingEngine, number>,
     bySeverity,
     byCategory,
     scanDurationMs,
@@ -640,7 +639,7 @@ function createEmptySummary(scanDurationMs: number): ScanSummary {
   return {
     totalTraces: 0,
     totalFindings: 0,
-    byEngine: { pii: 0, secrets: 0, cost: 0, loop: 0, toxicity: 0 },
+    byEngine: {} as Record<FindingEngine, number>,
     bySeverity: { critical: 0, high: 0, medium: 0, low: 0 },
     byCategory: {},
     scanDurationMs,

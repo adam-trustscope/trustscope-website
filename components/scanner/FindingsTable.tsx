@@ -8,43 +8,143 @@ interface FindingsTableProps {
   findings: Finding[];
 }
 
-const ENGINE_CONFIG: Record<FindingEngine, { icon: typeof Shield; label: string; color: string; bgColor: string; description: string }> = {
+// Engine configuration - supports both new and legacy engine names
+const ENGINE_CONFIG: Partial<Record<FindingEngine | string, { icon: typeof Shield; label: string; color: string; bgColor: string; description: string }>> = {
+  // Content engines
+  pii_scanner: {
+    icon: Shield,
+    label: 'Personal Information (PII)',
+    color: 'text-blue-400',
+    bgColor: 'bg-blue-500/10 border-blue-500/20',
+    description: '90 patterns across 10 categories'
+  },
+  secrets_scanner: {
+    icon: Key,
+    label: 'Secrets & Credentials',
+    color: 'text-red-400',
+    bgColor: 'bg-red-500/10 border-red-500/20',
+    description: '60 patterns across 9 categories'
+  },
+  prompt_injection: {
+    icon: AlertTriangle,
+    label: 'Prompt Injection',
+    color: 'text-pink-400',
+    bgColor: 'bg-pink-500/10 border-pink-500/20',
+    description: '57 patterns across 8 categories'
+  },
+  jailbreak_detector: {
+    icon: AlertTriangle,
+    label: 'Jailbreak Attempts',
+    color: 'text-rose-400',
+    bgColor: 'bg-rose-500/10 border-rose-500/20',
+    description: '46 patterns across 6 categories'
+  },
+  command_firewall: {
+    icon: Shield,
+    label: 'Command Firewall',
+    color: 'text-amber-400',
+    bgColor: 'bg-amber-500/10 border-amber-500/20',
+    description: '56 dangerous command patterns'
+  },
+  toxicity_filter: {
+    icon: AlertTriangle,
+    label: 'Content Safety',
+    color: 'text-orange-400',
+    bgColor: 'bg-orange-500/10 border-orange-500/20',
+    description: '6 toxicity categories'
+  },
+  data_exfiltration: {
+    icon: Shield,
+    label: 'Data Exfiltration',
+    color: 'text-red-400',
+    bgColor: 'bg-red-500/10 border-red-500/20',
+    description: 'Data extraction attempts'
+  },
+  // Statistical engines
+  loop_killer: {
+    icon: RefreshCw,
+    label: 'Loop Detection',
+    color: 'text-purple-400',
+    bgColor: 'bg-purple-500/10 border-purple-500/20',
+    description: 'Infinite loops and recursive patterns'
+  },
+  cost_velocity: {
+    icon: DollarSign,
+    label: 'Cost Anomalies',
+    color: 'text-yellow-400',
+    bgColor: 'bg-yellow-500/10 border-yellow-500/20',
+    description: 'Rapid cost increases'
+  },
+  token_growth: {
+    icon: DollarSign,
+    label: 'Token Growth',
+    color: 'text-yellow-400',
+    bgColor: 'bg-yellow-500/10 border-yellow-500/20',
+    description: 'Token usage growth patterns'
+  },
+  oscillation: {
+    icon: RefreshCw,
+    label: 'Oscillation',
+    color: 'text-purple-400',
+    bgColor: 'bg-purple-500/10 border-purple-500/20',
+    description: 'A-B-A-B behavioral patterns'
+  },
+  velocity: {
+    icon: RefreshCw,
+    label: 'Velocity Monitor',
+    color: 'text-cyan-400',
+    bgColor: 'bg-cyan-500/10 border-cyan-500/20',
+    description: 'Request rate patterns'
+  },
+  // Legacy engine name aliases
   pii: {
     icon: Shield,
     label: 'Personal Information (PII)',
     color: 'text-blue-400',
     bgColor: 'bg-blue-500/10 border-blue-500/20',
-    description: 'Sensitive personal data that could identify individuals'
+    description: 'Sensitive personal data'
   },
   secrets: {
     icon: Key,
     label: 'Secrets & Credentials',
     color: 'text-red-400',
     bgColor: 'bg-red-500/10 border-red-500/20',
-    description: 'API keys, tokens, and other credentials'
+    description: 'API keys and tokens'
   },
   cost: {
     icon: DollarSign,
     label: 'Cost Anomalies',
     color: 'text-yellow-400',
     bgColor: 'bg-yellow-500/10 border-yellow-500/20',
-    description: 'Unusual token usage or spending patterns'
+    description: 'Spending patterns'
   },
   loop: {
     icon: RefreshCw,
     label: 'Loop Detection',
     color: 'text-purple-400',
     bgColor: 'bg-purple-500/10 border-purple-500/20',
-    description: 'Repetitive or stuck agent behavior'
+    description: 'Repetitive behavior'
   },
   toxicity: {
     icon: AlertTriangle,
     label: 'Content Safety',
     color: 'text-orange-400',
     bgColor: 'bg-orange-500/10 border-orange-500/20',
-    description: 'Potentially problematic language or content'
+    description: 'Problematic content'
   },
 };
+
+// Default config for unknown engines
+const DEFAULT_ENGINE_CONFIG = {
+  icon: Shield,
+  label: 'Detection',
+  color: 'text-slate-400',
+  bgColor: 'bg-slate-500/10 border-slate-500/20',
+  description: 'Security detection'
+};
+
+// Helper to get config with fallback
+const getEngineConfig = (engine: string) => ENGINE_CONFIG[engine] || DEFAULT_ENGINE_CONFIG;
 
 const SEVERITY_DOTS: Record<FindingSeverity, string> = {
   critical: 'bg-red-500',
@@ -92,7 +192,7 @@ const CATEGORY_LABELS: Record<string, { label: string; description: string }> = 
 };
 
 export default function FindingsTable({ findings }: FindingsTableProps) {
-  const [expandedEngines, setExpandedEngines] = useState<Set<FindingEngine>>(() => new Set(['pii', 'secrets'] as FindingEngine[]));
+  const [expandedEngines, setExpandedEngines] = useState<Set<string>>(() => new Set(['pii_scanner', 'secrets_scanner', 'pii', 'secrets']));
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(() => new Set());
   const [showValues, setShowValues] = useState(false);
 
@@ -108,7 +208,7 @@ export default function FindingsTable({ findings }: FindingsTableProps) {
     return acc;
   }, {} as Record<FindingEngine, Record<string, Finding[]>>);
 
-  const toggleEngine = (engine: FindingEngine) => {
+  const toggleEngine = (engine: string) => {
     const newExpanded = new Set(expandedEngines);
     if (newExpanded.has(engine)) {
       newExpanded.delete(engine);
@@ -132,8 +232,22 @@ export default function FindingsTable({ findings }: FindingsTableProps) {
     return null;
   }
 
-  const engineOrder: FindingEngine[] = ['secrets', 'pii', 'cost', 'loop', 'toxicity'];
-  const sortedEngines = engineOrder.filter(e => grouped[e]);
+  // Order engines for display - prioritize secrets and PII
+  const engineOrder = [
+    'secrets_scanner', 'secrets',
+    'pii_scanner', 'pii',
+    'prompt_injection',
+    'jailbreak_detector',
+    'command_firewall',
+    'cost_velocity', 'cost',
+    'loop_killer', 'loop',
+    'toxicity_filter', 'toxicity',
+    'oscillation',
+    'velocity',
+    'token_growth',
+    'data_exfiltration',
+  ];
+  const sortedEngines = engineOrder.filter(e => grouped[e as FindingEngine]) as FindingEngine[];
 
   return (
     <div className="space-y-4">
@@ -156,7 +270,7 @@ export default function FindingsTable({ findings }: FindingsTableProps) {
       {/* Findings by engine */}
       <div className="space-y-3">
         {sortedEngines.map((engine) => {
-          const config = ENGINE_CONFIG[engine];
+          const config = getEngineConfig(engine);
           const Icon = config.icon;
           const categories = grouped[engine];
           const totalCount = Object.values(categories).reduce((sum, arr) => sum + arr.length, 0);
