@@ -1,326 +1,378 @@
-import Link from 'next/link'
-import { CheckCircle, X, ArrowRight, Zap, HelpCircle } from 'lucide-react'
+'use client';
 
-const tiers = [
+import { useState } from 'react';
+import Link from 'next/link';
+import { Check, X, ArrowRight, HelpCircle, Eye, Shield, Lock, FileCheck } from 'lucide-react';
+
+const TIERS = [
   {
-    name: 'Discover',
-    price: 'Free',
-    period: '',
-    description: 'See what your AI agents are doing',
-    highlight: false,
+    name: 'Monitor',
+    price: { monthly: 0, annual: 0 },
+    description: 'See everything your AI does',
+    traces: '5,000/month',
+    retention: '30 days',
+    engines: '19 (alert only)',
+    policies: '3 policies',
+    seats: '1 seat',
+    icon: Eye,
+    color: 'slate',
     cta: 'Start Free',
+    ctaLink: '/scanner',
     features: {
-      traces: '5,000/month',
-      retention: '3 days',
-      detections: '11 engines (alert only)',
-      seats: '1 seat',
-      policies: '4 policies',
-      blocking: false,
-      discovery: true,
-      mcpBasic: true,
-      agentDna: false,
-      agentLock: false,
-      evidencePacks: false,
-      certificates: false,
-      blockchainAnchoring: false,
-      support: 'Community',
-    }
+      'Browser scanner': true,
+      'Health Check imports': 'Unlimited',
+      '19 detection engines': true,
+      'Real-time blocking': false,
+      'Agent DNA': false,
+      'Platform sync': false,
+      'AI hybrid engines (6)': false,
+      'Natural language policies': false,
+      'AIUC-1 exports': false,
+      'SIEM integration': false,
+      'Evidence signing': false,
+      'Evidence Room': false,
+      'BYOK signing': false,
+      'On-prem option': false,
+      'Support': 'Community',
+    },
   },
   {
     name: 'Protect',
-    price: '$29',
-    period: '/month',
-    description: 'Block threats before they cause damage',
-    highlight: false,
-    cta: 'Start Trial',
+    price: { monthly: 49, annual: 470 },
+    description: 'Block threats before damage',
+    traces: '25,000/month',
+    retention: '90 days',
+    engines: '19 + blocking',
+    policies: 'Unlimited',
+    seats: '3 seats',
+    icon: Shield,
+    color: 'blue',
+    cta: 'Start Free, Upgrade Anytime',
+    ctaLink: 'https://app.trustscope.ai',
     features: {
-      traces: '20,000/month',
-      retention: '30 days',
-      detections: '15 engines (can block)',
-      seats: '3 seats',
-      policies: '16 policies',
-      blocking: true,
-      discovery: true,
-      mcpBasic: true,
-      agentDna: false,
-      agentLock: false,
-      evidencePacks: false,
-      certificates: false,
-      blockchainAnchoring: false,
-      support: 'Email',
-    }
+      'Browser scanner': true,
+      'Health Check imports': 'Unlimited',
+      '19 detection engines': true,
+      'Real-time blocking': true,
+      'Agent DNA': true,
+      'Platform sync': 'LangSmith, LangFuse',
+      'AI hybrid engines (6)': false,
+      'Natural language policies': false,
+      'AIUC-1 exports': false,
+      'SIEM integration': false,
+      'Evidence signing': false,
+      'Evidence Room': false,
+      'BYOK signing': false,
+      'On-prem option': false,
+      'Support': 'Email',
+    },
   },
   {
     name: 'Enforce',
-    price: '$99',
-    period: '/month',
-    description: 'AI-powered security and agent control',
-    highlight: true,
-    cta: 'Start Trial',
+    price: { monthly: 249, annual: 2388 },
+    description: 'AI engines + compliance exports',
+    traces: '100,000/month',
+    retention: '1 year',
+    engines: '25 (6 AI hybrid)',
+    policies: 'Natural language',
+    seats: '5 seats',
+    icon: Lock,
+    color: 'gold',
+    recommended: true,
+    cta: 'Start Free, Upgrade Anytime',
+    ctaLink: 'https://app.trustscope.ai',
     features: {
-      traces: '100,000/month',
-      retention: '1 year',
-      detections: '21 engines (AI-powered)',
-      seats: '5 seats',
-      policies: '50 policies',
-      blocking: true,
-      discovery: true,
-      mcpFull: true,
-      agentDna: true,
-      agentLock: true,
-      evidencePacks: false,
-      certificates: 'Preview',
-      blockchainAnchoring: 'Badge',
-      support: 'Email',
-    }
+      'Browser scanner': true,
+      'Health Check imports': 'Unlimited',
+      '19 detection engines': true,
+      'Real-time blocking': true,
+      'Agent DNA': true,
+      'Platform sync': 'LangSmith, LangFuse',
+      'AI hybrid engines (6)': true,
+      'Natural language policies': true,
+      'AIUC-1 exports': true,
+      'SIEM integration': 'Splunk, Datadog',
+      'Evidence signing': false,
+      'Evidence Room': false,
+      'BYOK signing': false,
+      'On-prem option': false,
+      'Support': 'Email + Priority',
+    },
   },
   {
-    name: 'Comply',
-    price: 'Contact Us',
-    period: '',
-    description: 'Evidence Packs for compliance and audit',
-    highlight: false,
-    cta: 'Contact Sales',
+    name: 'Govern',
+    price: { monthly: 2000, annual: 19200 },
+    description: 'Signed evidence + compliance proof',
+    traces: '500,000+/month',
+    retention: '7 years',
+    engines: '25 + signing',
+    policies: 'Unlimited',
+    seats: 'Unlimited',
+    icon: FileCheck,
+    color: 'emerald',
+    cta: 'Talk to Sales',
+    ctaLink: '/contact',
     features: {
-      traces: '500,000+/month',
-      retention: '3 years',
-      detections: '21 engines + evidence',
-      seats: 'Unlimited',
-      policies: 'Unlimited',
-      blocking: true,
-      discovery: true,
-      mcpFull: true,
-      agentDna: true,
-      agentLock: true,
-      evidencePacks: true,
-      certificates: true,
-      blockchainAnchoring: true,
-      support: 'Priority',
-    }
+      'Browser scanner': true,
+      'Health Check imports': 'Unlimited',
+      '19 detection engines': true,
+      'Real-time blocking': true,
+      'Agent DNA': true,
+      'Platform sync': 'All platforms',
+      'AI hybrid engines (6)': true,
+      'Natural language policies': true,
+      'AIUC-1 exports': true,
+      'SIEM integration': 'All + custom',
+      'Evidence signing': 'Ed25519',
+      'Evidence Room': true,
+      'BYOK signing': true,
+      'On-prem option': 'Docker',
+      'Support': 'Dedicated',
+    },
   },
-]
+];
 
-const featureLabels: { [key: string]: string } = {
-  traces: 'Monthly traces',
-  retention: 'Data retention',
-  detections: 'Detection engines',
-  seats: 'Team seats',
-  policies: 'Policy limit',
-  blocking: 'Real-time blocking',
-  discovery: 'Platform Discovery',
-  mcpBasic: 'MCP Integration (basic)',
-  mcpFull: 'MCP Full Suite',
-  agentDna: 'Agent DNA fingerprints',
-  agentLock: 'Agent Lock',
-  evidencePacks: 'Evidence Packs',
-  certificates: 'Governance certificates',
-  blockchainAnchoring: 'Blockchain anchoring',
-  support: 'Support level',
-}
-
-const faqs = [
+const FAQS = [
   {
-    question: 'What counts as a trace?',
-    answer: 'A trace is a single AI agent action captured by TrustScope—an LLM call, tool invocation, or agent decision. Multi-step agent workflows count as multiple traces.'
+    question: 'What happens if I hit my trace limit?',
+    answer: 'We notify you at 80% and 100% usage. Monitor tier has a hard cap. Paid tiers can purchase additional traces at $0.002/trace overage.',
   },
   {
     question: 'Can I change plans anytime?',
-    answer: 'Yes. Upgrade or downgrade at any time. When upgrading, you get immediate access. When downgrading, the change takes effect at your next billing cycle.'
+    answer: 'Yes. Upgrade instantly, downgrade at next billing cycle. No contracts on monthly plans.',
   },
   {
-    question: 'What happens if I exceed my trace limit?',
-    answer: 'We\'ll notify you at 80% and 100% usage. Discover has a hard cap. Paid tiers can purchase additional traces at overage rates ($1.50/1K for Protect, $1.00/1K for Enforce, $0.80/1K for Comply).'
+    question: 'Do you offer a startup discount?',
+    answer: 'Yes. Startups under $5M funding get 50% off the first year. Contact us with your funding details.',
+  },
+  {
+    question: "What's the difference between Health Check and Store?",
+    answer: 'Health Check runs detection without storing traces (unlimited, all tiers). Store persists traces for replay, DNA, and evidence.',
+  },
+  {
+    question: 'Is there an on-premise option?',
+    answer: 'Yes. Govern tier includes Docker deployment for air-gapped or regulated environments.',
   },
   {
     question: 'Do you offer annual billing?',
-    answer: 'Yes. Annual billing saves 20%. Contact sales for annual pricing on Enforce and Comply tiers.'
+    answer: 'Yes. Annual billing saves 20% across all paid tiers.',
   },
   {
-    question: 'Is there a free trial for paid tiers?',
-    answer: 'Yes. All paid tiers include a 14-day free trial with full features. No credit card required to start.'
+    question: 'What payment methods do you accept?',
+    answer: 'Credit card, ACH, wire transfer. Enterprise invoicing available on Govern tier.',
   },
   {
-    question: 'What\'s included in Evidence Packs?',
-    answer: 'Evidence Packs are auditor-ready bundles containing hash-chained logs, signed certificates, framework control mappings, and verification proofs—all exportable as PDF or structured data.'
+    question: 'Can I export my data?',
+    answer: 'Yes. Full data export available anytime via API or dashboard. Your data is always yours.',
   },
-]
+];
 
 export default function PricingPage() {
+  const [annual, setAnnual] = useState(false);
+
   return (
-    <div className="pt-20">
-      {/* Hero */}
-      <section className="py-24 bg-gradient-to-b from-blue-600/10 to-transparent">
-        <div className="section-container text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Simple, Transparent Pricing
+    <div className="min-h-screen bg-[#0f1117]">
+      {/* Header */}
+      <section className="pt-12 pb-8 px-4">
+        <div className="max-w-6xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Start free. Scale with confidence.
           </h1>
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-            Start free. Upgrade when you need more. 
-            No surprises, no hidden fees.
+          <p className="text-slate-400 text-lg mb-8">
+            No credit card required. Upgrade when you need more.
           </p>
-        </div>
-      </section>
 
-      {/* Pricing Cards */}
-      <section className="py-12">
-        <div className="section-container">
-          <div className="grid md:grid-cols-4 gap-6">
-            {tiers.map((tier, i) => (
-              <div 
-                key={i} 
-                className={`rounded-xl p-6 ${
-                  tier.highlight 
-                    ? 'bg-blue-600 border-2 border-blue-400 scale-105 z-10' 
-                    : 'bg-slate-900 border border-slate-700'
-                }`}
-              >
-                {tier.highlight && (
-                  <div className="text-center text-sm font-semibold text-blue-200 mb-4 flex items-center justify-center gap-2">
-                    <Zap className="w-4 h-4" />
-                    MOST POPULAR
-                  </div>
-                )}
-                
-                <h3 className="text-xl font-bold mb-1">{tier.name}</h3>
-                <p className={`text-sm mb-4 ${tier.highlight ? 'text-blue-200' : 'text-slate-400'}`}>
-                  {tier.description}
-                </p>
-                
-                <div className="mb-6">
-                  <span className="text-4xl font-bold">{tier.price}</span>
-                  <span className={tier.highlight ? 'text-blue-200' : 'text-slate-400'}>
-                    {tier.period}
-                  </span>
-                </div>
-                
-                <Link
-                  href={tier.name === 'Comply' ? '/contact' : 'https://app.trustscope.ai'}
-                  className={`block text-center py-3 rounded-lg font-semibold transition-colors mb-6 ${
-                    tier.highlight
-                      ? 'bg-white text-blue-600 hover:bg-blue-50'
-                      : 'bg-slate-800 hover:bg-slate-700 border border-slate-600'
-                  }`}
-                >
-                  {tier.cta}
-                </Link>
-
-                <ul className="space-y-3">
-                  <li className={`text-sm ${tier.highlight ? 'text-white' : 'text-slate-300'}`}>
-                    <strong>{tier.features.traces}</strong> traces
-                  </li>
-                  <li className={`text-sm ${tier.highlight ? 'text-blue-200' : 'text-slate-400'}`}>
-                    {tier.features.retention} retention
-                  </li>
-                  <li className={`text-sm ${tier.highlight ? 'text-blue-200' : 'text-slate-400'}`}>
-                    {tier.features.detections}
-                  </li>
-                </ul>
-              </div>
-            ))}
+          {/* Monthly/Annual Toggle */}
+          <div className="inline-flex items-center gap-3 bg-slate-800 rounded-full p-1">
+            <button
+              onClick={() => setAnnual(false)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                !annual ? 'bg-[#C49B3A] text-black' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setAnnual(true)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                annual ? 'bg-[#C49B3A] text-black' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Annual <span className="text-xs opacity-75">(20% off)</span>
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Feature Comparison Table */}
-      <section className="py-24 bg-slate-900/30">
-        <div className="section-container">
-          <h2 className="text-3xl font-bold text-center mb-12">Feature Comparison</h2>
-          
+      {/* Tier Cards */}
+      <section className="py-8 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-4">
+            {TIERS.map((tier) => {
+              const Icon = tier.icon;
+              const price = annual ? tier.price.annual : tier.price.monthly;
+              const isGovern = tier.name === 'Govern';
+
+              return (
+                <div
+                  key={tier.name}
+                  className={`relative rounded-xl p-6 border-2 transition-all ${
+                    tier.recommended
+                      ? 'border-[#C49B3A] bg-[#C49B3A]/5 ring-2 ring-[#C49B3A]/20'
+                      : 'border-slate-700 bg-[#1a1f2e]'
+                  }`}
+                >
+                  {tier.recommended && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#C49B3A] text-black text-xs font-bold px-3 py-1 rounded-full">
+                      RECOMMENDED
+                    </div>
+                  )}
+
+                  <Icon
+                    className={`w-8 h-8 mb-4 ${
+                      tier.color === 'gold'
+                        ? 'text-[#C49B3A]'
+                        : tier.color === 'blue'
+                        ? 'text-blue-400'
+                        : tier.color === 'emerald'
+                        ? 'text-emerald-400'
+                        : 'text-slate-400'
+                    }`}
+                  />
+
+                  <h3 className="text-xl font-bold text-white mb-1">{tier.name}</h3>
+                  <p className="text-sm text-slate-400 mb-4">{tier.description}</p>
+
+                  <div className="mb-4">
+                    {isGovern ? (
+                      <div className="text-3xl font-bold text-white">$2K+</div>
+                    ) : price === 0 ? (
+                      <div className="text-3xl font-bold text-white">Free</div>
+                    ) : (
+                      <div>
+                        <span className="text-3xl font-bold text-white">
+                          ${annual ? Math.round(price / 12) : price}
+                        </span>
+                        <span className="text-slate-400">/mo</span>
+                        {annual && price > 0 && (
+                          <div className="text-xs text-slate-500">
+                            ${price}/year billed annually
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  <Link
+                    href={tier.ctaLink}
+                    className={`block text-center py-3 rounded-lg font-medium transition-colors mb-6 ${
+                      tier.recommended
+                        ? 'bg-[#C49B3A] hover:bg-[#D4A843] text-black'
+                        : 'bg-slate-700 hover:bg-slate-600 text-white'
+                    }`}
+                  >
+                    {tier.cta}
+                  </Link>
+
+                  <div className="space-y-2 text-sm">
+                    <div className="text-slate-300">
+                      <strong>{tier.traces}</strong>
+                    </div>
+                    <div className="text-slate-400">{tier.retention} retention</div>
+                    <div className="text-slate-400">{tier.engines}</div>
+                    <div className="text-slate-400">{tier.seats}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Full Comparison Table */}
+      <section className="py-16 px-4">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-2xl font-bold text-white text-center mb-8">
+            Full Feature Comparison
+          </h2>
+
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-slate-700">
-                  <th className="text-left py-4 px-4 font-semibold">Feature</th>
-                  {tiers.map((tier, i) => (
-                    <th key={i} className="text-center py-4 px-4 font-semibold">
+                  <th className="text-left py-4 px-4 font-semibold text-slate-300">Feature</th>
+                  {TIERS.map((tier) => (
+                    <th
+                      key={tier.name}
+                      className={`text-center py-4 px-4 font-semibold ${
+                        tier.recommended ? 'text-[#C49B3A]' : 'text-slate-300'
+                      }`}
+                    >
                       {tier.name}
                     </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {Object.keys(featureLabels).map((key, i) => {
-                  // Skip mcpBasic row if any tier has mcpFull
-                  if (key === 'mcpBasic') return null;
-                  const displayKey = key === 'mcpFull' ? 'MCP' : key;
-                  return (
-                    <tr key={i} className="border-b border-slate-800">
-                      <td className="py-4 px-4 text-slate-400">
-                        {key === 'mcpFull' ? 'MCP Integration' : featureLabels[key]}
-                      </td>
-                      {tiers.map((tier, j) => {
-                        const value = key === 'mcpFull'
-                          ? (tier.features.mcpFull ? 'Full Suite' : (tier.features.mcpBasic ? 'Basic' : false))
-                          : tier.features[key as keyof typeof tier.features];
-                        return (
-                          <td key={j} className="text-center py-4 px-4">
-                            {typeof value === 'boolean' ? (
-                              value ? (
-                                <CheckCircle className="w-5 h-5 text-emerald-500 mx-auto" />
-                              ) : (
-                                <X className="w-5 h-5 text-slate-600 mx-auto" />
-                              )
+                {Object.keys(TIERS[0].features).map((feature) => (
+                  <tr key={feature} className="border-b border-slate-800">
+                    <td className="py-3 px-4 text-slate-400">{feature}</td>
+                    {TIERS.map((tier) => {
+                      const value = tier.features[feature as keyof typeof tier.features];
+                      return (
+                        <td key={tier.name} className="text-center py-3 px-4">
+                          {typeof value === 'boolean' ? (
+                            value ? (
+                              <Check className="w-5 h-5 text-emerald-400 mx-auto" />
                             ) : (
-                              <span className="text-slate-300 text-sm">
-                                {value}
-                              </span>
-                            )}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  );
-                })}
+                              <X className="w-5 h-5 text-slate-600 mx-auto" />
+                            )
+                          ) : (
+                            <span className="text-slate-300">{value}</span>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
         </div>
       </section>
 
-      {/* Enterprise */}
-      <section className="py-24">
-        <div className="section-container">
-          <div className="card bg-gradient-to-r from-slate-900 to-slate-800 p-12 text-center">
-            <h2 className="text-3xl font-bold mb-4">Enterprise</h2>
-            <p className="text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
-              Custom deployment, SLA guarantees, dedicated infrastructure, 
-              and hands-on implementation support.
+      {/* Enterprise CTA */}
+      <section className="py-12 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl p-8 md:p-12 text-center border border-slate-700">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+              Need custom volumes, on-prem deployment, or framework mapping?
+            </h2>
+            <p className="text-slate-400 mb-6">
+              Govern tier includes dedicated support, custom integrations, and compliance mapping.
             </p>
-            <ul className="flex flex-wrap justify-center gap-6 text-slate-400 text-sm mb-8">
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-emerald-500" />
-                Single-tenant deployment
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-emerald-500" />
-                99.99% SLA
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-emerald-500" />
-                BYOK encryption
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-emerald-500" />
-                Custom integrations
-              </li>
-            </ul>
-            <Link href="/contact" className="btn-primary inline-flex items-center gap-2">
-              Contact Sales <ArrowRight className="w-5 h-5" />
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 bg-[#C49B3A] hover:bg-[#D4A843] text-black font-medium px-6 py-3 rounded-lg transition-colors"
+            >
+              Talk to Sales <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="py-24 bg-slate-900/30">
-        <div className="section-container">
-          <h2 className="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
-          
-          <div className="max-w-3xl mx-auto grid gap-6">
-            {faqs.map((faq, i) => (
-              <div key={i} className="card">
-                <h3 className="font-semibold text-lg mb-2 flex items-start gap-3">
-                  <HelpCircle className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
+      <section className="py-16 px-4">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold text-white text-center mb-8">
+            Frequently Asked Questions
+          </h2>
+
+          <div className="space-y-4">
+            {FAQS.map((faq, i) => (
+              <div key={i} className="bg-[#1a1f2e] border border-slate-700/50 rounded-xl p-6">
+                <h3 className="font-medium text-white mb-2 flex items-start gap-3">
+                  <HelpCircle className="w-5 h-5 text-[#C49B3A] flex-shrink-0 mt-0.5" />
                   {faq.question}
                 </h3>
                 <p className="text-slate-400 ml-8">{faq.answer}</p>
@@ -330,18 +382,23 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24">
-        <div className="section-container text-center">
-          <h2 className="text-3xl font-bold mb-6">Start for free today</h2>
-          <p className="text-xl text-slate-400 mb-8">
-            No credit card required. Get started in under 5 minutes.
+      {/* Final CTA */}
+      <section className="py-16 px-4">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Ready to govern your AI agents?
+          </h2>
+          <p className="text-slate-400 mb-8">
+            Start free. No credit card required. See results in 5 minutes.
           </p>
-          <Link href="https://app.trustscope.ai" className="btn-primary inline-flex items-center gap-2">
-            Start Free Trial <ArrowRight className="w-5 h-5" />
+          <Link
+            href="/scanner"
+            className="inline-flex items-center gap-2 bg-[#C49B3A] hover:bg-[#D4A843] text-black font-medium px-8 py-4 rounded-lg transition-colors"
+          >
+            Try the Scanner <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>
     </div>
-  )
+  );
 }

@@ -1,537 +1,465 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import Link from 'next/link';
 import {
   Shield,
   Lock,
   Eye,
-  Fingerprint,
-  Server,
   FileCheck,
-  ChevronRight,
-  Sparkles,
-  Users,
   Code2,
   ArrowRight,
-  Activity,
   Zap,
-  Check,
-  X,
-} from "lucide-react";
+  Server,
+  Terminal,
+  Webhook,
+  Cpu,
+  Smartphone,
+  Globe,
+  BarChart3,
+  Github,
+  MessageCircle,
+  ShieldCheck,
+  Fingerprint,
+  ScrollText,
+  RefreshCw,
+  AlertTriangle,
+  DollarSign,
+  Scale,
+} from 'lucide-react';
+import BrowserScanner from '@/components/scanner/BrowserScanner';
+import { PillarTabs, StatsBar, CTASection } from '@/components/ui';
+
+const INTEGRATION_METHODS = [
+  { icon: Globe, name: 'Gateway Proxy', desc: 'Zero code changes', href: 'https://docs.trustscope.ai/gateway' },
+  { icon: Terminal, name: 'Python SDK', desc: '4 lines to integrate', href: 'https://docs.trustscope.ai/sdk/python' },
+  { icon: Code2, name: 'Node.js SDK', desc: 'TypeScript-first', href: 'https://docs.trustscope.ai/sdk/node' },
+  { icon: Smartphone, name: 'React Native', desc: 'Mobile agents', href: 'https://docs.trustscope.ai/sdk/react-native' },
+  { icon: Terminal, name: 'CLI', desc: 'npx @trustscope/cli', href: 'https://docs.trustscope.ai/cli' },
+  { icon: Cpu, name: 'MCP Server', desc: '9 tools in your IDE', href: 'https://docs.trustscope.ai/mcp' },
+  { icon: BarChart3, name: 'OpenTelemetry', desc: 'OTLP-compatible', href: 'https://docs.trustscope.ai/otel' },
+  { icon: Webhook, name: 'Webhooks', desc: 'Push to any system', href: 'https://docs.trustscope.ai/webhooks' },
+];
+
+const HOW_IT_WORKS = [
+  {
+    step: 1,
+    title: 'Connect',
+    description: 'Gateway, SDK, MCP, or CLI. Pick your method.',
+    code: `export OPENAI_BASE_URL="https://gateway.trustscope.ai/v1"`,
+  },
+  {
+    step: 2,
+    title: 'Detect',
+    description: '25 engines scan every trace in real-time.',
+    code: `# PII, secrets, injections, loops, anomalies...`,
+  },
+  {
+    step: 3,
+    title: 'Enforce',
+    description: 'Policies block violations before damage.',
+    code: `@ts.enforce(policies=["pii_block", "cost_limit"])`,
+  },
+  {
+    step: 4,
+    title: 'Prove',
+    description: 'Evidence packs satisfy any framework.',
+    code: `# AIUC-1, SOC 2, EU AI Act, NIST AI RMF...`,
+  },
+];
+
+const USE_CASES = [
+  {
+    title: 'Switching Models?',
+    description: 'Prove the new one is safe with 8-strand DNA comparison.',
+    href: '/switch',
+    icon: RefreshCw,
+  },
+  {
+    title: 'Auditor Asking?',
+    description: 'Generate AIUC-1 evidence packs in minutes.',
+    href: '/comply',
+    icon: Scale,
+  },
+  {
+    title: 'AI Security Incident?',
+    description: 'Block threats inline with proof of prevention.',
+    href: '/secure',
+    icon: AlertTriangle,
+  },
+];
+
+const TIERS = [
+  {
+    name: 'Monitor',
+    price: 'Free',
+    traces: '5K/mo',
+    highlight: 'See everything',
+    icon: Eye,
+    color: 'text-slate-400',
+    borderColor: 'border-slate-600',
+  },
+  {
+    name: 'Protect',
+    price: '$49',
+    traces: '25K/mo',
+    highlight: 'Block threats',
+    icon: Shield,
+    color: 'text-blue-400',
+    borderColor: 'border-blue-500/50',
+  },
+  {
+    name: 'Enforce',
+    price: '$249',
+    traces: '100K/mo',
+    highlight: 'AI engines + AIUC-1',
+    icon: Lock,
+    color: 'text-[#C49B3A]',
+    borderColor: 'border-[#C49B3A]',
+    recommended: true,
+  },
+  {
+    name: 'Govern',
+    price: '$2K+',
+    traces: '500K+/mo',
+    highlight: 'Signed evidence',
+    icon: FileCheck,
+    color: 'text-emerald-400',
+    borderColor: 'border-emerald-500/50',
+  },
+];
+
+const STATS = [
+  { number: 25, label: 'Detection Engines' },
+  { number: 417, label: 'API Endpoints', suffix: '+' },
+  { number: 87, label: 'Database Tables' },
+  { number: 7, label: 'Patents Filed' },
+  { number: 14, label: 'Compliance Frameworks' },
+];
 
 export default function HomePage() {
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
-  const [waitlistCount, setWaitlistCount] = useState(0);
-
-  // Partner form state
-  const [partnerOpen, setPartnerOpen] = useState(false);
-  const [partnerData, setPartnerData] = useState({
-    name: "",
-    email: "",
-    company: "",
-    useCase: "",
-  });
-  const [partnerLoading, setPartnerLoading] = useState(false);
-  const [partnerSubmitted, setPartnerSubmitted] = useState(false);
-
-  useEffect(() => {
-    fetch("/api/waitlist")
-      .then((res) => res.json())
-      .then((data) => setWaitlistCount(data.count || 0))
-      .catch(() => {});
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-
-    setLoading(true);
-    setError("");
-
-    try {
-      const res = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, type: "waitlist" }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setSubmitted(true);
-        setWaitlistCount(data.count || waitlistCount + 1);
-      } else {
-        setError(data.message || "Something went wrong");
-      }
-    } catch {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handlePartnerSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!partnerData.email || !partnerData.name) return;
-
-    setPartnerLoading(true);
-
-    try {
-      const res = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...partnerData, type: "partner" }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setPartnerSubmitted(true);
-      }
-    } catch {
-      // Fail silently
-    } finally {
-      setPartnerLoading(false);
-    }
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      {/* Gradient background */}
-      <div className="fixed inset-0 bg-gradient-to-b from-blue-950/20 via-slate-950 to-slate-950 pointer-events-none" />
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent pointer-events-none" />
-
-      {/* Header */}
-      <header className="relative z-10 border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Shield className="w-8 h-8 text-blue-500" />
-            <span className="text-xl font-bold">TrustScope</span>
-          </div>
-          <button
-            onClick={() => setPartnerOpen(true)}
-            className="px-4 py-2 border border-white/10 rounded-lg text-sm hover:bg-white/5 transition"
-          >
-            Become a Partner
-          </button>
-        </div>
-      </header>
-
-      {/* Hero */}
-      <section className="relative z-10 pt-20 pb-24 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 rounded-full px-4 py-2 mb-8">
-            <Sparkles className="w-4 h-4 text-blue-400" />
-            <span className="text-blue-400 text-sm font-medium">
-              359 Patent Claims | Private Beta
-            </span>
-          </div>
-
-          {/* Headline */}
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent">
-            Safe Mode for AI Agents
-          </h1>
-
-          {/* Subhead */}
-          <p className="text-xl md:text-2xl text-slate-400 mb-10 max-w-2xl mx-auto">
-            See what your AI agents are really doing. Then prove it.
-          </p>
-
-          {/* Waitlist form */}
-          <div className="max-w-md mx-auto mb-6">
-            {submitted ? (
-              <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-6 text-center">
-                <Check className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
-                <p className="text-emerald-400 font-medium">You&apos;re on the list!</p>
-                <p className="text-slate-400 text-sm mt-1">We&apos;ll be in touch soon.</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="flex gap-2">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@company.com"
-                  className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500/50"
-                  required
-                />
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-lg font-medium transition disabled:opacity-50"
-                >
-                  {loading ? "..." : "Request Access"}
-                </button>
-              </form>
-            )}
-            {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
-          </div>
-
-          {/* Social proof */}
-          {waitlistCount > 0 && (
-            <p className="text-slate-500 text-sm">
-              Join {waitlistCount.toLocaleString()}+ teams on the waitlist
-            </p>
-          )}
-
-          {/* Partner CTA */}
-          <button
-            onClick={() => setPartnerOpen(true)}
-            className="mt-8 text-blue-400 hover:text-blue-300 transition inline-flex items-center gap-1"
-          >
-            Become a Design Partner
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-      </section>
-
-      {/* Problem Section */}
-      <section className="relative z-10 py-20 px-6 border-t border-white/5">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Your AI agents are taking thousands of actions.
-            <br />
-            <span className="text-slate-500">Can you prove what governance ran?</span>
-          </h2>
-          <p className="text-lg text-slate-500 max-w-2xl mx-auto">
-            Auditors and regulators are starting to ask. The companies that can answer will win.
-          </p>
-        </div>
-      </section>
-
-      {/* Data Hook */}
-      <section className="relative z-10 py-16 px-6">
+    <div className="min-h-screen bg-[#0f1117]">
+      {/* 1. HERO - Scanner IS the hero */}
+      <section className="pt-8 pb-12 px-4">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-white/10 rounded-2xl p-8 text-center">
-            <p className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
-              73%
+          <div className="text-center mb-8">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              What is your AI actually doing?
+            </h1>
+            <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+              Drop a file. Browser scans locally. Nothing leaves your machine.
             </p>
-            <p className="text-slate-400 text-lg">
-              of agents in our beta exceeded their declared scope
-            </p>
+          </div>
+          <BrowserScanner />
+        </div>
+      </section>
+
+      {/* 2. TRUST PROOF BAR */}
+      <section className="py-6 px-4 bg-slate-800/30 border-y border-slate-700/50">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 text-sm">
+            <div className="flex items-center gap-2 text-slate-400">
+              <Lock className="w-4 h-4 text-green-400" />
+              <span>Scans run in your browser</span>
+            </div>
+            <div className="flex items-center gap-2 text-slate-400">
+              <Globe className="w-4 h-4 text-green-400" />
+              <span>Zero network calls</span>
+            </div>
+            <div className="flex items-center gap-2 text-slate-400">
+              <Zap className="w-4 h-4 text-green-400" />
+              <span>Works offline</span>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Solution: 4 Tiers */}
-      <section className="relative z-10 py-20 px-6 border-t border-white/5">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
-            Four Tiers of Governance
-          </h2>
-          <p className="text-slate-500 text-center mb-12 max-w-2xl mx-auto">
-            Start free. Scale to cryptographic proof.
-          </p>
-
-          <div className="grid md:grid-cols-4 gap-6">
-            {[
-              {
-                name: "Monitor",
-                price: "$0",
-                desc: "See everything",
-                icon: Eye,
-                color: "text-slate-400",
-              },
-              {
-                name: "Protect",
-                price: "$49",
-                desc: "Block threats",
-                icon: Shield,
-                color: "text-blue-400",
-              },
-              {
-                name: "Enforce",
-                price: "$149",
-                desc: "Policies + MCP",
-                icon: Lock,
-                color: "text-purple-400",
-              },
-              {
-                name: "Govern",
-                price: "$699",
-                desc: "Cryptographic proof",
-                icon: FileCheck,
-                color: "text-emerald-400",
-              },
-            ].map((tier) => (
-              <div
-                key={tier.name}
-                className="bg-white/5 border border-white/10 rounded-xl p-6 text-center hover:bg-white/[0.07] transition"
-              >
-                <tier.icon className={`w-8 h-8 ${tier.color} mx-auto mb-4`} />
-                <h3 className="text-xl font-bold mb-1">{tier.name}</h3>
-                <p className="text-2xl font-bold text-white/80 mb-2">
-                  {tier.price}
-                  {tier.price !== "$0" && <span className="text-sm text-slate-500">/mo</span>}
-                </p>
-                <p className="text-slate-500 text-sm">{tier.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Integration Section */}
-      <section className="relative z-10 py-20 px-6 border-t border-white/5">
+      {/* 3. THREE PILLARS */}
+      <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              One Integration. Every Framework.
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Know. Control. Prove.
             </h2>
-            <p className="text-slate-500 max-w-2xl mx-auto">
-              Unified Ingestion Engine for SDK, Gateway, MCP, and OpenTelemetry
+            <p className="text-slate-400 max-w-2xl mx-auto">
+              Three pillars of AI governance. One platform.
             </p>
           </div>
-
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            {["LangChain", "LangGraph", "CrewAI", "AutoGen", "OpenAI Agents", "Claude", "Gemini"].map(
-              (fw) => (
-                <div
-                  key={fw}
-                  className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm text-slate-400"
-                >
-                  {fw}
+          <PillarTabs
+            content={{
+              know: (
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-3">25 Detection Engines</h3>
+                  <p className="text-slate-300 mb-4">
+                    Every AI action analyzed in real-time. PII, secrets, injections, anomalies, loops, toxicity — see it all.
+                  </p>
+                  <ul className="space-y-2 text-slate-400">
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                      19 statistical engines (all tiers)
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                      6 AI hybrid engines (Enforce+)
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                      Shadow mode preview on free tier
+                    </li>
+                  </ul>
                 </div>
-              )
-            )}
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-4">
-            {[
-              { icon: Code2, label: "Python SDK" },
-              { icon: Code2, label: "Node SDK" },
-              { icon: Server, label: "Zero-Code Gateway" },
-              { icon: Zap, label: "MCP Native" },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className="bg-white/5 border border-white/10 rounded-xl p-4 text-center"
-              >
-                <item.icon className="w-6 h-6 text-blue-400 mx-auto mb-2" />
-                <span className="text-sm text-slate-400">{item.label}</span>
-              </div>
-            ))}
-          </div>
+              ),
+              control: (
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-3">50+ Policy Types</h3>
+                  <p className="text-slate-300 mb-4">
+                    Enforce your rules inline. Block violations before they cause damage. Natural language policies on Enforce tier.
+                  </p>
+                  <ul className="space-y-2 text-slate-400">
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                      Rate limits and budget caps
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                      Content filtering and redaction
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                      Human approval workflows
+                    </li>
+                  </ul>
+                </div>
+              ),
+              prove: (
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-3">Cryptographic Evidence</h3>
+                  <p className="text-slate-300 mb-4">
+                    Generate auditor-consumable evidence for any framework. Hash chains, Ed25519 signatures, AIUC-1 mapping.
+                  </p>
+                  <ul className="space-y-2 text-slate-400">
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                      14 compliance frameworks
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                      Evidence packs on demand
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                      7-year retention on Govern
+                    </li>
+                  </ul>
+                </div>
+              ),
+            }}
+          />
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="relative z-10 py-20 px-6 border-t border-white/5">
+      {/* 4. HOW IT WORKS */}
+      <section className="py-20 px-4 bg-slate-900/50">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            Built for Serious AI Governance
-          </h2>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                icon: Fingerprint,
-                title: "Agent DNA Fingerprinting",
-                desc: "Behavioral identity for every agent. Detect drift, freeze rogues.",
-              },
-              {
-                icon: Shield,
-                title: "21 Detection Engines",
-                desc: "From prompt injection to hallucination. Block before damage.",
-              },
-              {
-                icon: Lock,
-                title: "26 Policy Types",
-                desc: "Rate limits to human approval workflows. Full control.",
-              },
-              {
-                icon: Server,
-                title: "MCP Security",
-                desc: "6-Factor Trust Scoring. Jaccard tampering detection.",
-              },
-              {
-                icon: Activity,
-                title: "Blockchain Audit Trail",
-                desc: "Tamper-proof, legally admissible, independently verifiable.",
-              },
-              {
-                icon: FileCheck,
-                title: "Governance Certificates",
-                desc: "Signed proof for auditors. Answer the hard questions.",
-              },
-            ].map((feature) => (
-              <div
-                key={feature.title}
-                className="bg-white/5 border border-white/10 rounded-xl p-6 hover:bg-white/[0.07] transition"
-              >
-                <feature.icon className="w-8 h-8 text-blue-400 mb-4" />
-                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-                <p className="text-slate-500 text-sm">{feature.desc}</p>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              How It Works
+            </h2>
+            <p className="text-slate-400">Four steps to governed AI agents</p>
+          </div>
+          <div className="grid md:grid-cols-4 gap-6">
+            {HOW_IT_WORKS.map((item) => (
+              <div key={item.step} className="relative">
+                <div className="bg-[#1a1f2e] border border-slate-700/50 rounded-xl p-6">
+                  <div className="w-10 h-10 rounded-full bg-[#C49B3A]/20 text-[#C49B3A] flex items-center justify-center font-bold mb-4">
+                    {item.step}
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
+                  <p className="text-slate-400 text-sm mb-4">{item.description}</p>
+                  <code className="block text-xs text-slate-500 bg-slate-900/50 rounded p-2 overflow-x-auto">
+                    {item.code}
+                  </code>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Partner Section */}
-      <section className="relative z-10 py-20 px-6 border-t border-white/5">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-white/10 rounded-2xl p-8 md:p-12 text-center">
-            <Users className="w-12 h-12 text-blue-400 mx-auto mb-6" />
-            <h2 className="text-3xl font-bold mb-4">Become a Design Partner</h2>
-            <p className="text-slate-400 mb-8 max-w-lg mx-auto">
-              Shape the future of AI governance. Get early access and influence the roadmap.
-              Limited to 50 companies.
-            </p>
-            <button
-              onClick={() => setPartnerOpen(true)}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 px-8 py-4 rounded-lg text-lg font-medium transition inline-flex items-center gap-2"
-            >
-              Apply Now
-              <ArrowRight className="w-4 h-4" />
-            </button>
+      {/* 5. INTEGRATION METHODS */}
+      <section className="py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              8 Ways to Connect
+            </h2>
+            <p className="text-slate-400">Pick your integration. All tiers supported.</p>
           </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="relative z-10 py-24 px-6 border-t border-white/5">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Request Early Access
-          </h2>
-          <p className="text-slate-500 mb-8">
-            Limited spots in our private beta. Join the waitlist.
-          </p>
-          {submitted ? (
-            <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-6 text-center max-w-md mx-auto">
-              <Check className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
-              <p className="text-emerald-400 font-medium">You&apos;re on the list!</p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="flex gap-2 max-w-md mx-auto">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@company.com"
-                className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500/50"
-                required
-              />
-              <button
-                type="submit"
-                disabled={loading}
-                className="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-lg font-medium transition disabled:opacity-50"
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {INTEGRATION_METHODS.map((method) => (
+              <a
+                key={method.name}
+                href={method.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#1a1f2e] border border-slate-700/50 rounded-xl p-4 hover:border-[#C49B3A]/30 transition-colors group"
               >
-                {loading ? "..." : "Join"}
-              </button>
-            </form>
-          )}
+                <method.icon className="w-6 h-6 text-slate-400 group-hover:text-[#C49B3A] mb-3 transition-colors" />
+                <h3 className="font-medium text-white text-sm mb-1">{method.name}</h3>
+                <p className="text-xs text-slate-500">{method.desc}</p>
+              </a>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative z-10 border-t border-white/5 py-8 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3 text-slate-500">
-            <Shield className="w-5 h-5" />
-            <span className="text-sm">© 2026 TrustScope</span>
+      {/* 6. NUMBERS BAR */}
+      <section className="py-16 px-4 bg-slate-900/50 border-y border-slate-700/50">
+        <div className="max-w-6xl mx-auto">
+          <StatsBar stats={STATS} />
+        </div>
+      </section>
+
+      {/* 7. USE CASES */}
+      <section className="py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              What Brings You Here?
+            </h2>
           </div>
-          <div className="flex items-center gap-6 text-sm text-slate-500">
-            <a href="mailto:hello@trustscope.ai" className="hover:text-slate-300 transition">
-              hello@trustscope.ai
+          <div className="grid md:grid-cols-3 gap-6">
+            {USE_CASES.map((useCase) => (
+              <Link
+                key={useCase.title}
+                href={useCase.href}
+                className="bg-[#1a1f2e] border border-slate-700/50 rounded-xl p-6 hover:border-[#C49B3A]/30 transition-colors group"
+              >
+                <useCase.icon className="w-8 h-8 text-[#C49B3A] mb-4" />
+                <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-[#C49B3A] transition-colors">
+                  {useCase.title}
+                </h3>
+                <p className="text-slate-400 mb-4">{useCase.description}</p>
+                <span className="text-[#C49B3A] text-sm flex items-center gap-1">
+                  Learn more <ArrowRight className="w-4 h-4" />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 8. PRICING PREVIEW */}
+      <section className="py-20 px-4 bg-slate-900/50">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Start Free. Scale with Confidence.
+            </h2>
+          </div>
+          <div className="grid md:grid-cols-4 gap-4">
+            {TIERS.map((tier) => (
+              <div
+                key={tier.name}
+                className={`bg-[#1a1f2e] border-2 ${tier.borderColor} rounded-xl p-6 text-center relative ${
+                  tier.recommended ? 'ring-2 ring-[#C49B3A]/50' : ''
+                }`}
+              >
+                {tier.recommended && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#C49B3A] text-black text-xs font-medium px-3 py-1 rounded-full">
+                    Recommended
+                  </div>
+                )}
+                <tier.icon className={`w-8 h-8 ${tier.color} mx-auto mb-3`} />
+                <h3 className="text-lg font-bold text-white mb-1">{tier.name}</h3>
+                <div className="text-2xl font-bold text-white mb-1">
+                  {tier.price}
+                  {tier.price !== 'Free' && tier.price !== '$2K+' && (
+                    <span className="text-sm text-slate-500">/mo</span>
+                  )}
+                </div>
+                <p className="text-xs text-slate-500 mb-3">{tier.traces}</p>
+                <p className="text-sm text-slate-400">{tier.highlight}</p>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <Link
+              href="/pricing"
+              className="text-[#C49B3A] hover:text-[#D4A843] font-medium inline-flex items-center gap-1"
+            >
+              Compare all features <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 9. OPEN SOURCE & COMMUNITY */}
+      <section className="py-20 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Open Source CLI
+          </h2>
+          <p className="text-slate-400 mb-8">
+            MIT-licensed. 9,084 lines of local governance.
+          </p>
+          <div className="bg-[#1a1f2e] border border-slate-700/50 rounded-xl p-6 mb-8">
+            <code className="text-[#C49B3A] text-lg">npx @trustscope/mcp-server</code>
+            <p className="text-slate-500 text-sm mt-2">9 governance tools in your IDE. No signup.</p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-4">
+            <a
+              href="https://github.com/trustscope"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg text-white transition-colors"
+            >
+              <Github className="w-5 h-5" />
+              <span>GitHub</span>
+            </a>
+            <a
+              href="https://discord.gg/trustscope"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg text-white transition-colors"
+            >
+              <MessageCircle className="w-5 h-5" />
+              <span>Discord</span>
             </a>
           </div>
         </div>
-      </footer>
+      </section>
 
-      {/* Partner Form Modal */}
-      {partnerOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-black/70"
-            onClick={() => setPartnerOpen(false)}
-          />
-          <div className="relative bg-slate-900 border border-white/10 rounded-2xl p-8 max-w-md w-full">
+      {/* 10. FINAL CTA */}
+      <section className="py-20 px-4 bg-gradient-to-b from-slate-900/50 to-[#0f1117]">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Start with what you have.
+          </h2>
+          <p className="text-slate-400 mb-8">
+            Drop a trace file above. See what's hiding. Then decide.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              onClick={() => setPartnerOpen(false)}
-              className="absolute top-4 right-4 text-slate-500 hover:text-white"
+              onClick={scrollToTop}
+              className="bg-[#C49B3A] hover:bg-[#D4A843] text-black font-medium px-8 py-4 rounded-lg transition-colors inline-flex items-center justify-center gap-2"
             >
-              <X className="w-5 h-5" />
+              Try the Scanner
+              <ArrowRight className="w-4 h-4" />
             </button>
-
-            {partnerSubmitted ? (
-              <div className="text-center py-8">
-                <Check className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
-                <h3 className="text-xl font-bold mb-2">Application Received!</h3>
-                <p className="text-slate-400">
-                  We&apos;ll be in touch about the Design Partner program.
-                </p>
-              </div>
-            ) : (
-              <>
-                <h3 className="text-2xl font-bold mb-2">Design Partner Program</h3>
-                <p className="text-slate-400 mb-6">
-                  Shape the future of AI governance. Limited to 50 companies.
-                </p>
-
-                <form onSubmit={handlePartnerSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-sm text-slate-400 mb-1">Name *</label>
-                    <input
-                      type="text"
-                      value={partnerData.name}
-                      onChange={(e) =>
-                        setPartnerData({ ...partnerData, name: e.target.value })
-                      }
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500/50"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm text-slate-400 mb-1">Work Email *</label>
-                    <input
-                      type="email"
-                      value={partnerData.email}
-                      onChange={(e) =>
-                        setPartnerData({ ...partnerData, email: e.target.value })
-                      }
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500/50"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm text-slate-400 mb-1">Company</label>
-                    <input
-                      type="text"
-                      value={partnerData.company}
-                      onChange={(e) =>
-                        setPartnerData({ ...partnerData, company: e.target.value })
-                      }
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500/50"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm text-slate-400 mb-1">
-                      What are you building?
-                    </label>
-                    <textarea
-                      value={partnerData.useCase}
-                      onChange={(e) =>
-                        setPartnerData({ ...partnerData, useCase: e.target.value })
-                      }
-                      rows={3}
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 resize-none"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={partnerLoading}
-                    className="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-lg font-medium transition disabled:opacity-50"
-                  >
-                    {partnerLoading ? "Submitting..." : "Apply for Partner Program"}
-                  </button>
-                </form>
-              </>
-            )}
+            <Link
+              href="https://app.trustscope.ai"
+              className="border border-slate-600 hover:bg-slate-800 text-white px-8 py-4 rounded-lg transition-colors"
+            >
+              Sign In
+            </Link>
           </div>
         </div>
-      )}
+      </section>
     </div>
   );
 }

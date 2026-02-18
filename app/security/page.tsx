@@ -15,6 +15,21 @@ export default function SecurityPage() {
         </div>
       </section>
 
+      {/* Eat Our Own Cooking */}
+      <section className="py-12">
+        <div className="section-container">
+          <div className="max-w-3xl mx-auto">
+            <div className="card bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border-emerald-500/30 p-6 text-center">
+              <h2 className="text-xl font-bold mb-3 text-emerald-400">We Eat Our Own Cooking</h2>
+              <p className="text-slate-300">
+                TrustScope governs its own AI with TrustScope. Every AI call we make—including
+                our detection engines—runs through the same governance infrastructure you use.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Security Principles */}
       <section className="py-16 bg-slate-900/30">
         <div className="section-container">
@@ -65,19 +80,23 @@ export default function SecurityPage() {
                   <ul className="space-y-2 text-slate-400 text-sm">
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-emerald-500" />
-                      Hosted on SOC 2 Type II certified providers
+                      <strong>Render</strong> — SOC 2 Type II certified compute
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-emerald-500" />
-                      US data centers with geographic redundancy
+                      <strong>Neon</strong> — SOC 2 Type II certified PostgreSQL
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-emerald-500" />
-                      Private network isolation
+                      <strong>Vercel</strong> — SOC 2 Type II certified edge network
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-emerald-500" />
-                      DDoS protection and WAF
+                      <strong>Clerk</strong> — SOC 2, HIPAA-eligible authentication
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-emerald-500" />
+                      <strong>Stripe</strong> — PCI DSS Level 1 billing
                     </li>
                   </ul>
                 </div>
@@ -152,11 +171,15 @@ export default function SecurityPage() {
               <ul className="space-y-3 text-slate-400 text-sm">
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5" />
-                  <span>Data is isolated per organization—no cross-tenant access</span>
+                  <span>Org-scoped multi-tenancy: every query includes <code className="bg-slate-800 px-1 rounded">WHERE org_id = authenticated</code></span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5" />
                   <span>We do not train AI models on your data</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5" />
+                  <span>PII is redacted before any external AI engine call (detection engines)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5" />

@@ -60,10 +60,10 @@ export default function PrivacyPage() {
                   AI agent trace data is retained according to your subscription tier:
                 </p>
                 <ul className="list-disc pl-6 text-slate-400 space-y-2 mt-2">
-                  <li>Observe (Free): 3 days</li>
-                  <li>Protect: 30 days</li>
-                  <li>Enforce: 1 year</li>
-                  <li>Govern: 3 years (7 years with Extended Retention add-on)</li>
+                  <li>Monitor (Free): 30 days</li>
+                  <li>Protect ($49/mo): 90 days</li>
+                  <li>Enforce ($249/mo): 1 year</li>
+                  <li>Govern ($2K+/mo): 7 years</li>
                 </ul>
                 <p className="text-slate-400 mt-4">
                   You may request deletion of your data at any time by contacting privacy@trustscope.ai.

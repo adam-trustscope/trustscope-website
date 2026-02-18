@@ -3,10 +3,19 @@ import { Github, Twitter, Linkedin } from 'lucide-react'
 
 const footerLinks = {
   product: [
-    { name: 'Features', href: '/features' },
-    { name: 'Integrations', href: '/integrations' },
+    { name: 'Overview', href: '/' },
+    { name: 'Model Migration', href: '/switch' },
+    { name: 'Compliance', href: '/comply' },
+    { name: 'Security', href: '/secure' },
+    { name: 'Cost Management', href: '/cost' },
+    { name: 'For Developers', href: '/build' },
     { name: 'Pricing', href: '/pricing' },
+  ],
+  resources: [
     { name: 'Documentation', href: 'https://docs.trustscope.ai', external: true },
+    { name: 'API Reference', href: 'https://docs.trustscope.ai/api', external: true },
+    { name: 'Blog', href: '/blog' },
+    { name: 'Status Page', href: 'https://status.trustscope.ai', external: true },
     { name: 'Changelog', href: '/changelog' },
   ],
   solutions: [
@@ -15,11 +24,6 @@ const footerLinks = {
     { name: 'Prevent Data Leaks', href: '/solutions/prevent-data-leaks' },
     { name: 'Debug Agents', href: '/solutions/debug-agents' },
     { name: 'Pass Audits', href: '/solutions/pass-audits' },
-  ],
-  roles: [
-    { name: 'For Developers', href: '/developers' },
-    { name: 'For Compliance', href: '/compliance' },
-    { name: 'For CTOs', href: '/leadership' },
   ],
   compliance: [
     { name: 'Framework Overview', href: '/compliance' },
@@ -30,8 +34,6 @@ const footerLinks = {
   ],
   company: [
     { name: 'About', href: '/about' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Incidents', href: '/incidents' },
     { name: 'Contact', href: '/contact' },
     { name: 'Privacy Policy', href: '/privacy' },
     { name: 'Terms of Service', href: '/terms' },
@@ -44,14 +46,14 @@ export default function Footer() {
   return (
     <footer className="bg-slate-900/50 border-t border-slate-800">
       <div className="section-container py-16">
-        <div className="grid grid-cols-2 md:grid-cols-7 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
           {/* Brand Column */}
-          <div className="col-span-2">
+          <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center mb-4">
               <img src="/logo.png" alt="TrustScope" className="h-8" />
             </Link>
-            <p className="text-slate-400 text-sm mb-6 max-w-xs">
-              Evidence infrastructure for AI agents. Document that your AI followed policy with cryptographically signed evidence.
+            <p className="text-slate-500 text-xs mb-4">
+              Know. Control. Prove.
             </p>
             <div className="flex gap-4">
               <a href="https://twitter.com/trustscope" className="text-slate-500 hover:text-white transition-colors">
@@ -71,6 +73,23 @@ export default function Footer() {
             <h4 className="font-semibold text-sm mb-4 text-slate-300">Product</h4>
             <ul className="space-y-3">
               {footerLinks.product.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    href={link.href}
+                    className="text-slate-500 hover:text-white text-sm transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Resources */}
+          <div>
+            <h4 className="font-semibold text-sm mb-4 text-slate-300">Resources</h4>
+            <ul className="space-y-3">
+              {footerLinks.resources.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
@@ -98,21 +117,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* By Role */}
-          <div>
-            <h4 className="font-semibold text-sm mb-4 text-slate-300">By Role</h4>
-            <ul className="space-y-3">
-              {footerLinks.roles.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} className="text-slate-500 hover:text-white text-sm transition-colors">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Compliance */}
+          {/* Frameworks */}
           <div>
             <h4 className="font-semibold text-sm mb-4 text-slate-300">Frameworks</h4>
             <ul className="space-y-3">

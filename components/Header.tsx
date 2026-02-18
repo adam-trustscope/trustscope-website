@@ -2,15 +2,18 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Menu, X, ChevronDown, DollarSign, ShieldCheck, Bug, FileCheck, Terminal, Scale, Users, Puzzle, Gauge, CreditCard } from 'lucide-react'
+import { Menu, X, ChevronDown, DollarSign, ShieldCheck, Bug, FileCheck, Terminal, Scale, Users, Puzzle, Gauge, CreditCard, Scan } from 'lucide-react'
 
 const navigation = {
   product: {
     label: 'Product',
     items: [
-      { name: 'Features', href: '/features', description: '16 detection engines for AI safety', icon: Gauge },
-      { name: 'Integrations', href: '/integrations', description: 'LangChain, CrewAI, AutoGen & more', icon: Puzzle },
-      { name: 'Pricing', href: '/pricing', description: 'Free tier to enterprise', icon: CreditCard },
+      { name: 'Overview', href: '/', description: 'AI Agent Governance Platform', icon: Scan },
+      { name: 'Model Migration', href: '/switch', description: 'Prove new models are safe', icon: Gauge },
+      { name: 'Compliance', href: '/comply', description: 'Evidence for auditors', icon: Scale },
+      { name: 'Security', href: '/secure', description: 'Block threats inline', icon: ShieldCheck },
+      { name: 'Cost Management', href: '/cost', description: 'Track and control spend', icon: DollarSign },
+      { name: 'For Developers', href: '/build', description: 'Governance from first line', icon: Terminal },
     ],
   },
   solutions: {
@@ -28,8 +31,8 @@ const navigation = {
       {
         title: 'By Role',
         items: [
-          { name: 'For Developers', href: '/developers', description: 'CLI-first, 30-second setup', icon: Terminal },
-          { name: 'For Compliance', href: '/compliance', description: 'SOC 2, EU AI Act, NIST', icon: Scale },
+          { name: 'For Developers', href: '/build', description: 'CLI-first, 30-second setup', icon: Terminal },
+          { name: 'For Compliance', href: '/comply', description: 'SOC 2, EU AI Act, NIST', icon: Scale },
           { name: 'For CTOs', href: '/leadership', description: 'Risk visibility, insurance-ready', icon: Users },
         ],
       },
@@ -48,6 +51,7 @@ const navigation = {
 }
 
 const directLinks = [
+  { name: 'Scanner', href: '/scanner' },
   { name: 'Pricing', href: '/pricing' },
   { name: 'Docs', href: 'https://docs.trustscope.ai', external: true },
 ]
@@ -180,14 +184,25 @@ export default function Header() {
 
           {/* Direct Links */}
           {directLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className="px-4 py-2 text-slate-400 hover:text-white transition-colors"
-              {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-            >
-              {link.name}
-            </Link>
+            link.external ? (
+              <a
+                key={link.name}
+                href={link.href}
+                className="px-4 py-2 text-slate-400 hover:text-white transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {link.name}
+              </a>
+            ) : (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="px-4 py-2 text-slate-400 hover:text-white transition-colors"
+              >
+                {link.name}
+              </Link>
+            )
           ))}
         </div>
 
@@ -267,14 +282,27 @@ export default function Header() {
             {/* Direct Links */}
             <div className="pt-4 border-t border-slate-800">
               {directLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="block py-2 text-slate-300 hover:text-white"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.name}
-                </Link>
+                link.external ? (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    className="block py-2 text-slate-300 hover:text-white"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.name}
+                  </a>
+                ) : (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className="block py-2 text-slate-300 hover:text-white"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.name}
+                  </Link>
+                )
               ))}
             </div>
 

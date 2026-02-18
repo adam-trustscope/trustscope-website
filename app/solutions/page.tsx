@@ -47,7 +47,7 @@ const useCases = [
 // Personas
 const personas = [
   {
-    slug: '/developers',
+    slug: '/build',
     icon: Terminal,
     title: 'For Developers',
     subtitle: 'Ship agents that don\'t catch fire',
@@ -56,7 +56,7 @@ const personas = [
     color: 'emerald',
   },
   {
-    slug: '/compliance',
+    slug: '/comply',
     icon: Scale,
     title: 'For Compliance',
     subtitle: 'Evidence, not dashboards',
@@ -176,10 +176,10 @@ export default function SolutionsPage() {
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-4 gap-4">
               {[
-                { tier: 'Discover', price: 'Free', desc: '11 engines, see everything', icon: Bug },
-                { tier: 'Protect', price: '$29', desc: '15 engines, block threats', icon: Shield },
-                { tier: 'Enforce', price: '$99', desc: '21 engines + AI + MCP', icon: Zap },
-                { tier: 'Comply', price: 'Contact Us', desc: 'Evidence Packs + certificates', icon: FileCheck },
+                { tier: 'Monitor', price: 'Free', desc: '19 engines, see everything', icon: Bug },
+                { tier: 'Protect', price: '$49', desc: '19 engines + blocking', icon: Shield },
+                { tier: 'Enforce', price: '$249', desc: '25 engines + AI + policies', icon: Zap },
+                { tier: 'Govern', price: '$2K+', desc: 'Signed evidence packs', icon: FileCheck },
               ].map((t, i) => (
                 <div key={i} className="relative">
                   {i < 3 && (
