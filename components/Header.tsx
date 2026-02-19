@@ -62,14 +62,14 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800">
-      <nav className="section-container flex items-center justify-between py-4">
+      <nav className="section-container flex items-center justify-between h-16">
         {/* Logo */}
         <Link href="/" className="flex items-center flex-shrink-0">
-          <img src="/logo.png" alt="TrustScope" className="h-12" />
+          <img src="/logo.png" alt="TrustScope" className="h-9" />
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center gap-1">
+        <div className="hidden lg:flex items-center gap-0">
           {/* Product Dropdown */}
           <div 
             className="relative"
