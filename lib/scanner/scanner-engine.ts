@@ -11,6 +11,8 @@ import {
   simpleHash,
 } from './patterns';
 import { scanForToxicity, getCategoryLabel, ToxicityCategory } from './toxicity-keywords';
+import { scanForInjection } from './injection-scanner';
+import { scanForJailbreak } from './jailbreak-scanner';
 import {
   Finding,
   ScannedTrace,
@@ -181,6 +183,36 @@ export async function scanContent(
       }
       if (i % 20 === 0) {
         updateProgress(callbacks, 'scanning_toxicity', i, total, findings.length);
+        await yieldToMain();
+      }
+    }
+
+    // Injection Detection (v21.3)
+    updateProgress(callbacks, 'scanning_injection', 0, total, findings.length);
+    for (let i = 0; i < parsed.traces.length; i++) {
+      const trace = parsed.traces[i];
+      const injectionFindings = scanForInjection(trace);
+      for (const finding of injectionFindings) {
+        findings.push(finding);
+        callbacks.onFinding(finding);
+      }
+      if (i % 20 === 0) {
+        updateProgress(callbacks, 'scanning_injection', i, total, findings.length);
+        await yieldToMain();
+      }
+    }
+
+    // Jailbreak Detection (v21.3)
+    updateProgress(callbacks, 'scanning_jailbreak', 0, total, findings.length);
+    for (let i = 0; i < parsed.traces.length; i++) {
+      const trace = parsed.traces[i];
+      const jailbreakFindings = scanForJailbreak(trace);
+      for (const finding of jailbreakFindings) {
+        findings.push(finding);
+        callbacks.onFinding(finding);
+      }
+      if (i % 20 === 0) {
+        updateProgress(callbacks, 'scanning_jailbreak', i, total, findings.length);
         await yieldToMain();
       }
     }
