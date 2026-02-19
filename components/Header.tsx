@@ -65,7 +65,7 @@ export default function Header() {
       <nav className="section-container flex items-center justify-between h-16">
         {/* Logo */}
         <Link href="/" className="flex items-center flex-shrink-0">
-          <img src="/logo.png" alt="TrustScope" className="h-12" />
+          <img src="/logo.png" alt="TrustScope" className="h-16" />
         </Link>
 
         {/* Desktop Navigation */}
