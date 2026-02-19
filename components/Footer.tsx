@@ -50,7 +50,7 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center mb-4">
-              <img src="/logo.png" alt="TrustScope" className="h-8" />
+              <img src="/logo.png" alt="TrustScope" className="h-10" />
             </Link>
             <p className="text-slate-500 text-xs mb-4">
               Know. Control. Prove.
