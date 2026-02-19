@@ -90,10 +90,10 @@ export default function SwitchPage() {
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
-                href="https://docs.trustscope.ai/migration"
+                href="https://docs.trustscope.ai/getting-started"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium border border-slate-700 hover:border-slate-600 text-slate-300 hover:text-white transition-colors"
               >
-                Read Migration Guide
+                View Documentation
               </Link>
             </div>
           </div>
@@ -318,7 +318,7 @@ export default function SwitchPage() {
         headline="Ready to switch models safely?"
         subtext="Upload traces from your current and candidate models. Get a signed comparison report."
         primaryCTA={{ label: 'Compare Models Now', href: '/scanner' }}
-        secondaryCTA={{ label: 'Read Migration Guide', href: '/docs/migration' }}
+        secondaryCTA={{ label: 'View Documentation', href: 'https://docs.trustscope.ai/getting-started' }}
         variant="gradient"
       />
     </main>
