@@ -44,29 +44,29 @@ const features = [
   {
     icon: FileText,
     title: 'PII Scanner',
-    description: '67+ patterns including SSN, credit cards, medical IDs, and more. Real-time detection in inputs and outputs.',
-    tier: 'Protect (alert) / Enforce (block)',
-    patterns: '67+ patterns',
+    description: '88+ patterns including SSN, credit cards, medical IDs, and more. Real-time detection in inputs and outputs.',
+    tier: 'All tiers (alert) · Protect+ (block) · ML-powered (Presidio)',
+    patterns: '88+ patterns',
   },
   {
     icon: Key,
     title: 'Secrets Scanner',
     description: 'Detects API keys, passwords, tokens, connection strings, and other credentials before they leak.',
-    tier: 'Protect',
-    patterns: '15+ credential types',
+    tier: 'All tiers (alert) · Protect+ (block) · 50+ patterns',
+    patterns: '50+ credential types',
   },
   {
     icon: Terminal,
     title: 'Command Firewall',
     description: 'Blocks dangerous commands: DROP TABLE, DELETE without WHERE, rm -rf, and other destructive operations.',
-    tier: 'Protect',
+    tier: 'All tiers (alert) · Protect+ (block) · Pattern-based',
     patterns: '25+ blocked commands',
   },
   {
     icon: Lock,
     title: 'Data Boundary Enforcement',
     description: 'Define what data agents can access. Alert or block when they try to go outside their scope.',
-    tier: 'Enforce',
+    tier: 'Enforce+ · AI Hybrid (LLM-powered)',
     patterns: 'Custom rules',
   },
 ]
@@ -114,7 +114,7 @@ export default function PreventDataLeaksPage() {
         <div className="section-container">
           <div className="grid grid-cols-3 gap-6 text-center">
             <div>
-              <div className="text-3xl font-bold text-amber-400">67+</div>
+              <div className="text-3xl font-bold text-amber-400">88+</div>
               <div className="text-slate-500 text-sm">PII patterns detected</div>
             </div>
             <div>
@@ -160,7 +160,7 @@ export default function PreventDataLeaksPage() {
       <section className="py-24 bg-slate-900/30">
         <div className="section-container">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">67+ PII Patterns Detected</h2>
+            <h2 className="text-3xl font-bold mb-4">88+ PII Patterns Detected</h2>
             <p className="text-slate-400">From obvious (SSN) to subtle (medical record IDs)</p>
           </div>
 
@@ -174,7 +174,7 @@ export default function PreventDataLeaksPage() {
               ))}
             </div>
             <p className="text-center text-slate-500 text-sm mt-6">
-              ...and 55+ more patterns including industry-specific identifiers
+              ...and 76+ more patterns including industry-specific identifiers
             </p>
           </div>
         </div>
@@ -249,7 +249,7 @@ export default function PreventDataLeaksPage() {
         <div className="section-container text-center">
           <h2 className="text-3xl font-bold mb-6">Stop leaks before they happen</h2>
           <p className="text-xl text-slate-400 mb-8">
-            Protect tier ($29/mo) includes PII and Secrets scanning with real-time blocking.
+            Protect tier ($49/mo) includes PII and Secrets scanning with real-time blocking.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="https://app.trustscope.ai" className="btn-primary flex items-center justify-center gap-2">

@@ -38,7 +38,7 @@ const MIGRATION_STEPS = [
   {
     step: 2,
     title: 'Run candidate model',
-    description: 'Replay traffic or run shadow traffic on the new model',
+    description: 'Upload traces from your candidate model (Replay and Shadow routing coming soon)',
     icon: GitCompare,
   },
   {
@@ -50,7 +50,7 @@ const MIGRATION_STEPS = [
   {
     step: 4,
     title: 'Human review + approve',
-    description: 'Your team reviews and approves the migration',
+    description: 'Your team reviews divergence and approves (Enforce+ for approval workflows)',
     icon: Users,
   },
   {
@@ -86,7 +86,7 @@ export default function SwitchPage() {
                 href="/scanner"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium bg-[#C49B3A] hover:bg-[#D4A843] text-white transition-colors"
               >
-                Compare Models Now
+                Compare Models Now — Free with Protect tier
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
@@ -308,8 +308,8 @@ export default function SwitchPage() {
       <StatsBar
         stats={[
           { number: 8, label: 'DNA Strands' },
-          { number: 94, label: 'Avg Match Rate', suffix: '%' },
-          { number: 15, label: 'Minutes to Compare' },
+          { number: 90, label: 'Avg Match Rate', suffix: '%', prefix: '~' },
+          { number: 15, label: 'Minutes to Compare', prefix: '<' },
         ]}
       />
 

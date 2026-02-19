@@ -257,8 +257,8 @@ export default function CostPage() {
       {/* CTA */}
       <CTASection
         headline="Take control of AI costs"
-        subtext="Upload traces to see your cost breakdown. Find optimization opportunities."
-        primaryCTA={{ label: 'Analyze Costs', href: '/scanner' }}
+        subtext="Drop a trace file on our homepage scanner. See your cost breakdown in seconds — nothing leaves your browser."
+        primaryCTA={{ label: 'Analyze Costs', href: '/' }}
         secondaryCTA={{ label: 'Read Cost Guide', href: '/docs/cost' }}
         variant="gradient"
       />

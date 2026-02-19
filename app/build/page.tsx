@@ -14,6 +14,7 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import { CTASection, CodeBlock, FeatureGrid } from '@/components/ui';
+import IngestionWizard from '@/components/IngestionWizard';
 
 // Metadata moved to layout or head for client component
 
@@ -52,7 +53,7 @@ const FEATURES = [
   {
     icon: Zap,
     title: 'Real-time Alerts',
-    description: 'Discord, Slack, email, webhook',
+    description: 'Discord, Telegram (all tiers) · Slack, Email (Protect+) · Webhooks (Enforce+)',
   },
   {
     icon: BarChart3,
@@ -66,7 +67,7 @@ const FEATURES = [
   },
   {
     icon: Code,
-    title: '417+ API Endpoints',
+    title: '270+ API Endpoints',
     description: 'Full programmatic access',
   },
 ];
@@ -76,8 +77,9 @@ const FRAMEWORKS = [
   'CrewAI',
   'AutoGen',
   'LangGraph',
-  'OpenAI Agents',
+  'OpenAI Agents SDK',
   'Google ADK',
+  'Anthropic MCP',
   'Custom',
 ];
 
@@ -230,8 +232,23 @@ export default function BuildPage() {
         </div>
       </section>
 
-      {/* What You Get */}
+      {/* Integration Wizard */}
       <section className="py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Find Your Integration Path
+            </h2>
+            <p className="text-lg text-slate-400">
+              Answer a few questions to get personalized setup instructions
+            </p>
+          </div>
+          <IngestionWizard />
+        </div>
+      </section>
+
+      {/* What You Get */}
+      <section className="py-20 px-4 bg-slate-900/30 border-y border-slate-800">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -282,7 +299,7 @@ export default function BuildPage() {
             Our CLI is Open Source
           </h2>
           <p className="text-lg text-slate-400 mb-8">
-            9,084 lines of local governance. MIT licensed.
+            ~9,000 lines of local governance. MIT licensed.
           </p>
           <Link
             href="https://github.com/trustscope/cli"

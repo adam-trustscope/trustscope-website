@@ -16,7 +16,7 @@ const releases = [
     ],
     features: [
       { icon: FileCheck, text: 'Evidence Packs with blockchain anchoring' },
-      { icon: Shield, text: '16 detection engines (OWASP Agentic Top 10)' },
+      { icon: Shield, text: '19 detection engines (OWASP Agentic Top 10)' },
       { icon: GitBranch, text: 'Agent DNA behavioral fingerprinting' },
       { icon: Zap, text: 'Sub-50ms latency Gateway proxy' },
     ],

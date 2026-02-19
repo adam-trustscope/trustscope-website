@@ -33,11 +33,11 @@ const INTEGRATION_METHODS = [
   { icon: Globe, name: 'Gateway Proxy', desc: 'Zero code changes', href: 'https://docs.trustscope.ai/gateway' },
   { icon: Terminal, name: 'Python SDK', desc: '4 lines to integrate', href: 'https://docs.trustscope.ai/sdk/python' },
   { icon: Code2, name: 'Node.js SDK', desc: 'TypeScript-first', href: 'https://docs.trustscope.ai/sdk/node' },
-  { icon: Smartphone, name: 'React Native', desc: 'Mobile agents', href: 'https://docs.trustscope.ai/sdk/react-native' },
   { icon: Terminal, name: 'CLI', desc: 'npx @trustscope/cli', href: 'https://docs.trustscope.ai/cli' },
   { icon: Cpu, name: 'MCP Server', desc: '9 tools in your IDE', href: 'https://docs.trustscope.ai/mcp' },
   { icon: BarChart3, name: 'OpenTelemetry', desc: 'OTLP-compatible', href: 'https://docs.trustscope.ai/otel' },
-  { icon: Webhook, name: 'Webhooks', desc: 'Push to any system', href: 'https://docs.trustscope.ai/webhooks' },
+  { icon: Zap, name: 'Framework Callbacks', desc: 'LangChain/CrewAI/AutoGen', href: 'https://docs.trustscope.ai/callbacks' },
+  { icon: Server, name: 'Direct API', desc: '270+ endpoints', href: 'https://docs.trustscope.ai/api' },
 ];
 
 const HOW_IT_WORKS = [
@@ -50,7 +50,7 @@ const HOW_IT_WORKS = [
   {
     step: 2,
     title: 'Detect',
-    description: '25 engines scan every trace in real-time.',
+    description: '19 engines scan every trace in real-time. 25 with AI hybrid at Enforce+.',
     code: `# PII, secrets, injections, loops, anomalies...`,
   },
   {
@@ -76,7 +76,7 @@ const USE_CASES = [
   },
   {
     title: 'Auditor Asking?',
-    description: 'Generate AIUC-1 evidence packs in minutes.',
+    description: "Generate AIUC-1 evidence — the emerging 'SOC 2 for AI agents' standard — in minutes.",
     href: '/comply',
     icon: Scale,
   },
@@ -93,7 +93,7 @@ const TIERS = [
     name: 'Monitor',
     price: 'Free',
     traces: '5K/mo',
-    highlight: 'See everything',
+    highlight: '30-day retention · 1 seat · Alert-only (no blocking)',
     icon: Eye,
     color: 'text-slate-400',
     borderColor: 'border-slate-600',
@@ -102,7 +102,7 @@ const TIERS = [
     name: 'Protect',
     price: '$49',
     traces: '25K/mo',
-    highlight: 'Block threats',
+    highlight: '90-day retention · 3 seats · Real-time blocking',
     icon: Shield,
     color: 'text-blue-400',
     borderColor: 'border-blue-500/50',
@@ -111,7 +111,7 @@ const TIERS = [
     name: 'Enforce',
     price: '$249',
     traces: '100K/mo',
-    highlight: 'AI engines + AIUC-1',
+    highlight: '1-year retention · 5 seats · +6 AI engines + AIUC-1',
     icon: Lock,
     color: 'text-[#C49B3A]',
     borderColor: 'border-[#C49B3A]',
@@ -121,7 +121,7 @@ const TIERS = [
     name: 'Govern',
     price: '$2K+',
     traces: '500K+/mo',
-    highlight: 'Signed evidence',
+    highlight: '7-year retention · Unlimited seats · Signed evidence',
     icon: FileCheck,
     color: 'text-emerald-400',
     borderColor: 'border-emerald-500/50',
@@ -129,10 +129,10 @@ const TIERS = [
 ];
 
 const STATS = [
-  { number: 25, label: 'Detection Engines' },
-  { number: 417, label: 'API Endpoints', suffix: '+' },
+  { number: 19, label: 'Free Detection Engines' },
+  { number: 270, label: 'API Endpoints', suffix: '+' },
   { number: 87, label: 'Database Tables' },
-  { number: 7, label: 'Patents Filed' },
+  { number: 3, label: 'Patents Filed (4 Pending)' },
   { number: 14, label: 'Compliance Frameworks' },
 ];
 
@@ -193,22 +193,22 @@ export default function HomePage() {
             content={{
               know: (
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-3">25 Detection Engines</h3>
+                  <h3 className="text-xl font-bold text-white mb-3">19 Detection Engines — Free</h3>
                   <p className="text-slate-300 mb-4">
-                    Every AI action analyzed in real-time. PII, secrets, injections, anomalies, loops, toxicity — see it all.
+                    Every AI action analyzed in real-time. PII leaks, prompt injections, jailbreaks, cost spikes, loops, toxicity — caught before they cause damage.
                   </p>
                   <ul className="space-y-2 text-slate-400">
                     <li className="flex items-center gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-                      19 statistical engines (all tiers)
+                      5 ML-powered engines including Prompt Guard 2, Presidio, Detoxify (all tiers)
                     </li>
                     <li className="flex items-center gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-                      6 AI hybrid engines (Enforce+)
+                      10 statistical engines for cost, loops, velocity anomalies (all tiers)
                     </li>
                     <li className="flex items-center gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-                      Shadow mode preview on free tier
+                      +6 AI hybrid engines at Enforce+ (semantic firewall, hallucination, reasoning drift)
                     </li>
                   </ul>
                 </div>
@@ -405,7 +405,7 @@ export default function HomePage() {
             Open Source CLI
           </h2>
           <p className="text-slate-400 mb-8">
-            MIT-licensed. 9,084 lines of local governance.
+            MIT-licensed. ~9,000 lines of local governance.
           </p>
           <div className="bg-[#1a1f2e] border border-slate-700/50 rounded-xl p-6 mb-8">
             <code className="text-[#C49B3A] text-lg">npx @trustscope/mcp-server</code>

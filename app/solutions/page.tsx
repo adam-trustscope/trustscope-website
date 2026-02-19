@@ -52,7 +52,7 @@ const personas = [
     title: 'For Developers',
     subtitle: 'Ship agents that don\'t catch fire',
     description: 'CLI-first debugging, 30-second integration, free tier that\'s actually useful.',
-    cta: 'pip install trustscope-cli',
+    cta: 'npx @trustscope/cli',
     color: 'emerald',
   },
   {
@@ -196,7 +196,7 @@ export default function SolutionsPage() {
             </div>
             
             <p className="text-center text-slate-500 text-sm mt-8">
-              Most teams start at Discover or Protect, then upgrade when compliance requirements kick in.
+              Most teams start at Monitor or Protect, then upgrade when compliance requirements kick in.
             </p>
           </div>
         </div>

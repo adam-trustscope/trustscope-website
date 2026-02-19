@@ -130,7 +130,7 @@ a2a_client = monitor.wrap(original_client)`,
     description: 'Command-line interface for testing and debugging.',
     effort: '2 minutes',
     code: `# Install
-pip install trustscope-cli
+npx @trustscope/cli
 
 # Test a prompt
 trustscope test "What is 2+2?" --agent my-agent
@@ -349,7 +349,7 @@ export default function IntegrationsPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="https://app.trustscope.ai" className="btn-primary">
-              Start Free Trial
+              Get Started Free
             </Link>
             <Link href="https://docs.trustscope.ai/quickstart" target="_blank" rel="noopener noreferrer" className="btn-secondary">
               Read Quickstart Guide

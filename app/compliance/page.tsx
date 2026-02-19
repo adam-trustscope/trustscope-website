@@ -4,6 +4,16 @@ import { ArrowRight, CheckCircle, FileCheck, Shield, Scale, Award, AlertTriangle
 // Framework cards
 const frameworks = [
   {
+    name: 'AIUC-1',
+    slug: 'aiuc1',
+    icon: Award,
+    description: '"SOC 2 for AI agents" · Microsoft, JPMorgan, Anthropic, 60+ Fortune 500 CISOs',
+    coverage: '45 of 51 requirements · 92% mandatory coverage',
+    ready: 45,
+    badge: 'PRIMARY',
+    primary: true,
+  },
+  {
     name: 'NIST AI RMF',
     slug: 'nist',
     icon: Shield,
@@ -174,7 +184,7 @@ export default function CompliancePage() {
             <FileCheck className="w-12 h-12 text-blue-400 mx-auto mb-6" />
             <h2 className="text-3xl font-bold mb-4">Evidence Packs</h2>
             <p className="text-slate-400 mb-8">
-              The Comply tier (Contact Us) includes pre-built Evidence Pack templates with hash chains,
+              The Govern tier ($2K+/mo) includes pre-built Evidence Pack templates with hash chains,
               Ed25519 signatures, and blockchain anchoring. Export as PDF or structured data.
             </p>
             
@@ -226,7 +236,7 @@ export default function CompliancePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="https://app.trustscope.ai" className="btn-primary">
-              Start Free Trial
+              Get Started Free
             </Link>
             <Link href="/pricing" className="btn-secondary">
               View Pricing

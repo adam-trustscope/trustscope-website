@@ -30,7 +30,7 @@ const features = [
     icon: RefreshCw,
     title: 'Loop Killer',
     description: 'Detects repetitive patterns in agent output. Kills runaway loops at iteration 10, not 10,000.',
-    tier: 'Observe (alert) / Protect (block)',
+    tier: 'All tiers (alert) · Protect+ (block)',
   },
   {
     icon: Users,
@@ -54,7 +54,7 @@ const features = [
     icon: Clock,
     title: 'Velocity Monitoring',
     description: 'Track requests per minute per agent. Catch unusual spikes before they cost you.',
-    tier: 'Observe',
+    tier: 'All tiers (alert) · Protect+ (block)',
   },
 ]
 

@@ -19,7 +19,7 @@ Agent: "Let me check that order status for you..."
     damage: '$10,247 OpenAI bill. Discovered Monday morning.',
     quote: '"We thought we had rate limiting. Turns out it was on a different service."',
     solution: 'Loop Killer detection would have stopped this at iteration 10.',
-    tier: 'Observe',
+    tier: 'Monitor',
     tierColor: 'slate',
   },
   {
@@ -368,7 +368,7 @@ export default function HorrorStoriesPage() {
           
           <div className="grid md:grid-cols-4 gap-4 max-w-5xl mx-auto">
             <div className="card p-4">
-              <div className="text-slate-400 text-sm mb-2">Observe (Free)</div>
+              <div className="text-slate-400 text-sm mb-2">Monitor (Free)</div>
               <div className="font-semibold mb-2">Detect & Alert</div>
               <ul className="text-xs text-slate-500 space-y-1">
                 <li>• #1 Infinite Loop</li>
@@ -376,7 +376,7 @@ export default function HorrorStoriesPage() {
             </div>
             
             <div className="card p-4 border-blue-500/30">
-              <div className="text-blue-400 text-sm mb-2">Protect ($29)</div>
+              <div className="text-blue-400 text-sm mb-2">Protect ($49)</div>
               <div className="font-semibold mb-2">Block Threats</div>
               <ul className="text-xs text-slate-500 space-y-1">
                 <li>• #2 DROP TABLE</li>
@@ -386,7 +386,7 @@ export default function HorrorStoriesPage() {
             </div>
             
             <div className="card p-4 border-purple-500/30">
-              <div className="text-purple-400 text-sm mb-2">Enforce ($99)</div>
+              <div className="text-purple-400 text-sm mb-2">Enforce ($249)</div>
               <div className="font-semibold mb-2">Policy Control</div>
               <ul className="text-xs text-slate-500 space-y-1">
                 <li>• #4 Ghost Pricing</li>
@@ -395,7 +395,7 @@ export default function HorrorStoriesPage() {
             </div>
             
             <div className="card p-4 border-amber-500/30">
-              <div className="text-amber-400 text-sm mb-2">Govern ($499)</div>
+              <div className="text-amber-400 text-sm mb-2">Govern ($2K+)</div>
               <div className="font-semibold mb-2">Evidence Packs</div>
               <ul className="text-xs text-slate-500 space-y-1">
                 <li>• #3 False Promise</li>
@@ -416,7 +416,7 @@ export default function HorrorStoriesPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="https://app.trustscope.ai" className="btn-primary flex items-center justify-center gap-2">
-              Start Free Trial <ArrowRight className="w-5 h-5" />
+              Get Started Free <ArrowRight className="w-5 h-5" />
             </Link>
             <Link href="/pricing" className="btn-secondary">
               View Pricing

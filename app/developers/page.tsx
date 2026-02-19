@@ -103,7 +103,7 @@ def run_agent(prompt: str):
     name: 'CLI Testing',
     time: '10 seconds',
     code: `# Install
-pip install trustscope-cli
+npx @trustscope/cli
 
 # Test immediately
 trustscope test "Summarize this document" --agent doc-summarizer
@@ -142,7 +142,7 @@ export default function DevelopersPage() {
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 font-mono text-sm flex items-center gap-3">
                 <span className="text-slate-500">$</span>
-                <span className="text-emerald-400">pip install trustscope-cli</span>
+                <span className="text-emerald-400">npx @trustscope/cli</span>
                 <button className="text-slate-500 hover:text-white">
                   <Copy className="w-4 h-4" />
                 </button>
@@ -268,7 +268,7 @@ export default function DevelopersPage() {
                 <div className="text-5xl font-bold text-white mb-2">$0</div>
                 <div className="text-slate-400 mb-4">forever</div>
                 <Link href="https://app.trustscope.ai" className="btn-primary">
-                  Start Free Trial
+                  Get Started Free
                 </Link>
               </div>
             </div>
@@ -293,7 +293,7 @@ export default function DevelopersPage() {
             <div className="card p-6 text-center">
               <Shield className="w-8 h-8 text-emerald-400 mx-auto mb-4" />
               <h3 className="font-semibold mb-2">Safety Rails</h3>
-              <p className="text-slate-500 text-sm">16 detection engines catch problems before users do</p>
+              <p className="text-slate-500 text-sm">19 detection engines catch problems before users do</p>
             </div>
             
             <div className="card p-6 text-center">
@@ -338,7 +338,7 @@ export default function DevelopersPage() {
           
           <div className="bg-slate-900 border border-slate-700 rounded-lg px-6 py-4 font-mono text-lg inline-flex items-center gap-3 mb-8">
             <span className="text-slate-500">$</span>
-            <span className="text-emerald-400">pip install trustscope-cli && trustscope init</span>
+            <span className="text-emerald-400">npx @trustscope/cli && trustscope init</span>
           </div>
           
           <p className="text-slate-400 mb-8">
@@ -347,7 +347,7 @@ export default function DevelopersPage() {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="https://app.trustscope.ai" className="btn-primary flex items-center justify-center gap-2">
-              Start Free Trial <ArrowRight className="w-5 h-5" />
+              Get Started Free <ArrowRight className="w-5 h-5" />
             </Link>
             <Link href="https://docs.trustscope.ai/cli" target="_blank" rel="noopener noreferrer" className="btn-secondary">
               CLI Documentation

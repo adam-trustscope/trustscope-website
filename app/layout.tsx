@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     default: 'TrustScope - Evidence Infrastructure for AI Agents',
     template: '%s | TrustScope',
   },
-  description: 'Know what your AI agents are doing. Control what they can do. Prove it to anyone who asks. 25 detection engines, 50+ policy types, cryptographic evidence.',
+  description: 'Know what your AI agents are doing. Control what they can do. Prove it to anyone who asks. 19 detection engines (25 with AI hybrid), 50+ policy types, cryptographic evidence.',
   keywords: ['AI governance', 'AI compliance', 'AI agents', 'AI safety', 'audit trail', 'SOC 2', 'EU AI Act', 'NIST AI RMF', 'agent monitoring', 'LLM observability'],
   authors: [{ name: 'TrustScope' }],
   creator: 'TrustScope',

@@ -90,7 +90,7 @@ export default function DebugAgentsPage() {
 
             <div className="bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 font-mono text-sm inline-flex items-center gap-3 mb-8">
               <span className="text-slate-500">$</span>
-              <span className="text-emerald-400">pip install trustscope-cli</span>
+              <span className="text-emerald-400">npm install -g @trustscope/cli</span>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">

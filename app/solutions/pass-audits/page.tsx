@@ -100,7 +100,7 @@ export default function PassAuditsPage() {
               <Link key={i} href={f.href} className="hover:text-blue-400 transition-colors">
                 <div className="text-sm text-slate-500 mb-1">{f.name}</div>
                 <div className="text-2xl font-bold text-white">{f.controls}</div>
-                <div className="text-xs text-emerald-400">{f.coverage} ready</div>
+                <div className="text-xs text-emerald-400">{f.coverage} covered</div>
               </Link>
             ))}
           </div>
@@ -280,7 +280,7 @@ export default function PassAuditsPage() {
         <div className="section-container text-center">
           <h2 className="text-3xl font-bold mb-6">Be audit-ready before the audit</h2>
           <p className="text-xl text-slate-400 mb-8">
-            Govern tier ($499/mo) includes Evidence Packs for all supported frameworks.
+            Evidence Packs start at Enforce ($249/mo) for validation packs. Govern ($2K+/mo) adds Ed25519 signing, BYOK, and blockchain anchoring.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="https://app.trustscope.ai" className="btn-primary flex items-center justify-center gap-2">

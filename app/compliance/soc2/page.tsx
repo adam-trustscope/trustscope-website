@@ -7,7 +7,7 @@ const soc2Controls = [
     id: 'CC4.1', 
     name: 'Monitoring activities', 
     status: 'ready', 
-    evidence: 'Dashboard, 16 detection engines',
+    evidence: 'Dashboard, 19 detection engines',
     rationale: 'Continuous monitoring with real-time alerts',
     category: 'Monitoring'
   },
@@ -339,7 +339,7 @@ export default function SOC2Page() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="https://app.trustscope.ai" className="btn-primary">
-              Start Free Trial
+              Get Started Free
             </Link>
             <Link href="/pricing" className="btn-secondary">
               View Pricing

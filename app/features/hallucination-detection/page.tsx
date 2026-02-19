@@ -31,7 +31,7 @@ export default function HallucinationDetectionPage() {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="https://app.trustscope.ai" className="btn-primary flex items-center justify-center gap-2">
-              Start Free Trial <ArrowRight className="w-5 h-5" />
+              Get Started Free <ArrowRight className="w-5 h-5" />
             </Link>
             <Link href="#demo" className="btn-secondary">
               See Demo
@@ -273,7 +273,7 @@ export default function HallucinationDetectionPage() {
             {[
               {
                 name: 'Protect',
-                price: '$29',
+                price: '$49',
                 period: '/month',
                 traces: '25K traces',
                 description: 'Know about problems',
@@ -285,12 +285,12 @@ export default function HallucinationDetectionPage() {
                   { text: 'Auto-Block', included: false },
                   { text: 'Evidence Receipts', included: false },
                 ],
-                cta: 'Start Free Trial',
+                cta: 'Get Started Free',
                 highlight: false,
               },
               {
                 name: 'Enforce',
-                price: '$99',
+                price: '$249',
                 period: '/month',
                 traces: '100K traces',
                 description: 'Stop problems',
@@ -302,12 +302,12 @@ export default function HallucinationDetectionPage() {
                   { text: 'Evidence Receipts', included: false },
                   { text: 'Compliance Export', included: false },
                 ],
-                cta: 'Start Free Trial',
+                cta: 'Get Started Free',
                 highlight: true,
               },
               {
                 name: 'Govern',
-                price: '$499',
+                price: '$2K+',
                 period: '/month',
                 traces: '500K traces',
                 description: 'Document you checked',
@@ -417,7 +417,7 @@ export default function HallucinationDetectionPage() {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="https://app.trustscope.ai" className="btn-primary text-lg px-8 py-4 flex items-center justify-center gap-2">
-              Start Free Trial <ArrowRight className="w-5 h-5" />
+              Get Started Free <ArrowRight className="w-5 h-5" />
             </Link>
             <Link href="/contact" className="btn-secondary text-lg px-8 py-4">
               Talk to Sales

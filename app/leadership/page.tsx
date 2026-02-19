@@ -29,7 +29,7 @@ const risks = [
 
 const metrics = [
   { value: '€35M', label: 'Max EU AI Act fine', subtext: 'or 7% global revenue' },
-  { value: '$2M', label: 'Largest AI settlement', subtext: 'insufficient evidence of controls' },
+  { value: '$812', label: 'Air Canada AI judgment', subtext: 'chatbot gave wrong refund policy' },
   { value: '6 mo', label: 'Avg remediation time', subtext: 'after failed audit' },
   { value: '47%', label: 'Enterprises affected', subtext: 'by AI hallucinations (IBM 2025)' },
 ]
@@ -61,7 +61,7 @@ const capabilities = [
   },
   {
     title: 'Incident Prevention',
-    description: '16 detection engines catch problems before they become headlines.',
+    description: '19 detection engines catch problems before they become headlines. 25 with AI-powered engines at Enforce+.',
     icon: Shield,
   },
 ]

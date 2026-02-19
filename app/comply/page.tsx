@@ -69,7 +69,7 @@ const AIUC_DOMAINS = [
   {
     domain: 'F',
     name: 'Fairness & Transparency',
-    description: 'Bias detection (AIF360 adapter)',
+    description: 'Bias detection (ML-powered, custom engine)',
     coverage: 75,
     color: 'text-pink-400',
     bgColor: 'bg-pink-500/10 border-pink-500/20',
@@ -103,8 +103,7 @@ export default function ComplyPage() {
               <span className="text-[#C49B3A]">Here's your answer.</span>
             </h1>
             <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-8">
-              AIUC-1 evidence packs across all 6 domains. Connect your agents, get a
-              readiness score.
+              AIUC-1 evidence across all 6 domains. Connect your agents, see your evidence coverage.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link
@@ -281,6 +280,7 @@ export default function ComplyPage() {
                 {[
                   'Policy enforcement + blocking',
                   'AIUC-1 compliance exports',
+                  'Evidence Packs (validation)',
                   '1-year retention',
                   '25 detection engines (6 AI)',
                   '5 seats included',
@@ -301,7 +301,7 @@ export default function ComplyPage() {
               <ul className="space-y-2">
                 {[
                   'Ed25519 + BYOK signing',
-                  'Signed evidence packs',
+                  'Evidence Packs (full signed, court-ready)',
                   '7-year retention',
                   'Evidence Room portal',
                   'ZKP layer (beta)',
@@ -320,8 +320,8 @@ export default function ComplyPage() {
       {/* CTA */}
       <CTASection
         headline="Ready for your next audit?"
-        subtext="Upload traces for a compliance assessment. See your framework coverage in minutes."
-        primaryCTA={{ label: 'Start Assessment', href: '/scanner' }}
+        subtext="Connect your agents to start generating AIUC-1 evidence. Enforce tier includes validation packs, Govern tier includes signed evidence."
+        primaryCTA={{ label: 'Get Started Free', href: 'https://app.trustscope.ai' }}
         secondaryCTA={{ label: 'Talk to Compliance Team', href: '/contact' }}
         variant="gradient"
       />

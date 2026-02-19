@@ -40,7 +40,7 @@ That's what TrustScope provides.
 
 TrustScope is inline runtime governance infrastructure for AI agents. Three capabilities, one platform:
 
-**Know** — 25 detection engines analyze every AI action. PII, secrets, prompt injections, loops, anomalies, toxicity. See it all.
+**Know** — 19 detection engines analyze every AI action (25 with AI hybrid at Enforce tier). PII, secrets, prompt injections, loops, anomalies, toxicity. See it all.
 
 **Control** — 50+ policy types enforce your rules inline. Block threats before they cause damage. Natural language policies for complex requirements.
 
@@ -49,7 +49,7 @@ TrustScope is inline runtime governance infrastructure for AI agents. Three capa
 ## How It Works
 
 1. **Connect** your agents via Gateway, SDK, MCP, or CLI
-2. **Detect** threats with 25 engines running on every trace
+2. **Detect** threats with 19 engines running on every trace
 3. **Enforce** policies that block violations inline
 4. **Prove** compliance with signed evidence packs
 

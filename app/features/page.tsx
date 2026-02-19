@@ -7,20 +7,20 @@ import {
   Clock, Hash, Award
 } from 'lucide-react'
 
-// Detection engines - v16: 11 Discover → 15 Protect → 21 Enforce → 21 Comply (+evidence)
+// Detection engines - v21: 19 all tiers (alert) → 19 Protect+ (block) → 25 Enforce+ (AI hybrid)
 const detectionEngines = [
-  // 11 Discover Engines (alert only, cannot block)
-  { name: 'Loop Killer', description: '5 identical requests in 60s', icon: GitBranch, tier: 'Discover' },
-  { name: 'Velocity', description: '100 req/60s threshold', icon: Clock, tier: 'Discover' },
-  { name: 'Oscillation', description: 'A→B→A→B cycle detection', icon: GitBranch, tier: 'Discover' },
-  { name: 'Token Growth', description: '50% growth in 3 requests', icon: AlertTriangle, tier: 'Discover' },
-  { name: 'Cost Velocity', description: '$5/min spending threshold', icon: Zap, tier: 'Discover' },
-  { name: 'Error Rate', description: '50% error rate detection', icon: AlertTriangle, tier: 'Discover' },
-  { name: 'Budget Caps', description: 'Session/daily/monthly limits', icon: Zap, tier: 'Discover' },
-  { name: 'Context Expansion', description: '>50% growth or >50K tokens', icon: AlertTriangle, tier: 'Discover' },
-  { name: 'PII Scanner', description: '88 patterns (alert only)', icon: Scan, tier: 'Discover' },
-  { name: 'Session Duration', description: '4hr default limit', icon: Clock, tier: 'Discover' },
-  { name: 'Session Actions', description: '500 actions/session limit', icon: Clock, tier: 'Discover' },
+  // 19 Monitor Engines (alert only, cannot block)
+  { name: 'Loop Killer', description: '5 identical requests in 60s', icon: GitBranch, tier: 'Monitor' },
+  { name: 'Velocity', description: '100 req/60s threshold', icon: Clock, tier: 'Monitor' },
+  { name: 'Oscillation', description: 'A→B→A→B cycle detection', icon: GitBranch, tier: 'Monitor' },
+  { name: 'Token Growth', description: '50% growth in 3 requests', icon: AlertTriangle, tier: 'Monitor' },
+  { name: 'Cost Velocity', description: '$5/min spending threshold', icon: Zap, tier: 'Monitor' },
+  { name: 'Error Rate', description: '50% error rate detection', icon: AlertTriangle, tier: 'Monitor' },
+  { name: 'Budget Caps', description: 'Session/daily/monthly limits', icon: Zap, tier: 'Monitor' },
+  { name: 'Context Expansion', description: '>50% growth or >50K tokens', icon: AlertTriangle, tier: 'Monitor' },
+  { name: 'PII Scanner', description: '88 patterns (alert only)', icon: Scan, tier: 'Monitor' },
+  { name: 'Session Duration', description: '4hr default limit', icon: Clock, tier: 'Monitor' },
+  { name: 'Session Actions', description: '500 actions/session limit', icon: Clock, tier: 'Monitor' },
   // +4 Protect Engines (can block)
   { name: 'Command Firewall', description: '55+ shell/SQL/code patterns', icon: ShieldAlert, tier: 'Protect+' },
   { name: 'Blocked Phrases', description: 'Org-configured blacklist', icon: ShieldAlert, tier: 'Protect+' },
@@ -87,14 +87,14 @@ const governanceFeatures = [
 
 // Tier features (v16 Golden Spec)
 const tierFeatures = {
-  discover: {
-    name: 'Discover',
+  monitor: {
+    name: 'Monitor',
     price: 'Free',
     tagline: 'See everything',
     color: 'slate',
     features: [
       'Trace capture (5K/mo)',
-      '11 detection engines (alert only)',
+      '19 detection engines (alert only)',
       'Platform Discovery (CLI, GitHub, GitLab)',
       'Agent inventory & coverage dashboard',
       '4 basic policies',
@@ -105,13 +105,13 @@ const tierFeatures = {
   },
   protect: {
     name: 'Protect',
-    price: '$29/mo',
+    price: '$49/mo',
     tagline: 'Block threats',
     color: 'blue',
     features: [
-      'Everything in Discover',
-      '20K traces/month',
-      '15 detection engines (can block)',
+      'Everything in Monitor',
+      '25K traces/month',
+      '19 detection engines (can block)',
       'Real-time blocking mode',
       '16 policies (11 types)',
       'New agent alerts (Shadow AI)',
@@ -122,13 +122,13 @@ const tierFeatures = {
   },
   enforce: {
     name: 'Enforce',
-    price: '$99/mo',
+    price: '$249/mo',
     tagline: 'AI + MCP + Control',
     color: 'purple',
     features: [
       'Everything in Protect',
       '100K traces/month',
-      '21 engines (AI-powered)',
+      '25 engines (6 AI-powered)',
       '50 policies (20 types)',
       'MCP Trust Scoring (6-factor)',
       'Agent DNA + Lock + /history',
@@ -208,7 +208,7 @@ export default function FeaturesPage() {
         <div className="section-container">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold mb-4">21 Detection Engines</h2>
-            <p className="text-slate-400">11 Discover (alert) + 4 Protect (block) + 6 Enforce (AI-powered)</p>
+            <p className="text-slate-400">19 all tiers (alert) · 19 Protect+ (block) · 25 with AI hybrid at Enforce+</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -229,7 +229,7 @@ export default function FeaturesPage() {
           </div>
 
           <div className="text-center mt-8">
-            <span className="text-slate-500 text-sm">All 21 engines. OWASP Agentic Top 10 aligned.</span>
+            <span className="text-slate-500 text-sm">All 25 engines. OWASP Agentic Top 10 aligned.</span>
           </div>
         </div>
       </section>
@@ -313,7 +313,7 @@ export default function FeaturesPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="https://app.trustscope.ai" className="btn-primary">
-              Start Free Trial
+              Get Started Free
             </Link>
             <Link href="/contact" className="btn-secondary">
               Talk to Sales

@@ -32,7 +32,7 @@ const article17Requirements = [
     name: 'Examination and testing', 
     status: 'ready', 
     evidence: 'Detection test results',
-    rationale: '16 detection engines provide continuous testing',
+    rationale: '19 detection engines provide continuous testing',
     details: 'Real-time examination through prompt injection, PII, command firewall, and 13 other detection engines.'
   },
   { 
@@ -333,7 +333,7 @@ export default function EUAIActPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="https://app.trustscope.ai" className="btn-primary">
-              Start Free Trial
+              Get Started Free
             </Link>
             <Link href="/contact" className="btn-secondary">
               Talk to Compliance Team

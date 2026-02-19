@@ -22,6 +22,8 @@ const THREAT_STATS = [
   { stat: '12%', label: 'had secrets in responses' },
 ];
 
+// Note: Stats based on OWASP Agentic Top 10 research and industry incident reports
+
 const OWASP_MAPPING = [
   {
     code: 'AG01',
@@ -59,38 +61,59 @@ const SECURITY_ENGINES = [
   {
     icon: Shield,
     title: 'PII Scanner',
-    description: '88 patterns for SSN, email, phone, credit cards, and more',
+    description: '88 patterns for SSN, email, phone, credit cards. All tiers (alert) · Protect+ (block) · ML-powered (Presidio)',
     tier: 'monitor' as const,
   },
   {
     icon: Lock,
     title: 'Secrets Scanner',
-    description: '50+ patterns for API keys, AWS creds, private keys',
-    tier: 'protect' as const,
+    description: '50+ patterns for API keys, AWS creds, private keys. All tiers (alert) · Protect+ (block)',
+    tier: 'monitor' as const,
   },
   {
     icon: AlertTriangle,
     title: 'Prompt Injection',
-    description: 'Pattern pre-filter + AI verification for <1% false positives',
-    tier: 'enforce' as const,
+    description: 'Pattern pre-filter + AI verification for <1% false positives. All tiers (alert) · Protect+ (block) · ML-powered (Prompt Guard 2)',
+    tier: 'monitor' as const,
   },
   {
     icon: Ban,
     title: 'Jailbreak Detection',
-    description: 'Two-stage detection for known and novel attacks',
-    tier: 'enforce' as const,
+    description: 'Two-stage detection for known and novel attacks. All tiers (alert) · Protect+ (block) · ML-powered (Prompt Guard 2)',
+    tier: 'monitor' as const,
   },
   {
     icon: Eye,
     title: 'Toxicity Filter',
-    description: 'Content safety across multiple categories',
-    tier: 'protect' as const,
+    description: 'Content safety across multiple categories. All tiers (alert) · Protect+ (block) · ML-powered (Detoxify)',
+    tier: 'monitor' as const,
   },
   {
     icon: Zap,
     title: 'Command Firewall',
-    description: 'Block dangerous system operations inline',
-    tier: 'protect' as const,
+    description: 'Block dangerous system operations inline. All tiers (alert) · Protect+ (block) · Pattern-based',
+    tier: 'monitor' as const,
+  },
+];
+
+const AI_HYBRID_ENGINES = [
+  {
+    icon: Shield,
+    title: 'Semantic Firewall',
+    description: 'Enforce+ · AI Hybrid (LLM-powered) — understands intent, not just patterns',
+    tier: 'enforce' as const,
+  },
+  {
+    icon: AlertTriangle,
+    title: 'Hallucination Detector',
+    description: 'Enforce+ · AI Hybrid (LLM-powered) — catches factual inconsistencies',
+    tier: 'enforce' as const,
+  },
+  {
+    icon: Eye,
+    title: 'Reasoning Drift',
+    description: 'Enforce+ · AI Hybrid (LLM-powered) — detects when agent reasoning goes off-track',
+    tier: 'enforce' as const,
   },
 ];
 
@@ -152,7 +175,7 @@ export default function SecurePage() {
             ))}
           </div>
           <p className="text-center text-slate-500">
-            Based on TrustScope detection analysis across AI agent deployments
+            Based on OWASP Agentic Top 10 research and industry incident reports
           </p>
         </div>
       </section>
@@ -196,11 +219,18 @@ export default function SecurePage() {
               Security Detection Engines
             </h2>
             <p className="text-lg text-slate-400">
-              25 engines protect your AI agents
+              19 engines protect your AI agents at all tiers. 25 with AI hybrid at Enforce+.
             </p>
           </div>
 
           <FeatureGrid features={SECURITY_ENGINES} columns={3} />
+
+          <div className="mt-12">
+            <h3 className="text-xl font-bold text-white mb-6 text-center">
+              +6 AI Hybrid Engines (Enforce+)
+            </h3>
+            <FeatureGrid features={AI_HYBRID_ENGINES} columns={3} />
+          </div>
         </div>
       </section>
 

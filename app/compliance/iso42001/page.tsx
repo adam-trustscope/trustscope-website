@@ -286,7 +286,7 @@ export default function ISO42001Page() {
               <ul className="space-y-2 text-sm">
                 <li className="flex items-center gap-2 text-slate-300">
                   <CheckCircle className="w-3 h-3 text-emerald-500" />
-                  16 detection engines
+                  19 detection engines
                 </li>
                 <li className="flex items-center gap-2 text-slate-300">
                   <CheckCircle className="w-3 h-3 text-emerald-500" />
@@ -353,7 +353,7 @@ export default function ISO42001Page() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="https://app.trustscope.ai" className="btn-primary">
-              Start Free Trial
+              Get Started Free
             </Link>
             <Link href="/pricing" className="btn-secondary">
               View Pricing

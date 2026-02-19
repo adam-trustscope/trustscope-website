@@ -236,7 +236,7 @@ export default function NISTPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="https://app.trustscope.ai" className="btn-primary">
-              Start Free Trial
+              Get Started Free
             </Link>
             <Link href="/pricing" className="btn-secondary">
               View Pricing

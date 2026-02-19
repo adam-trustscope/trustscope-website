@@ -51,6 +51,7 @@ const navigation = {
 }
 
 const directLinks = [
+  { name: 'Developers', href: '/build' },
   { name: 'Scanner', href: '/scanner' },
   { name: 'Pricing', href: '/pricing' },
   { name: 'Docs', href: 'https://docs.trustscope.ai', external: true },
@@ -212,7 +213,7 @@ export default function Header() {
             Sign In
           </Link>
           <Link href="https://app.trustscope.ai" className="btn-primary">
-            Start Free Trial
+            Get Started Free
           </Link>
         </div>
 
@@ -312,7 +313,7 @@ export default function Header() {
                 Sign In
               </Link>
               <Link href="https://app.trustscope.ai" className="btn-primary block text-center">
-                Start Free Trial
+                Get Started Free
               </Link>
             </div>
           </div>
