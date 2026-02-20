@@ -4,22 +4,22 @@ import HeroGovernanceDemo from '@/components/HeroGovernanceDemo'
 
 const urgencySignals = [
   {
-    value: '7%',
-    label: 'max global annual turnover penalty for prohibited-practice violations under the EU AI Act.',
-    sourceLabel: 'EU AI Act (Regulation (EU) 2024/1689, Article 99)',
-    sourceHref: 'http://data.europa.eu/eli/reg/2024/1689/oj',
+    value: '88%',
+    label: 'of organizations had confirmed or suspected AI agent security incidents this year.',
+    sourceLabel: 'State of AI Agent Security 2026, Gravitee (900+ executives), Feb 2026',
+    sourceHref: 'https://gravitee.io/resources/state-of-ai-agent-security-2026',
   },
   {
-    value: 'Aug 2, 2026',
-    label: 'key EU AI Act obligations apply for most high-risk AI systems.',
-    sourceLabel: 'EUR-Lex AI Act timeline summary',
-    sourceHref: 'https://eur-lex.europa.eu/EN/legal-content/summary/rules-for-trustworthy-artificial-intelligence.html',
+    value: '14%',
+    label: 'of organizations have full security approval for their entire AI agent fleet. The rest are flying blind.',
+    sourceLabel: 'State of AI Agent Security 2026, Gravitee, Feb 2026',
+    sourceHref: 'https://gravitee.io/resources/state-of-ai-agent-security-2026',
   },
   {
-    value: '6 domains',
-    label: 'in AIUC-1 require evidence across privacy, security, safety, reliability, accountability, and society.',
-    sourceLabel: 'TrustScope AIUC-1 mapping (v22.0)',
-    sourceHref: '/compliance/aiuc-1',
+    value: '$4.63M',
+    label: 'average cost of an AI-related data breach — $670K more than standard breaches.',
+    sourceLabel: 'IBM Cost of a Data Breach Report, 2025',
+    sourceHref: 'https://www.ibm.com/reports/data-breach',
   },
 ]
 
