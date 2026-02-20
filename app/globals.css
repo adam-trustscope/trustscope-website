@@ -2,56 +2,133 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg: #09090b;
+  --surface: #111113;
+  --surface-hover: #1a1a1d;
+  --border: #27272a;
+  --border-hover: #3f3f46;
+
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --text-subtle: #52525b;
+
+  --brand: #b8964e;
+  --brand-hover: #9a7d42;
+  --brand-muted: #6b5a35;
+
+  --interactive: #2563eb;
+  --interactive-hover: #1d4ed8;
+
+  --status-danger: #dc2626;
+  --status-warning: #d97706;
+  --status-success: #16a34a;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
   }
-  
+
   body {
-    @apply bg-slate-950 text-white antialiased;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  code,
+  pre,
+  kbd,
+  samp {
+    font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
   }
 }
 
 @layer components {
-  .btn-primary {
-    @apply px-6 py-3 bg-blue-600 hover:bg-blue-500 rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-blue-600/25;
-  }
-  
-  .btn-secondary {
-    @apply px-6 py-3 border border-slate-600 hover:bg-slate-800 rounded-lg font-semibold transition-all duration-200;
-  }
-  
   .section-container {
-    @apply max-w-7xl mx-auto px-6;
+    @apply mx-auto w-full max-w-7xl px-6;
   }
-  
-  .gradient-text {
-    @apply bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent;
+
+  .btn-primary {
+    background: var(--brand);
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--brand) 45%, transparent);
+    @apply inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm font-semibold text-white transition-colors;
   }
-  
+
+  .btn-primary:hover {
+    background: var(--brand-hover);
+  }
+
+  .btn-secondary {
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    @apply inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm font-semibold transition-colors;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--border-hover);
+    background: var(--surface-hover);
+    color: var(--text-primary);
+  }
+
   .card {
-    @apply bg-slate-900/50 border border-slate-700/50 rounded-xl p-6 hover:border-slate-600 transition-colors;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    @apply rounded-xl p-6 transition-colors;
   }
-  
-  .glow {
-    box-shadow: 0 0 60px rgba(59, 130, 246, 0.15);
+
+  .card:hover {
+    border-color: var(--border-hover);
+  }
+
+  .eyebrow {
+    color: var(--text-subtle);
+    font-family: var(--font-mono), ui-monospace, monospace;
+    @apply text-[11px] uppercase tracking-[0.12em];
+  }
+
+  .compliance-disclaimer {
+    border: 1px solid color-mix(in oklab, var(--status-warning) 35%, transparent);
+    background: color-mix(in oklab, var(--status-warning) 8%, transparent);
+    @apply rounded-xl p-4 text-sm;
+  }
+
+  .link-action {
+    color: var(--interactive);
+    @apply transition-colors;
+  }
+
+  .link-action:hover {
+    color: var(--interactive-hover);
   }
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: var(--bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 4px;
+  background: var(--border-hover);
+  border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #52525b;
 }

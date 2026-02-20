@@ -1,7 +1,7 @@
 // Sample Data Generators for Browser Scanner
-// 4 synthetic datasets that demonstrate all detection capabilities
+// 5 synthetic datasets that demonstrate core detection capabilities
 
-export type SampleType = 'healthcare' | 'financial' | 'support' | 'multiagent';
+import type { SampleType } from './types';
 
 interface SampleDataResult {
   content: string;
@@ -10,6 +10,24 @@ interface SampleDataResult {
 
 export function generateSampleData(sampleType: SampleType): SampleDataResult {
   switch (sampleType) {
+    case 'support_bot': {
+      const sample = generateSupportSample();
+      return { ...sample, fileName: 'support_bot_traces.json' };
+    }
+    case 'code_assistant':
+      return generateCodeAssistantSample();
+    case 'claims_processor': {
+      const sample = generateHealthcareSample();
+      return { ...sample, fileName: 'claims_processor_traces.json' };
+    }
+    case 'research_pipeline': {
+      const sample = generateMultiAgentSample();
+      return { ...sample, fileName: 'research_pipeline_traces.json' };
+    }
+    case 'financial_advisor': {
+      const sample = generateFinancialSample();
+      return { ...sample, fileName: 'financial_advisor_traces.json' };
+    }
     case 'healthcare':
       return generateHealthcareSample();
     case 'financial':
@@ -44,7 +62,7 @@ function generateHealthcareSample(): SampleDataResult {
       },
       outputs: {
         generations: [{
-          text: `Patient ${patientId} found. Name: John Smith, DOB: 03/15/1985, SSN: ${generateSSN()}, Phone: ${generatePhone()}, Email: ${generateEmail()}`
+          text: `Patient ${patientId} found. Name: John Smith, DOB: 03/15/1985, SSN: ${generateSSN()}, Phone: ${generatePhone()}, Email: ${generateEmail()}, Member ID: ${generateMemberId()}, Policy: ${generatePolicyNumber()}, NPI ${generateNpi()}, Diagnosis: ${generateIcd10()}`
         }]
       },
       extra: {
@@ -322,6 +340,91 @@ function generateSupportSample(): SampleDataResult {
   };
 }
 
+// Code Assistant Sample
+// Contains: API keys/secrets in generated snippets, loop retries, cost anomalies
+function generateCodeAssistantSample(): SampleDataResult {
+  const traces = [];
+  const baseDate = new Date('2026-02-01T07:00:00Z');
+
+  // Normal coding assistant traces
+  for (let i = 0; i < 120; i++) {
+    traces.push({
+      id: `code-${9000 + i}`,
+      created_at: new Date(baseDate.getTime() + i * 45000).toISOString(),
+      model_name: i % 2 === 0 ? 'gpt-4o' : 'claude-3-5-sonnet',
+      input: `Implement feature ${i + 1} with tests. Keep response concise.`,
+      output: `Implemented feature ${i + 1}. Added unit tests and edge-case handling. Ready for review.`,
+      tokens_in: 120 + Math.floor(Math.random() * 35),
+      tokens_out: 180 + Math.floor(Math.random() * 60),
+    });
+  }
+
+  // Secret leakage in generated code
+  traces.push({
+    id: 'code-secret-openai',
+    created_at: new Date(baseDate.getTime() + 121 * 45000).toISOString(),
+    model_name: 'gpt-4o',
+    input: 'Generate a config file for local development.',
+    output: `export OPENAI_API_KEY="sk-proj-codeassist123456789abcdefghijklmnopqrstuvwxyz"\nexport API_BASE_URL="https://api.example.dev"`,
+    tokens_in: 95,
+    tokens_out: 130,
+  });
+
+  traces.push({
+    id: 'code-secret-github',
+    created_at: new Date(baseDate.getTime() + 122 * 45000).toISOString(),
+    model_name: 'claude-3-5-sonnet',
+    input: 'Show CI token setup for the deployment script.',
+    output: `GITHUB_TOKEN=ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcd\n./deploy.sh`,
+    tokens_in: 90,
+    tokens_out: 120,
+  });
+
+  traces.push({
+    id: 'code-secret-db',
+    created_at: new Date(baseDate.getTime() + 123 * 45000).toISOString(),
+    model_name: 'gpt-4o',
+    input: 'Generate database bootstrap snippet.',
+    output: `DATABASE_URL=postgresql://dev_user:DevPassword123!@db.internal:5432/app_dev`,
+    tokens_in: 88,
+    tokens_out: 110,
+  });
+
+  // Retry loop pattern
+  const retryPrompt = 'Run tests, patch failures, rerun tests until green';
+  for (let i = 0; i < 6; i++) {
+    traces.push({
+      id: `code-loop-${i}`,
+      created_at: new Date(baseDate.getTime() + (130 + i) * 45000).toISOString(),
+      model_name: 'gpt-4o-mini',
+      input: retryPrompt,
+      output: 'Tests still failing on the same assertion. Applying another patch and retrying.',
+      tokens_in: 140,
+      tokens_out: 120,
+    });
+  }
+
+  // Cost anomalies: very large context windows
+  for (let i = 0; i < 18; i++) {
+    const multiplier = 1 + i;
+    traces.push({
+      id: `code-cost-${i}`,
+      created_at: new Date(baseDate.getTime() + (140 + i) * 45000).toISOString(),
+      model_name: 'gpt-4',
+      input: 'Refactor monorepo and include full workspace context in each step.',
+      output: `Completed pass ${i + 1}. Context expanded to include additional modules.`,
+      tokens_in: 6000 + multiplier * 1800,
+      tokens_out: 2500 + multiplier * 700,
+      cost: Number((0.12 * multiplier).toFixed(3)),
+    });
+  }
+
+  return {
+    content: JSON.stringify(traces, null, 2),
+    fileName: 'code_assistant_traces.json'
+  };
+}
+
 // Multi-Agent Sample (50-100 traces)
 // Contains: Identical loops, oscillation, massive costs, mixed API keys, DB URLs, token growth
 function generateMultiAgentSample(): SampleDataResult {
@@ -455,6 +558,25 @@ function generateMultiAgentSample(): SampleDataResult {
 }
 
 // Helper generators
+function generatePolicyNumber(): string {
+  return `POL-${Math.floor(10000000 + Math.random() * 89999999)}`;
+}
+
+function generateMemberId(): string {
+  return `MEM-${Math.floor(10000000 + Math.random() * 89999999)}`;
+}
+
+function generateNpi(): string {
+  return `${Math.floor(1000000000 + Math.random() * 8999999999)}`;
+}
+
+function generateIcd10(): string {
+  const prefixes = ['E11', 'I10', 'J45', 'M54', 'K21', 'N18', 'F41', 'G47'];
+  const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+  const suffix = Math.floor(Math.random() * 90) + 10;
+  return `${prefix}.${suffix}`;
+}
+
 function generateSSN(): string {
   const area = String(Math.floor(Math.random() * 899) + 100);
   const group = String(Math.floor(Math.random() * 99) + 1).padStart(2, '0');

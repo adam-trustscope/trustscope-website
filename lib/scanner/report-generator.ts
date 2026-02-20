@@ -1,323 +1,348 @@
-// Report Generator for Browser Scanner
-// Client-side PDF generation using jsPDF
-
-import { jsPDF } from 'jspdf';
+import { jsPDF } from 'jspdf'
 import {
-  Finding,
-  ScanSummary,
   ContentClassification,
-  FormatDetectionResult,
-  FindingEngine,
+  Finding,
   FindingSeverity,
-} from './types';
+  FormatDetectionResult,
+  ScanSummary,
+} from './types'
+import { getBrandLogoDataUrl } from '@/lib/pdf/brand-logo'
 
 export interface ReportData {
-  fileName: string;
-  scanDate: Date;
-  formatResult: FormatDetectionResult;
-  classification: ContentClassification;
-  summary: ScanSummary;
-  findings: Finding[];
+  fileName: string
+  scanDate: Date
+  formatResult: FormatDetectionResult
+  classification: ContentClassification
+  summary: ScanSummary
+  findings: Finding[]
 }
 
-export function generatePdfReport(data: ReportData): Blob {
-  const doc = new jsPDF();
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const margin = 20;
-  const contentWidth = pageWidth - margin * 2;
-  let y = margin;
+interface ExposureIndicator {
+  score: number
+  label: string
+  band: string
+}
 
-  // Helper functions
-  const addText = (text: string, size: number = 10, style: 'normal' | 'bold' = 'normal') => {
-    doc.setFontSize(size);
-    doc.setFont('helvetica', style);
-    const lines = doc.splitTextToSize(text, contentWidth);
-    doc.text(lines, margin, y);
-    y += lines.length * (size * 0.4) + 2;
-  };
+const SCANNER_DISCLAIMER =
+  'This report reflects automated detection results only. TrustScope does not provide legal, compliance, or certification determinations.'
 
-  const addSection = (title: string) => {
-    y += 5;
-    doc.setDrawColor(59, 130, 246); // Blue
-    doc.setLineWidth(0.5);
-    doc.line(margin, y, pageWidth - margin, y);
-    y += 5;
-    addText(title, 14, 'bold');
-    y += 2;
-  };
+const severityPriority: Record<FindingSeverity, number> = {
+  critical: 4,
+  high: 3,
+  medium: 2,
+  low: 1,
+}
 
-  const checkPageBreak = (neededSpace: number = 30) => {
-    if (y > doc.internal.pageSize.getHeight() - neededSpace) {
-      doc.addPage();
-      y = margin;
+function computeExposureIndicator(summary: ScanSummary): ExposureIndicator {
+  const totalTraces = Math.max(summary.totalTraces, 1)
+  const weighted =
+    summary.bySeverity.critical * 12 +
+    summary.bySeverity.high * 6 +
+    summary.bySeverity.medium * 2 +
+    summary.bySeverity.low * 1
+
+  const perTrace = weighted / totalTraces
+  const score = Math.max(0, Math.min(100, Math.round(100 - perTrace * 8)))
+
+  if (score >= 90) return { score, label: 'Low exposure', band: 'Minimal' }
+  if (score >= 80) return { score, label: 'Moderate exposure', band: 'Low' }
+  if (score >= 70) return { score, label: 'Elevated exposure', band: 'Moderate' }
+  if (score >= 60) return { score, label: 'High exposure', band: 'High' }
+  return { score, label: 'Severe exposure', band: 'Critical' }
+}
+
+function getTopCategories(summary: ScanSummary): Array<{ category: string; count: number }> {
+  return Object.entries(summary.byCategory)
+    .map(([category, count]) => ({ category, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 6)
+}
+
+function getTopEngines(summary: ScanSummary): Array<{ engine: string; count: number }> {
+  return Object.entries(summary.byEngine)
+    .map(([engine, count]) => ({ engine, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 8)
+}
+
+function formatCategoryLabel(value: string): string {
+  const mapping: Record<string, string> = {
+    ssn: 'Social Security Number',
+    email: 'Email',
+    phone: 'Phone',
+    credit_card: 'Card Number',
+    date_of_birth: 'Date of Birth',
+    medical_record: 'Medical Record ID',
+    openai_key: 'OpenAI Key',
+    anthropic_key: 'Anthropic Key',
+    aws_access_key: 'AWS Access Key',
+    aws_secret_key: 'AWS Secret Key',
+    bearer_token: 'Bearer Token',
+    private_key: 'Private Key',
+    database_url: 'Database URL',
+    high_tokens: 'High Token Usage',
+    high_cost: 'High Cost',
+    cost_growth: 'Cost Growth',
+    identical_inputs: 'Identical Input Loop',
+    similar_inputs: 'Similar Input Loop',
+    oscillation: 'Oscillation Loop',
+    prompt_injection: 'Prompt Injection',
+    jailbreak: 'Jailbreak',
+  }
+  return mapping[value] ?? value.replace(/_/g, ' ')
+}
+
+function formatEngineLabel(value: string): string {
+  return value.replace(/_/g, ' ')
+}
+
+function formatSeverityLabel(value: FindingSeverity): string {
+  return value.charAt(0).toUpperCase() + value.slice(1)
+}
+
+function formatFindingSnippet(finding: Finding): string {
+  const preview = finding.redactedPreview?.trim() || finding.description
+  if (!preview) return finding.description
+  return preview.length > 70 ? `${preview.slice(0, 67)}...` : preview
+}
+
+function footer(doc: jsPDF): void {
+  const pageWidth = doc.internal.pageSize.getWidth()
+  const pageHeight = doc.internal.pageSize.getHeight()
+  const page = doc.getCurrentPageInfo().pageNumber
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(8)
+  doc.setTextColor(113, 113, 122)
+  doc.text(`TrustScope Trace Analysis Report • Page ${page}`, pageWidth / 2, pageHeight - 8, {
+    align: 'center',
+  })
+}
+
+export async function generatePdfReport(data: ReportData): Promise<Blob> {
+  const doc = new jsPDF()
+  const pageWidth = doc.internal.pageSize.getWidth()
+  const pageHeight = doc.internal.pageSize.getHeight()
+  const margin = 16
+  const contentWidth = pageWidth - margin * 2
+  let y = margin
+
+  const ensureSpace = (space = 20) => {
+    if (y + space > pageHeight - 14) {
+      footer(doc)
+      doc.addPage()
+      y = margin
     }
-  };
+  }
+
+  const writeText = (
+    text: string,
+    size = 10,
+    style: 'normal' | 'bold' = 'normal',
+    color: [number, number, number] = [39, 39, 42]
+  ) => {
+    doc.setFont('helvetica', style)
+    doc.setFontSize(size)
+    doc.setTextColor(color[0], color[1], color[2])
+    const lines = doc.splitTextToSize(text, contentWidth)
+    doc.text(lines, margin, y)
+    y += lines.length * (size * 0.38) + 2.4
+  }
+
+  const writeSection = (title: string) => {
+    ensureSpace(16)
+    y += 1
+    doc.setDrawColor(63, 63, 70)
+    doc.setLineWidth(0.4)
+    doc.line(margin, y, pageWidth - margin, y)
+    y += 5
+    writeText(title, 12.5, 'bold')
+    y += 1
+  }
 
   // Header
-  doc.setFillColor(15, 23, 42); // Slate-900
-  doc.rect(0, 0, pageWidth, 35, 'F');
+  doc.setFillColor(9, 9, 11)
+  doc.rect(0, 0, pageWidth, 34, 'F')
 
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(24);
-  doc.setFont('helvetica', 'bold');
-  doc.text('TrustScope', margin, 18);
-
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'normal');
-  doc.text('AI Trace Security Scan Report', margin, 28);
-
-  doc.setTextColor(0, 0, 0);
-  y = 45;
-
-  // Scan Info
-  addSection('Scan Information');
-  addText(`File: ${data.fileName}`);
-  addText(`Format: ${data.formatResult.displayName}`);
-  addText(`Traces Scanned: ${data.formatResult.traceCount.toLocaleString()}`);
-  addText(`Scan Date: ${data.scanDate.toLocaleString()}`);
-  addText(`Scan Duration: ${(data.summary.scanDurationMs / 1000).toFixed(2)} seconds`);
-
-  // Summary
-  addSection('Summary');
-
-  const severityColors: Record<FindingSeverity, [number, number, number]> = {
-    critical: [220, 38, 38],
-    high: [234, 88, 12],
-    medium: [202, 138, 4],
-    low: [22, 163, 74],
-  };
-
-  // Draw severity boxes
-  const boxWidth = (contentWidth - 15) / 4;
-  let boxX = margin;
-
-  for (const severity of ['critical', 'high', 'medium', 'low'] as FindingSeverity[]) {
-    const count = data.summary.bySeverity[severity];
-    const [r, g, b] = severityColors[severity];
-
-    doc.setFillColor(r, g, b);
-    doc.roundedRect(boxX, y, boxWidth, 25, 2, 2, 'F');
-
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(16);
-    doc.setFont('helvetica', 'bold');
-    doc.text(count.toString(), boxX + boxWidth / 2, y + 12, { align: 'center' });
-
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'normal');
-    doc.text(severity.toUpperCase(), boxX + boxWidth / 2, y + 20, { align: 'center' });
-
-    boxX += boxWidth + 5;
+  const whiteLogo = await getBrandLogoDataUrl('white')
+  if (whiteLogo) {
+    doc.addImage(whiteLogo, 'PNG', margin, 8, 46, 15)
+  } else {
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(17)
+    doc.setTextColor(250, 250, 250)
+    doc.text('TrustScope', margin, 18)
   }
 
-  doc.setTextColor(0, 0, 0);
-  y += 35;
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(10.5)
+  doc.setTextColor(228, 228, 231)
+  doc.text('Trace Analysis Report', pageWidth - margin, 18, { align: 'right' })
 
-  // Findings by Engine
-  addText('Findings by Detection Engine:', 11, 'bold');
-  y += 2;
+  y = 42
+  writeText(`File: ${data.fileName}`, 9, 'normal', [113, 113, 122])
+  writeText(`Format: ${data.formatResult.displayName}`, 9, 'normal', [113, 113, 122])
+  writeText(`Generated: ${data.scanDate.toLocaleString()}`, 9, 'normal', [113, 113, 122])
+  writeText(`Scan duration: ${(data.summary.scanDurationMs / 1000).toFixed(2)}s`, 9, 'normal', [113, 113, 122])
 
-  const engineLabels: Partial<Record<string, string>> = {
-    // New engine names
-    pii_scanner: 'PII Detection',
-    secrets_scanner: 'Secrets Detection',
-    prompt_injection: 'Prompt Injection',
-    jailbreak_detector: 'Jailbreak Detection',
-    command_firewall: 'Command Firewall',
-    toxicity_filter: 'Content Safety',
-    loop_killer: 'Loop Detection',
-    cost_velocity: 'Cost Anomalies',
-    oscillation: 'Oscillation Detection',
-    velocity: 'Velocity Monitor',
-    token_growth: 'Token Growth',
-    data_exfiltration: 'Data Exfiltration',
-    // Legacy engine names
-    pii: 'PII Detection',
-    secrets: 'Secrets Detection',
-    cost: 'Cost Anomalies',
-    loop: 'Loop Detection',
-    toxicity: 'Content Safety',
-  };
+  // Executive summary
+  const indicator = computeExposureIndicator(data.summary)
+  writeSection('Executive Summary')
 
-  // Display engines with findings
-  for (const [engine, count] of Object.entries(data.summary.byEngine)) {
-    if (count > 0) {
-      const label = engineLabels[engine] || engine;
-      addText(`  • ${label}: ${count} finding${count !== 1 ? 's' : ''}`);
+  ensureSpace(24)
+  doc.setFillColor(244, 244, 245)
+  doc.setDrawColor(212, 212, 216)
+  doc.roundedRect(margin, y, contentWidth, 22, 2, 2, 'FD')
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(16)
+  doc.setTextColor(39, 39, 42)
+  doc.text(`Exposure Index: ${indicator.score}/100`, margin + 3, y + 9)
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(9)
+  doc.setTextColor(82, 82, 91)
+  doc.text(`${indicator.label} · Band: ${indicator.band}`, margin + 3, y + 15)
+  y += 27
+
+  ensureSpace(21)
+  const cards = [
+    { label: 'Traces scanned', value: data.summary.totalTraces.toLocaleString() },
+    { label: 'Total findings', value: data.summary.totalFindings.toLocaleString() },
+    {
+      label: 'Critical + High',
+      value: (data.summary.bySeverity.critical + data.summary.bySeverity.high).toLocaleString(),
+    },
+    {
+      label: 'Findings / trace',
+      value: (data.summary.totalFindings / Math.max(data.summary.totalTraces, 1)).toFixed(2),
+    },
+  ]
+  const cardWidth = (contentWidth - 12) / 4
+  cards.forEach((card, index) => {
+    const x = margin + index * (cardWidth + 4)
+    doc.setFillColor(249, 250, 251)
+    doc.setDrawColor(228, 228, 231)
+    doc.roundedRect(x, y, cardWidth, 18, 2, 2, 'FD')
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(7.6)
+    doc.setTextColor(113, 113, 122)
+    doc.text(card.label, x + 2, y + 5)
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(11)
+    doc.setTextColor(39, 39, 42)
+    doc.text(card.value, x + 2, y + 13)
+  })
+  y += 24
+
+  writeSection('Top Risk Signals')
+  const topCategories = getTopCategories(data.summary)
+  if (topCategories.length === 0) {
+    writeText('No findings detected in this trace file.', 9.5, 'normal', [82, 82, 91])
+  } else {
+    topCategories.forEach((item, index) => {
+      ensureSpace(7)
+      writeText(
+        `${index + 1}. ${formatCategoryLabel(item.category)} — ${item.count.toLocaleString()} finding(s)`,
+        9.5,
+        'normal',
+        [63, 63, 70]
+      )
+    })
+  }
+
+  writeSection('Model Footprint')
+  const models = data.classification.modelNames.length > 0 ? data.classification.modelNames.join(', ') : 'Not detected'
+  writeText(models, 9.5, 'normal', [63, 63, 70])
+
+  writeSection('Findings by Severity')
+  ;(['critical', 'high', 'medium', 'low'] as FindingSeverity[]).forEach((severity) => {
+    ensureSpace(7)
+    writeText(
+      `${formatSeverityLabel(severity)}: ${data.summary.bySeverity[severity].toLocaleString()}`,
+      9.4,
+      'normal',
+      [63, 63, 70]
+    )
+  })
+
+  writeSection('Findings by Detection Engine')
+  const topEngines = getTopEngines(data.summary)
+  if (topEngines.length === 0) {
+    writeText('No detection engines reported findings.', 9.2, 'normal', [82, 82, 91])
+  } else {
+    topEngines.forEach((item) => {
+      ensureSpace(7)
+      writeText(
+        `${formatEngineLabel(item.engine)} — ${item.count.toLocaleString()} finding(s)`,
+        9.2,
+        'normal',
+        [63, 63, 70]
+      )
+    })
+  }
+
+  writeSection('Representative Findings')
+  const sampleFindings = [...data.findings]
+    .sort((a, b) => severityPriority[b.severity] - severityPriority[a.severity])
+    .slice(0, 20)
+
+  if (sampleFindings.length === 0) {
+    writeText('No findings available for detail preview.', 9.2, 'normal', [82, 82, 91])
+  } else {
+    for (const finding of sampleFindings) {
+      ensureSpace(11)
+      doc.setFillColor(249, 250, 251)
+      doc.setDrawColor(228, 228, 231)
+      doc.roundedRect(margin, y - 1, contentWidth, 9, 1.2, 1.2, 'FD')
+      doc.setFont('helvetica', 'bold')
+      doc.setFontSize(8.4)
+      doc.setTextColor(39, 39, 42)
+      doc.text(
+        `Trace #${finding.traceIndex + 1} • ${formatSeverityLabel(finding.severity)} • ${formatEngineLabel(finding.engine)}`,
+        margin + 2,
+        y + 2.6
+      )
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(7.8)
+      doc.setTextColor(82, 82, 91)
+      doc.text(formatFindingSnippet(finding), margin + 2, y + 6.2)
+      y += 11
     }
   }
 
-  // Content Classification
-  checkPageBreak(50);
-  addSection('Content Classification');
+  writeSection('Disclosure')
+  writeText(SCANNER_DISCLAIMER, 8.4, 'normal', [113, 113, 122])
 
-  addText(`Models Detected: ${data.classification.modelNames.join(', ') || 'None'}`);
-
-  const contentTypes: string[] = [];
-  if (data.classification.hasPrompts) contentTypes.push('Prompts');
-  if (data.classification.hasResponses) contentTypes.push('Responses');
-  if (data.classification.hasToolCalls) contentTypes.push('Tool Calls');
-  if (data.classification.hasSystemPrompts) contentTypes.push('System Prompts');
-  if (data.classification.hasEmbeddings) contentTypes.push('Embeddings');
-  if (data.classification.hasMetadata) contentTypes.push('Metadata');
-
-  addText(`Content Types: ${contentTypes.join(', ') || 'None detected'}`);
-
-  if (data.classification.dateRange) {
-    addText(`Date Range: ${new Date(data.classification.dateRange.earliest).toLocaleDateString()} - ${new Date(data.classification.dateRange.latest).toLocaleDateString()}`);
+  const pageCount = doc.getNumberOfPages()
+  for (let page = 1; page <= pageCount; page += 1) {
+    doc.setPage(page)
+    footer(doc)
   }
 
-  // Risk Assessment
-  const risks: string[] = [];
-  if (data.classification.hasPii) risks.push('PII detected in traces');
-  if (data.classification.hasSecrets) risks.push('Secrets/API keys detected');
-  if (data.classification.hasSystemPrompts) risks.push('System prompts may contain proprietary logic');
-  if (data.classification.hasEmbeddings) risks.push('Embeddings may leak training data');
-
-  if (risks.length > 0) {
-    y += 3;
-    addText('Risk Assessment:', 11, 'bold');
-    for (const risk of risks) {
-      addText(`  ⚠ ${risk}`);
-    }
-  }
-
-  // Detailed Findings
-  if (data.findings.length > 0) {
-    checkPageBreak(40);
-    addSection('Detailed Findings');
-
-    // Group findings by engine and category
-    const grouped = groupFindings(data.findings);
-
-    for (const [engine, categories] of Object.entries(grouped)) {
-      checkPageBreak(30);
-      addText(`${engineLabels[engine] || engine}`, 12, 'bold');
-
-      for (const [category, findings] of Object.entries(categories)) {
-        checkPageBreak(20);
-        addText(`  ${getCategoryLabel(category)} (${findings.length})`, 10, 'bold');
-
-        // Show up to 5 examples per category
-        const examples = findings.slice(0, 5);
-        for (const finding of examples) {
-          checkPageBreak(15);
-          doc.setFillColor(245, 245, 245);
-          doc.roundedRect(margin + 10, y - 2, contentWidth - 20, 12, 1, 1, 'F');
-
-          doc.setFontSize(8);
-          doc.setFont('helvetica', 'normal');
-          doc.text(`Trace #${finding.traceIndex} | ${finding.field} | ${finding.redactedPreview}`, margin + 12, y + 4);
-          y += 14;
-        }
-
-        if (findings.length > 5) {
-          addText(`    ... and ${findings.length - 5} more`, 8);
-        }
-
-        y += 3;
-      }
-    }
-  }
-
-  // Footer
-  const addFooter = () => {
-    doc.setFontSize(8);
-    doc.setTextColor(128, 128, 128);
-    doc.text(
-      'Generated by TrustScope Browser Scanner | 100% Client-Side | No data transmitted',
-      pageWidth / 2,
-      doc.internal.pageSize.getHeight() - 10,
-      { align: 'center' }
-    );
-  };
-
-  // Add footer to all pages
-  const totalPages = doc.internal.pages.length - 1;
-  for (let i = 1; i <= totalPages; i++) {
-    doc.setPage(i);
-    addFooter();
-  }
-
-  return doc.output('blob');
+  return doc.output('blob')
 }
 
-function groupFindings(findings: Finding[]): Record<string, Record<string, Finding[]>> {
-  const grouped: Record<string, Record<string, Finding[]>> = {};
-
-  for (const finding of findings) {
-    if (!grouped[finding.engine]) {
-      grouped[finding.engine] = {};
-    }
-    if (!grouped[finding.engine][finding.category]) {
-      grouped[finding.engine][finding.category] = [];
-    }
-    grouped[finding.engine][finding.category].push(finding);
-  }
-
-  return grouped;
-}
-
-function getCategoryLabel(category: string): string {
-  const labels: Record<string, string> = {
-    // PII
-    ssn: 'Social Security Numbers',
-    email: 'Email Addresses',
-    phone: 'Phone Numbers',
-    credit_card: 'Credit Card Numbers',
-    date_of_birth: 'Dates of Birth',
-    ip_address: 'IP Addresses',
-    medical_record: 'Medical Record IDs',
-    drivers_license: "Driver's Licenses",
-    // Secrets
-    openai_key: 'OpenAI API Keys',
-    anthropic_key: 'Anthropic API Keys',
-    aws_access_key: 'AWS Access Keys',
-    aws_secret_key: 'AWS Secret Keys',
-    bearer_token: 'Bearer Tokens',
-    private_key: 'Private Keys',
-    generic_api_key: 'Generic API Keys',
-    database_url: 'Database URLs',
-    github_token: 'GitHub Tokens',
-    google_api_key: 'Google API Keys',
-    // Cost
-    high_tokens: 'High Token Usage',
-    high_cost: 'High Cost Requests',
-    cost_growth: 'Cost Growth Spikes',
-    above_median: 'Above Median Cost',
-    // Loop
-    identical_inputs: 'Identical Input Loops',
-    similar_inputs: 'Similar Input Patterns',
-    oscillation: 'Oscillation Patterns',
-    // Toxicity
-    hate_speech: 'Hate Speech',
-    violence: 'Violence',
-    self_harm: 'Self-Harm Content',
-    sexual: 'Sexual Content',
-    profanity: 'Profanity',
-  };
-
-  return labels[category] || category;
-}
-
-// Download helper
 export function downloadReport(blob: Blob, fileName: string): void {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = fileName;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  const url = URL.createObjectURL(blob)
+  const anchor = document.createElement('a')
+  anchor.href = url
+  anchor.download = fileName
+  document.body.appendChild(anchor)
+  anchor.click()
+  document.body.removeChild(anchor)
+  URL.revokeObjectURL(url)
 }
 
-// Download redacted file
 export function downloadRedactedFile(content: string, originalFileName: string): void {
-  const extension = originalFileName.split('.').pop() || 'txt';
-  const baseName = originalFileName.replace(/\.[^/.]+$/, '');
-  const newFileName = `${baseName}_redacted.${extension}`;
+  const extension = originalFileName.split('.').pop() || 'txt'
+  const baseName = originalFileName.replace(/\.[^/.]+$/, '')
+  const fileName = `${baseName}_redacted.${extension}`
 
-  const blob = new Blob([content], { type: 'application/json' });
-  downloadReport(blob, newFileName);
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const anchor = document.createElement('a')
+  anchor.href = url
+  anchor.download = fileName
+  document.body.appendChild(anchor)
+  anchor.click()
+  document.body.removeChild(anchor)
+  URL.revokeObjectURL(url)
 }

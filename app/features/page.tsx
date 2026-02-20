@@ -1,324 +1,211 @@
 import Link from 'next/link'
-import {
-  Eye, Shield, Lock, FileCheck, Zap,
-  ArrowRight, CheckCircle, AlertTriangle,
-  Fingerprint, GitBranch, Link2, Terminal,
-  FileSearch, ShieldAlert, Brain, Scan,
-  Clock, Hash, Award
-} from 'lucide-react'
+import { Fragment } from 'react'
+import { ArrowRight, Code2, ShieldCheck } from 'lucide-react'
 
-// Detection engines - v21: 19 all tiers (alert) → 19 Protect+ (block) → 25 Enforce+ (AI hybrid)
-const detectionEngines = [
-  // 19 Monitor Engines (alert only, cannot block)
-  { name: 'Loop Killer', description: '5 identical requests in 60s', icon: GitBranch, tier: 'Monitor' },
-  { name: 'Velocity', description: '100 req/60s threshold', icon: Clock, tier: 'Monitor' },
-  { name: 'Oscillation', description: 'A→B→A→B cycle detection', icon: GitBranch, tier: 'Monitor' },
-  { name: 'Token Growth', description: '50% growth in 3 requests', icon: AlertTriangle, tier: 'Monitor' },
-  { name: 'Cost Velocity', description: '$5/min spending threshold', icon: Zap, tier: 'Monitor' },
-  { name: 'Error Rate', description: '50% error rate detection', icon: AlertTriangle, tier: 'Monitor' },
-  { name: 'Budget Caps', description: 'Session/daily/monthly limits', icon: Zap, tier: 'Monitor' },
-  { name: 'Context Expansion', description: '>50% growth or >50K tokens', icon: AlertTriangle, tier: 'Monitor' },
-  { name: 'PII Scanner', description: '88 patterns (alert only)', icon: Scan, tier: 'Monitor' },
-  { name: 'Session Duration', description: '4hr default limit', icon: Clock, tier: 'Monitor' },
-  { name: 'Session Actions', description: '500 actions/session limit', icon: Clock, tier: 'Monitor' },
-  // +4 Protect Engines (can block)
-  { name: 'Command Firewall', description: '55+ shell/SQL/code patterns', icon: ShieldAlert, tier: 'Protect+' },
-  { name: 'Blocked Phrases', description: 'Org-configured blacklist', icon: ShieldAlert, tier: 'Protect+' },
-  { name: 'Secrets Scanner', description: '50+ patterns (AWS, GCP, etc.)', icon: Lock, tier: 'Protect+' },
-  { name: 'PII Blocking', description: 'Upgraded: now blocks', icon: Scan, tier: 'Protect+' },
-  // +6 Enforce Engines (AI-powered)
-  { name: 'Prompt Injection', description: '40+ patterns, ≥0.85 confidence', icon: Brain, tier: 'Enforce+' },
-  { name: 'Jailbreak Detector', description: '30+ patterns (DAN, STAN)', icon: Brain, tier: 'Enforce+' },
-  { name: 'Semantic Firewall', description: 'Embedding-based detection', icon: Brain, tier: 'Enforce+' },
-  { name: 'A2A Depth', description: 'Warn depth 3, block depth 5', icon: GitBranch, tier: 'Enforce+' },
-  { name: 'Hallucination', description: '3-layer detection pipeline', icon: Brain, tier: 'Enforce+' },
-  { name: 'Reasoning Drift', description: 'LLM reasoning quality check', icon: Brain, tier: 'Enforce+' },
-]
-
-// Integration methods
-const integrations = [
-  { 
-    name: 'Gateway Proxy', 
-    description: 'Route LLM traffic through TrustScope. Zero code changes.',
-    code: 'OPENAI_BASE_URL=https://gateway.trustscope.ai/v1',
-    icon: Link2 
-  },
-  { 
-    name: 'SDK', 
-    description: 'Instrument your code directly for maximum control.',
-    code: 'from trustscope import TrustScope\nts = TrustScope(api_key="...")',
-    icon: Terminal 
-  },
-  { 
-    name: 'MCP Server', 
-    description: 'Monitor Model Context Protocol tool usage.',
-    code: '# Works with Anthropic Claude, etc.',
-    icon: FileSearch 
-  },
-]
-
-// Governance features - v16 with DNA endpoints
-const governanceFeatures = [
-  {
-    name: 'Agent DNA (8 Strands, 13 Endpoints)',
-    description: '8-strand behavioral fingerprints with Ed25519 attestation. /verify and /history endpoints for cryptographic proof.',
-    icon: Fingerprint,
-    details: ['8 DNA strands', '13 API endpoints', '/verify attestation', '/history audit trail']
-  },
-  { 
-    name: 'Hash Chain Audit Trail', 
-    description: 'Every action linked cryptographically. Tamper-evident by design.',
-    icon: Hash,
-    details: ['SHA-256 chaining', 'Ed25519 signatures', 'Daily merkle roots', 'SIEM export']
-  },
-  { 
-    name: 'Blockchain Anchoring', 
-    description: 'Timestamps anchored via OpenTimestamps for immutable evidence.',
-    icon: Hash,
-    details: ['Daily anchoring', 'Immutable evidence', 'Third-party verifiable', '50+ year retention']
-  },
-  { 
-    name: 'Governance Certificates', 
-    description: 'Signed attestations documenting your AI was under control.',
-    icon: Award,
-    details: ['Per-agent certs', 'Time-bounded', 'Framework-mapped', 'Auditor-ready']
-  },
-]
-
-// Tier features (v16 Golden Spec)
-const tierFeatures = {
-  monitor: {
-    name: 'Monitor',
-    price: 'Free',
-    tagline: 'See everything',
-    color: 'slate',
-    features: [
-      'Trace capture (5K/mo)',
-      '19 detection engines (alert only)',
-      'Platform Discovery (CLI, GitHub, GitLab)',
-      'Agent inventory & coverage dashboard',
-      '4 basic policies',
-      'Discord & Telegram alerts',
-      '3-day retention',
-      '1 seat',
-    ]
-  },
-  protect: {
-    name: 'Protect',
-    price: '$49/mo',
-    tagline: 'Block threats',
-    color: 'blue',
-    features: [
-      'Everything in Monitor',
-      '25K traces/month',
-      '19 detection engines (can block)',
-      'Real-time blocking mode',
-      '16 policies (11 types)',
-      'New agent alerts (Shadow AI)',
-      'Slack/Email alerts',
-      '30-day retention',
-      '3 seats',
-    ]
-  },
-  enforce: {
-    name: 'Enforce',
-    price: '$249/mo',
-    tagline: 'AI + MCP + Control',
-    color: 'purple',
-    features: [
-      'Everything in Protect',
-      '100K traces/month',
-      '25 engines (6 AI-powered)',
-      '50 policies (20 types)',
-      'MCP Trust Scoring (6-factor)',
-      'Agent DNA + Lock + /history',
-      'Delegation policies (v16)',
-      'Per-agent API keys',
-      '1-year retention',
-      '5 seats',
-    ]
-  },
-  comply: {
-    name: 'Comply',
-    price: 'Contact Us',
-    tagline: 'Evidence Packs',
-    color: 'amber',
-    features: [
-      'Everything in Enforce',
-      '500K+ traces/month',
-      '23 policy types (unlimited)',
-      '14-layer governance engine',
-      'DNA /verify (Ed25519 attestation)',
-      'Evidence Packs + hash chains',
-      'Blockchain anchoring (export)',
-      'Framework exports (4 frameworks)',
-      '3-year retention',
-      'Unlimited seats',
-      'Priority support + SSO',
-    ]
-  }
+type EngineRow = {
+  engine: string
+  detects: string
+  tier: string
+  mode: string
 }
+
+type EngineGroup = {
+  label: string
+  description: string
+  rows: EngineRow[]
+}
+
+const engineRows: EngineRow[] = [
+  { engine: 'PII Scanner', detects: 'SSN, email, phone, policy/member IDs', tier: 'Monitor+', mode: 'Alert + redact + block' },
+  { engine: 'Secrets Scanner', detects: 'API keys, bearer tokens, DB URLs', tier: 'Monitor+', mode: 'Alert + block' },
+  { engine: 'Command Firewall', detects: 'Unsafe shell / SQL / tool actions', tier: 'Monitor+', mode: 'Alert + block' },
+  { engine: 'Loop Killer', detects: 'Recursive or oscillating agent behavior', tier: 'Monitor+', mode: 'Alert + block' },
+  { engine: 'Velocity Monitor', detects: 'Runaway request bursts', tier: 'Monitor+', mode: 'Alert + block' },
+  { engine: 'Cost Velocity', detects: 'Spend anomalies and growth spikes', tier: 'Monitor+', mode: 'Alert + block' },
+  { engine: 'Context Expansion', detects: 'Context window bloat and drift', tier: 'Monitor+', mode: 'Alert' },
+  { engine: 'PII Confidence Model', detects: 'Context-aware sensitive data', tier: 'Protect+', mode: 'Alert + block' },
+  { engine: 'Intent Classification', detects: 'Risky user intent patterns', tier: 'Protect+', mode: 'Alert + policy route' },
+  { engine: 'Toxicity Scoring', detects: 'Harmful output risk', tier: 'Protect+', mode: 'Alert + block' },
+  { engine: 'Prompt Injection (AI)', detects: 'Goal hijacking and instructions tampering', tier: 'Enforce+', mode: 'Alert + block' },
+  { engine: 'Jailbreak Detection (AI)', detects: 'Guardrail evasion attempts', tier: 'Enforce+', mode: 'Alert + block' },
+  { engine: 'Hallucination Scoring (AI)', detects: 'Ungrounded or fabricated output', tier: 'Enforce+', mode: 'Alert + approval gates' },
+  { engine: 'Groundedness / Citation', detects: 'Unsupported claims and missing evidence', tier: 'Enforce+', mode: 'Alert + policy route' },
+]
+
+const integrations = [
+  {
+    method: 'Gateway proxy',
+    setup: 'export OPENAI_BASE_URL=https://api.trustscope.ai/gateway',
+    bestFor: 'Zero-code rollout in existing apps',
+  },
+  {
+    method: 'Python / Node SDK',
+    setup: 'TrustScope client + callback/decorator hooks',
+    bestFor: 'Deep per-agent policy control',
+  },
+  {
+    method: 'MCP server',
+    setup: 'npx @trustscope/mcp-server',
+    bestFor: 'IDE-native governance workflows',
+  },
+  {
+    method: 'Batch trace import',
+    setup: 'JSON, JSONL, CSV, TSV, HAR, OTel',
+    bestFor: 'Offline and historical analysis',
+  },
+]
+
+const capabilityGroups = [
+  {
+    title: 'Know',
+    items: [
+      '26-engine runtime visibility',
+      'Agent DNA fingerprinting + drift detection',
+      'Session replay and forensic trace context',
+      'Cost and exposure telemetry by agent/model',
+    ],
+  },
+  {
+    title: 'Control',
+    items: [
+      'Policy modes: simulate, alert, block',
+      'Inline redaction and command restrictions',
+      'Human-approval gates for high-risk actions',
+      'Fail-open architecture with explicit controls',
+    ],
+  },
+  {
+    title: 'Prove',
+    items: [
+      'Signed, tamper-evident evidence receipts',
+      'Hash-chained history with long retention',
+      'Framework exports: AIUC-1, NIST, ISO, SOC 2, EU AI Act',
+      'Govern-tier underwriting and audit workflows',
+    ],
+  },
+]
+
+const engineGroups: EngineGroup[] = [
+  {
+    label: 'Monitor Foundation',
+    description: 'Rule-based runtime controls available from Monitor tier upward.',
+    rows: engineRows.filter((row) => row.tier.startsWith('Monitor')),
+  },
+  {
+    label: 'Protect Layer',
+    description: 'ML-assisted controls for contextual risk routing and stronger blocking.',
+    rows: engineRows.filter((row) => row.tier.startsWith('Protect')),
+  },
+  {
+    label: 'Enforce Layer',
+    description: 'AI-hybrid controls for advanced runtime reasoning and migration risk checks.',
+    rows: engineRows.filter((row) => row.tier.startsWith('Enforce')),
+  },
+]
 
 export default function FeaturesPage() {
   return (
-    <div className="pt-20">
-      {/* Hero */}
-      <section className="py-24 bg-gradient-to-b from-blue-600/10 to-transparent">
-        <div className="section-container text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Everything You Need to
-            <br />
-            <span className="gradient-text">Govern AI Agents</span>
-          </h1>
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-8">
-            From observability to evidence generation. 
-            One platform for the entire AI governance lifecycle.
-          </p>
-          <Link href="https://app.trustscope.ai" className="btn-primary inline-flex items-center gap-2">
-            Start Free <ArrowRight className="w-5 h-5" />
-          </Link>
-        </div>
+    <div className="min-h-screen bg-[var(--bg)] py-14">
+      <section className="section-container max-w-6xl text-center">
+        <p className="eyebrow mb-4">Features</p>
+        <h1 className="text-4xl font-extrabold md:text-6xl">Everything TrustScope does.</h1>
+        <p className="mx-auto mt-4 max-w-3xl text-lg text-[var(--text-secondary)]">
+          26 detection engines, 4 integration paths, and one runtime governance platform.
+        </p>
       </section>
 
-      {/* Integration Methods */}
-      <section className="py-24">
-        <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Multiple Integration Points</h2>
-            <p className="text-slate-400">Capture every agent action, however you deploy</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {integrations.map((integration, i) => (
-              <div key={i} className="card">
-                <integration.icon className="w-8 h-8 text-blue-400 mb-4" />
-                <h3 className="font-semibold text-lg mb-2">{integration.name}</h3>
-                <p className="text-slate-400 text-sm mb-4">{integration.description}</p>
-                <pre className="bg-slate-950 rounded-lg p-3 text-xs text-slate-300 overflow-x-auto">
-                  <code>{integration.code}</code>
-                </pre>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Detection Engines */}
-      <section className="py-24 bg-slate-900/30">
-        <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">21 Detection Engines</h2>
-            <p className="text-slate-400">19 all tiers (alert) · 19 Protect+ (block) · 25 with AI hybrid at Enforce+</p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {detectionEngines.map((engine, i) => (
-              <div key={i} className="card p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <engine.icon className="w-6 h-6 text-blue-400" />
-                  <span className={`text-xs px-2 py-0.5 rounded ${
-                    engine.tier === 'All' ? 'bg-slate-700 text-slate-300' :
-                    engine.tier === 'Protect+' ? 'bg-blue-500/20 text-blue-400' :
-                    'bg-purple-500/20 text-purple-400'
-                  }`}>{engine.tier}</span>
-                </div>
-                <h3 className="font-medium text-sm mb-1">{engine.name}</h3>
-                <p className="text-slate-500 text-xs">{engine.description}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-8">
-            <span className="text-slate-500 text-sm">All 25 engines. OWASP Agentic Top 10 aligned.</span>
-          </div>
-        </div>
-      </section>
-
-      {/* Governance Features */}
-      <section className="py-24">
-        <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Patent-Protected Governance</h2>
-            <p className="text-slate-400">274 claims across 3 provisional patents</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {governanceFeatures.map((feature, i) => (
-              <div key={i} className="card flex gap-6">
-                <div className="shrink-0">
-                  <div className="w-12 h-12 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                    <feature.icon className="w-6 h-6 text-amber-400" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg mb-2">{feature.name}</h3>
-                  <p className="text-slate-400 text-sm mb-4">{feature.description}</p>
-                  <ul className="grid grid-cols-2 gap-2">
-                    {feature.details.map((detail, j) => (
-                      <li key={j} className="text-slate-500 text-xs flex items-center gap-2">
-                        <CheckCircle className="w-3 h-3 text-emerald-500" />
-                        {detail}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Tier Comparison */}
-      <section className="py-24 bg-slate-900/30">
-        <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Choose Your Tier</h2>
-            <p className="text-slate-400">Start free. Upgrade as you grow.</p>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-6">
-            {Object.values(tierFeatures).map((tier, i) => (
-              <div key={i} className={`card ${tier.name === 'Comply' ? 'border-amber-500/50 glow' : ''}`}>
-                <div className="mb-4">
-                  <h3 className="font-semibold text-lg">{tier.name}</h3>
-                  <p className="text-slate-500 text-sm">{tier.tagline}</p>
-                </div>
-                <div className="text-3xl font-bold mb-6">{tier.price}</div>
-                <ul className="space-y-2">
-                  {tier.features.map((feature, j) => (
-                    <li key={j} className="text-slate-400 text-sm flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                      {feature}
-                    </li>
+      <section className="section-container mt-14 max-w-6xl">
+        <p className="eyebrow mb-3">Detection matrix</p>
+        <p className="mb-3 text-sm text-[var(--text-muted)]">
+          Grouped by control layer so buyers can quickly map capability depth to tier.
+        </p>
+        <div className="card overflow-x-auto !p-0">
+          <table className="w-full min-w-[860px] text-left text-sm">
+            <thead className="border-b border-[var(--border)] bg-[var(--surface-hover)]">
+              <tr>
+                <th className="px-4 py-3 font-semibold text-[var(--text-secondary)]">Engine</th>
+                <th className="px-4 py-3 font-semibold text-[var(--text-secondary)]">What it detects</th>
+                <th className="px-4 py-3 font-semibold text-[var(--text-secondary)]">Tier</th>
+                <th className="px-4 py-3 font-semibold text-[var(--text-secondary)]">Action mode</th>
+              </tr>
+            </thead>
+            <tbody>
+              {engineGroups.map((group) => (
+                <Fragment key={group.label}>
+                  <tr key={`${group.label}-header`} className="border-b border-[var(--border)] bg-[var(--bg)]">
+                    <td colSpan={4} className="px-4 py-2.5">
+                      <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--text-subtle)]">{group.label}</p>
+                      <p className="mt-1 text-xs text-[var(--text-muted)]">{group.description}</p>
+                    </td>
+                  </tr>
+                  {group.rows.map((row) => (
+                    <tr key={`${group.label}-${row.engine}`} className="border-b border-[var(--border)] last:border-0">
+                      <td className="px-4 py-3 font-medium text-[var(--text-primary)]">{row.engine}</td>
+                      <td className="px-4 py-3 text-[var(--text-secondary)]">{row.detects}</td>
+                      <td className="px-4 py-3 text-[var(--text-secondary)]">{row.tier}</td>
+                      <td className="px-4 py-3 text-[var(--text-secondary)]">{row.mode}</td>
+                    </tr>
                   ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <Link href="/pricing" className="btn-primary inline-flex items-center gap-2">
-              View Full Pricing <ArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
+                </Fragment>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24">
-        <div className="section-container text-center">
-          <h2 className="text-3xl font-bold mb-6">Ready to get started?</h2>
-          <p className="text-xl text-slate-400 mb-8">
-            Free tier includes 5,000 traces/month. No credit card required.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="https://app.trustscope.ai" className="btn-primary">
-              Get Started Free
-            </Link>
-            <Link href="/contact" className="btn-secondary">
-              Talk to Sales
-            </Link>
-          </div>
+      <section className="section-container mt-14 max-w-6xl">
+        <p className="eyebrow mb-3">Integration paths</p>
+        <div className="card overflow-x-auto !p-0">
+          <table className="w-full min-w-[760px] text-left text-sm">
+            <thead className="border-b border-[var(--border)] bg-[var(--surface-hover)]">
+              <tr>
+                <th className="px-4 py-3 font-semibold text-[var(--text-secondary)]">Method</th>
+                <th className="px-4 py-3 font-semibold text-[var(--text-secondary)]">Setup</th>
+                <th className="px-4 py-3 font-semibold text-[var(--text-secondary)]">Best for</th>
+              </tr>
+            </thead>
+            <tbody>
+              {integrations.map((row) => (
+                <tr key={row.method} className="border-b border-[var(--border)] last:border-0">
+                  <td className="px-4 py-3 font-medium text-[var(--text-primary)]">{row.method}</td>
+                  <td className="px-4 py-3 font-mono text-xs text-[var(--text-secondary)]">{row.setup}</td>
+                  <td className="px-4 py-3 text-[var(--text-secondary)]">{row.bestFor}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="section-container mt-14 max-w-6xl">
+        <p className="eyebrow mb-3">Platform capabilities</p>
+        <div className="grid gap-3 md:grid-cols-3">
+          {capabilityGroups.map((group) => (
+            <article key={group.title} className="card">
+              <h2 className="text-2xl font-bold">{group.title}</h2>
+              <ul className="mt-4 space-y-2">
+                {group.items.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
+                    <ShieldCheck className="mt-0.5 h-4 w-4 text-[var(--status-success)]" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-container mt-14 max-w-6xl text-center">
+        <h2 className="text-3xl font-bold">See it on your own data.</h2>
+        <p className="mt-3 text-[var(--text-secondary)]">Run local analysis first, then move to continuous governance.</p>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <Link href="/scanner" className="btn-primary gap-2">
+            Open Trace Analyzer <ArrowRight className="h-4 w-4" />
+          </Link>
+          <Link href="/developers" className="btn-secondary gap-2">
+            <Code2 className="h-4 w-4" /> Developer Setup
+          </Link>
         </div>
       </section>
     </div>

@@ -23,22 +23,29 @@ export default function FormatBadge({ result }: FormatBadgeProps) {
   const Icon = FORMAT_ICONS[result.format];
 
   return (
-    <div className="flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-4 py-3">
-      <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-      <Icon className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-      <div className="flex-1 min-w-0">
-        <p className="text-emerald-400 font-medium truncate">
-          Detected: {result.displayName}
-        </p>
-        <p className="text-slate-400 text-sm">
-          {result.traceCount.toLocaleString()} trace{result.traceCount !== 1 ? 's' : ''} found
-        </p>
+    <div className="rounded-xl border border-[color:rgba(22,163,74,.35)] bg-[color:rgba(22,163,74,.1)] px-4 py-3">
+      <div className="flex items-center gap-3">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[color:rgba(22,163,74,.35)] bg-[color:rgba(22,163,74,.14)]">
+          <CheckCircle className="h-4 w-4 text-[var(--status-success)]" />
+        </div>
+        <Icon className="h-5 w-5 flex-shrink-0 text-[var(--status-success)]" />
+        <div className="min-w-0 flex-1">
+          <p className="truncate font-semibold text-[var(--status-success)]">
+            Format detected: {result.displayName}
+          </p>
+          <p className="text-sm text-[var(--text-muted)]">
+            {result.traceCount.toLocaleString()} trace{result.traceCount !== 1 ? 's' : ''} available for analysis
+          </p>
+        </div>
+        {result.confidence >= 0.8 && (
+          <span className="rounded-md border border-[color:rgba(22,163,74,.35)] bg-[color:rgba(22,163,74,.14)] px-2 py-1 text-xs text-[color:rgba(22,163,74,.9)]">
+            {Math.round(result.confidence * 100)}% confidence
+          </span>
+        )}
       </div>
-      {result.confidence >= 0.8 && (
-        <span className="text-xs text-emerald-400/60 bg-emerald-400/10 px-2 py-1 rounded">
-          {Math.round(result.confidence * 100)}% confidence
-        </span>
-      )}
+      <p className="mt-2 text-xs text-[var(--text-subtle)]">
+        Confidence is based on trace schema and field consistency checks.
+      </p>
     </div>
   );
 }

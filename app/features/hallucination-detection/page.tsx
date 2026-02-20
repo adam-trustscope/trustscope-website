@@ -1,428 +1,176 @@
 import Link from 'next/link'
-import { 
-  ArrowRight, CheckCircle, AlertTriangle, 
-  Fingerprint, Search, Brain, FileCheck,
-  Shield, Zap
-} from 'lucide-react'
+import { AlertTriangle, ArrowRight, CheckCircle2, FileCheck, Search, ShieldCheck } from 'lucide-react'
+
+const sourcedSignals = [
+  {
+    value: '7%',
+    label: 'Maximum global annual turnover penalty for prohibited-practice violations under the EU AI Act.',
+    sourceLabel: 'EU AI Act (Regulation (EU) 2024/1689, Article 99)',
+    sourceHref: 'http://data.europa.eu/eli/reg/2024/1689/oj',
+  },
+  {
+    value: 'Aug 2, 2026',
+    label: 'Date key EU AI Act obligations become applicable for most high-risk systems.',
+    sourceLabel: 'EUR-Lex AI Act timeline summary',
+    sourceHref: 'https://eur-lex.europa.eu/EN/legal-content/summary/rules-for-trustworthy-artificial-intelligence.html',
+  },
+  {
+    value: '6 controls',
+    label: 'Mandatory AIUC-1 controls currently depend on third-party testing, not self-attestation.',
+    sourceLabel: 'TrustScope Framework Mapping v22.0 (AIUC-1 gap analysis)',
+    sourceHref: '/compliance/aiuc-1',
+  },
+]
+
+const process = [
+  {
+    title: 'Ground Truth Check',
+    detail:
+      'Compare model output against tool output and source context to detect claim mismatches.',
+  },
+  {
+    title: 'Behavior Drift Check',
+    detail:
+      'Compare current output patterns against historical baseline for unexpected behavior shifts.',
+  },
+  {
+    title: 'Evidence Receipt',
+    detail:
+      'Store per-check receipts with hash chain and signature metadata for downstream review.',
+  },
+]
+
+const complianceReferences = [
+  'EU AI Act Article 12: record-keeping',
+  'EU AI Act Article 14: human oversight',
+  'EU AI Act Article 17: quality management system',
+  'NIST AI RMF: MAP / MEASURE / MANAGE evidence support',
+]
 
 export default function HallucinationDetectionPage() {
   return (
-    <div className="pt-20">
-      {/* Hero */}
-      <section className="py-24 bg-gradient-to-b from-blue-600/10 to-transparent">
-        <div className="section-container text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 mb-8">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-sm text-emerald-300">Now Available</span>
-          </div>
-          
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            AI Hallucination Detection
-          </h1>
-          
-          <p className="text-2xl text-slate-400 mb-4">
-            Not just detection. <span className="text-white font-semibold">Evidence.</span>
+    <div className="min-h-screen bg-[var(--bg)] py-14">
+      <section className="section-container max-w-5xl text-center">
+        <p className="eyebrow mb-4">Feature Deep Dive</p>
+        <h1 className="text-4xl font-extrabold md:text-6xl">Hallucination detection with evidence.</h1>
+        <p className="mx-auto mt-4 max-w-3xl text-lg text-[var(--text-secondary)]">
+          Finding hallucinations is useful. Proving what was checked, when, and against which data is what auditors and risk teams need.
+        </p>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <Link href="/scanner" className="btn-primary gap-2">
+            Run Trace Analyzer <ArrowRight className="h-4 w-4" />
+          </Link>
+          <Link href="/pricing" className="btn-secondary">
+            View Plan Coverage
+          </Link>
+        </div>
+      </section>
+
+      <section className="section-container mt-14 max-w-5xl">
+        <p className="eyebrow mb-3">Context (source-backed)</p>
+        <div className="grid gap-3 md:grid-cols-3">
+          {sourcedSignals.map((item) => (
+            <article key={item.value} className="card !p-5 text-center">
+              <p className="text-4xl font-black text-[var(--text-primary)]">{item.value}</p>
+              <p className="mt-2 text-sm text-[var(--text-secondary)]">{item.label}</p>
+              <a
+                href={item.sourceHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-block text-xs font-semibold text-[var(--interactive)] hover:underline"
+              >
+                Source: {item.sourceLabel}
+              </a>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-container mt-14 max-w-5xl">
+        <div className="card">
+          <p className="eyebrow mb-3">Failure pattern</p>
+          <h2 className="text-3xl font-bold">The model said one thing. The tool returned another.</h2>
+          <p className="mt-3 text-[var(--text-secondary)]">
+            Example: an assistant tells a user the refund amount is $500 while the backend tool output was $50. The risk is not just response quality. The risk is operational and regulatory.
           </p>
-          
-          <p className="text-lg text-slate-500 max-w-2xl mx-auto mb-12">
-            The difference between "we think we caught it" and 
-            "here's the signed, timestamped evidence."
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="https://app.trustscope.ai" className="btn-primary flex items-center justify-center gap-2">
-              Get Started Free <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link href="#demo" className="btn-secondary">
-              See Demo
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="border-y border-slate-800 bg-slate-900/50">
-        <div className="section-container py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { value: '47%', label: 'of enterprises made decisions based on hallucinated AI content', source: 'IBM 2025' },
-              { value: '76%', label: 'now require human-in-the-loop for AI outputs', source: 'IBM 2025' },
-              { value: '$5M', label: 'annual compliance cost for hallucination mitigation', source: 'Deloitte' },
-              { value: '6%', label: 'of global revenue in potential EU AI Act fines', source: 'EU AI Act' },
-            ].map((stat, i) => (
-              <div key={i} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-blue-400 mb-2">{stat.value}</div>
-                <div className="text-sm text-slate-400">{stat.label}</div>
-                <div className="text-xs text-slate-600 mt-1">{stat.source}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Problem */}
-      <section className="py-24">
-        <div className="section-container">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">The Problem</h2>
-          </div>
-          
-          <div className="max-w-2xl mx-auto">
-            <div className="card bg-red-500/10 border-red-500/30 p-8">
-              <p className="text-lg text-slate-300 mb-4">
-                Your AI agent told a customer their refund was <span className="text-red-400 font-semibold">$500</span>.
-              </p>
-              <p className="text-lg text-slate-300 mb-4">
-                The tool actually returned <span className="text-emerald-400 font-semibold">$50</span>.
-              </p>
-              <p className="text-lg text-slate-300">
-                You found out when they complained on Twitter.
-              </p>
-            </div>
-            
-            <div className="text-center mt-8">
-              <p className="text-xl text-white font-semibold">
-                How do you show your auditor that you had controls in place?
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Comparison */}
-      <section className="py-24 bg-slate-900/50">
-        <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">The TrustScope Difference</h2>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* Others */}
-            <div className="card bg-red-500/5 border-red-500/20 p-8">
-              <h3 className="text-lg font-semibold text-red-400 mb-6">Other Tools</h3>
-              <ul className="space-y-4">
-                {[
-                  '"We detect hallucinations"',
-                  'AI checks AI (opinion-based)',
-                  'Alert when found',
-                  'Dashboard shows issues',
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-slate-400">
-                    <span className="text-red-400 mt-1">✗</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            {/* TrustScope */}
-            <div className="card bg-emerald-500/5 border-emerald-500/20 p-8 glow">
-              <h3 className="text-lg font-semibold text-emerald-400 mb-6">TrustScope</h3>
-              <ul className="space-y-4">
-                {[
-                  '"We document what your AI saw vs said"',
-                  'Ground truth verification (provable)',
-                  'Signed evidence receipt for every check',
-                  'Export compliance pack for auditors',
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-slate-300">
-                    <span className="text-emerald-400 mt-1">✓</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="py-24">
-        <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">How It Works</h2>
-            <p className="text-slate-400">Three layers of verification. Most issues caught for free.</p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {[
-              {
-                layer: '1',
-                name: 'Ground Truth',
-                description: 'Compare claims in AI response against actual tool outputs',
-                cost: 'FREE',
-                confidence: '100%',
-                badge: 'Provable',
-                badgeColor: 'emerald',
-                icon: Search,
-              },
-              {
-                layer: '2',
-                name: 'Behavioral Anomaly',
-                description: 'Compare against Agent DNA baseline patterns',
-                cost: 'FREE',
-                confidence: '75-90%',
-                badge: 'Statistical',
-                badgeColor: 'blue',
-                icon: Fingerprint,
-              },
-              {
-                layer: '3',
-                name: 'Semantic Consistency',
-                description: 'LLM checks for internal contradictions',
-                cost: '~$0.001',
-                confidence: '70-80%',
-                badge: 'AI Analysis',
-                badgeColor: 'purple',
-                icon: Brain,
-              },
-            ].map((layer) => (
-              <div key={layer.layer} className="card">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold">
-                    {layer.layer}
-                  </div>
-                  <h3 className="font-semibold text-lg">{layer.name}</h3>
-                </div>
-                
-                <p className="text-slate-400 text-sm mb-4">{layer.description}</p>
-                
-                <div className="flex items-center justify-between text-sm mb-4">
-                  <span className={`px-2 py-1 rounded bg-${layer.badgeColor}-500/20 text-${layer.badgeColor}-400`}>
-                    {layer.badge}
-                  </span>
-                  <span className="text-slate-500">{layer.confidence} confidence</span>
-                </div>
-                
-                <div className="pt-4 border-t border-slate-700">
-                  <span className={`text-lg font-bold ${layer.cost === 'FREE' ? 'text-emerald-400' : 'text-slate-300'}`}>
-                    {layer.cost}
-                  </span>
-                  <span className="text-slate-500 text-sm ml-2">per check</span>
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          <p className="text-center text-slate-500 text-sm mt-8">
-            Layers run in order. Most hallucinations caught in Layers 1-2 (free). LLM only used for edge cases.
+          <p className="mt-3 text-[var(--text-secondary)]">
+            The core question in review is: what checks ran before this output was delivered?
           </p>
         </div>
       </section>
 
-      {/* Evidence Receipt Demo */}
-      <section id="demo" className="py-24 bg-slate-900/50">
-        <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Every Check Creates Evidence</h2>
-            <p className="text-slate-400">Not just "we found something" — cryptographic evidence you checked.</p>
-          </div>
-          
-          <div className="max-w-3xl mx-auto">
-            <div className="bg-slate-950 border border-slate-700 rounded-xl overflow-hidden">
-              <div className="bg-slate-800 px-4 py-3 border-b border-slate-700 flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-red-500" />
-                <span className="w-3 h-3 rounded-full bg-yellow-500" />
-                <span className="w-3 h-3 rounded-full bg-green-500" />
-                <span className="text-slate-400 text-sm ml-4">Evidence Receipt</span>
+      <section className="section-container mt-14 max-w-5xl">
+        <p className="eyebrow mb-3">How it works</p>
+        <div className="grid gap-3 md:grid-cols-3">
+          {process.map((item, index) => (
+            <article key={item.title} className="card">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[var(--interactive)] text-xs font-bold text-white">
+                  {index + 1}
+                </span>
+                <h3 className="text-lg font-semibold">{item.title}</h3>
               </div>
-              <pre className="p-6 text-sm overflow-x-auto">
-                <code className="text-slate-300">{`{
+              <p className="text-sm text-[var(--text-secondary)]">{item.detail}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-container mt-14 max-w-5xl">
+        <div className="card">
+          <p className="eyebrow mb-3">Evidence payload example</p>
+          <pre className="overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--bg)] p-4 text-xs text-[var(--text-secondary)]">
+            <code>{`{
   "receipt_id": "rcpt_7a8b9c2d",
   "trace_id": "tr_abc123",
   "check_type": "hallucination_ground_truth",
-  "timestamp": "2026-01-30T14:23:01.234Z",
-  
   "result": "FLAGGED",
-  "confidence": 1.0,
-  "provable": true,
-  
-  "evidence": {
-    "claim": "Account balance is $50,000",
-    "tool_name": "get_balance",
-    "tool_returned": 12000,
-    "claim_stated": 50000
-  },
-  
-  "verification": {
-    "receipt_hash": "sha256:4d5e6f7a8b9c...",
-    "signature": "ed25519:2c3d4e5f6g7h...",
-    "blockchain_anchor": "ots:abc123..."
-  }
+  "claim": "Account balance is $50,000",
+  "tool_returned": 12000,
+  "claim_stated": 50000,
+  "receipt_hash": "sha256:...",
+  "signature": "ed25519:..."
 }`}</code>
-              </pre>
-            </div>
-            
-            <p className="text-center text-slate-400 mt-6">
-              Hash-chained. Ed25519 signed. Blockchain-anchored. 
-              <span className="text-white font-semibold"> Hand this to your auditor.</span>
-            </p>
-          </div>
+          </pre>
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="py-24">
-        <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Pricing</h2>
-            <p className="text-slate-400">Start detecting. Upgrade for evidence.</p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {[
-              {
-                name: 'Protect',
-                price: '$49',
-                period: '/month',
-                traces: '25K traces',
-                description: 'Know about problems',
-                features: [
-                  { text: 'Ground Truth Detection', included: true },
-                  { text: 'Semantic Consistency', included: true },
-                  { text: 'Alert on Detection', included: true },
-                  { text: 'Behavioral Anomaly', included: false },
-                  { text: 'Auto-Block', included: false },
-                  { text: 'Evidence Receipts', included: false },
-                ],
-                cta: 'Get Started Free',
-                highlight: false,
-              },
-              {
-                name: 'Enforce',
-                price: '$249',
-                period: '/month',
-                traces: '100K traces',
-                description: 'Stop problems',
-                features: [
-                  { text: 'Everything in Protect', included: true },
-                  { text: 'Behavioral Anomaly (Agent DNA)', included: true },
-                  { text: 'Auto-Block on Detection', included: true },
-                  { text: 'Custom Thresholds', included: true },
-                  { text: 'Evidence Receipts', included: false },
-                  { text: 'Compliance Export', included: false },
-                ],
-                cta: 'Get Started Free',
-                highlight: true,
-              },
-              {
-                name: 'Govern',
-                price: '$2K+',
-                period: '/month',
-                traces: '500K traces',
-                description: 'Document you checked',
-                features: [
-                  { text: 'Everything in Enforce', included: true },
-                  { text: 'Signed Evidence Receipts', included: true },
-                  { text: 'Hash Chain Verification', included: true },
-                  { text: 'Compliance Export', included: true },
-                  { text: 'EU AI Act Evidence Pack', included: true },
-                  { text: 'Blockchain Timestamp Anchoring', included: true },
-                ],
-                cta: 'Contact Sales',
-                highlight: false,
-              },
-            ].map((tier) => (
-              <div 
-                key={tier.name}
-                className={`rounded-xl p-6 ${
-                  tier.highlight 
-                    ? 'bg-blue-600 border-2 border-blue-400 scale-105 z-10' 
-                    : 'bg-slate-900 border border-slate-700'
-                }`}
-              >
-                {tier.highlight && (
-                  <div className="text-center text-sm font-semibold text-blue-200 mb-4">
-                    MOST POPULAR
-                  </div>
-                )}
-                
-                <h3 className="text-xl font-bold mb-1">{tier.name}</h3>
-                <p className={`text-sm mb-2 ${tier.highlight ? 'text-blue-200' : 'text-slate-400'}`}>
-                  {tier.description}
-                </p>
-                <p className={`text-xs mb-4 ${tier.highlight ? 'text-blue-300' : 'text-slate-500'}`}>
-                  {tier.traces}/month
-                </p>
-                
-                <div className="mb-6">
-                  <span className="text-4xl font-bold">{tier.price}</span>
-                  <span className={tier.highlight ? 'text-blue-200' : 'text-slate-400'}>
-                    {tier.period}
-                  </span>
-                </div>
-                
-                <ul className="space-y-3 mb-8">
-                  {tier.features.map((feature, i) => (
-                    <li key={i} className={`flex items-center gap-2 text-sm ${
-                      feature.included 
-                        ? (tier.highlight ? 'text-white' : 'text-slate-300')
-                        : (tier.highlight ? 'text-blue-300/50' : 'text-slate-600')
-                    }`}>
-                      <span>{feature.included ? '✓' : '—'}</span>
-                      {feature.text}
-                    </li>
-                  ))}
-                </ul>
-                
-                <Link 
-                  href={tier.name === 'Govern' ? '/contact' : 'https://app.trustscope.ai'}
-                  className={`block text-center py-3 rounded-lg font-semibold transition-colors ${
-                    tier.highlight
-                      ? 'bg-white text-blue-600 hover:bg-blue-50'
-                      : 'bg-slate-800 hover:bg-slate-700 border border-slate-600'
-                  }`}
-                >
-                  {tier.cta}
-                </Link>
-              </div>
+      <section className="section-container mt-14 max-w-5xl">
+        <div className="card">
+          <p className="eyebrow mb-3">Compliance relevance</p>
+          <ul className="space-y-2 text-sm text-[var(--text-secondary)]">
+            {complianceReferences.map((item) => (
+              <li key={item} className="flex items-start gap-2">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 text-[var(--status-success)]" />
+                <span>{item}</span>
+              </li>
             ))}
+          </ul>
+          <div className="mt-4 rounded-lg border border-[color:rgba(217,119,6,.35)] bg-[color:rgba(217,119,6,.1)] p-3 text-xs text-[var(--text-secondary)]">
+            These mappings are evidence-support references. Final compliance interpretation remains a legal/compliance function.
           </div>
         </div>
       </section>
 
-      {/* Compliance */}
-      <section className="py-24 bg-slate-900/50">
-        <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Compliance Ready</h2>
-            <p className="text-slate-400">Maps directly to regulatory requirements</p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
-            {[
-              { framework: 'EU AI Act Article 17', requirement: 'Quality management system documentation' },
-              { framework: 'EU AI Act Article 12', requirement: 'Record-keeping and automatic logging' },
-              { framework: 'SOC 2 CC8.1', requirement: 'Change and configuration management' },
-              { framework: 'NIST AI RMF MAP 2.3', requirement: 'AI capabilities and limitations documented' },
-            ].map((item, i) => (
-              <div key={i} className="card p-4">
-                <div className="text-blue-400 font-semibold text-sm mb-1">{item.framework}</div>
-                <div className="text-slate-300 text-sm">{item.requirement}</div>
-              </div>
-            ))}
-          </div>
+      <section className="section-container mt-14 max-w-5xl text-center">
+        <h2 className="text-3xl font-bold">Run it on real traces.</h2>
+        <p className="mt-3 text-[var(--text-secondary)]">
+          Start local in Trace Analyzer. Move to continuous enforcement when you are ready.
+        </p>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <Link href="/scanner" className="btn-primary gap-2">
+            <Search className="h-4 w-4" /> Open Trace Analyzer
+          </Link>
+          <Link href="/compliance" className="btn-secondary gap-2">
+            <FileCheck className="h-4 w-4" /> Compliance Mapping
+          </Link>
+          <Link href="/secure" className="btn-secondary gap-2">
+            <ShieldCheck className="h-4 w-4" /> Security Coverage
+          </Link>
         </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-24">
-        <div className="section-container text-center">
-          <h2 className="text-4xl font-bold mb-6">
-            Ready to document your AI is under control?
-          </h2>
-          <p className="text-xl text-slate-400 mb-12">
-            Start with detection. Upgrade when auditors come knocking.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="https://app.trustscope.ai" className="btn-primary text-lg px-8 py-4 flex items-center justify-center gap-2">
-              Get Started Free <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link href="/contact" className="btn-secondary text-lg px-8 py-4">
-              Talk to Sales
-            </Link>
-          </div>
+        <div className="mt-4 inline-flex items-center gap-2 text-xs text-[var(--text-muted)]">
+          <AlertTriangle className="h-3.5 w-3.5 text-[var(--status-warning)]" />
+          TrustScope provides evidence artifacts, not certification outcomes.
         </div>
       </section>
     </div>

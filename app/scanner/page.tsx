@@ -1,31 +1,76 @@
-'use client';
+import BrowserScanner from '@/components/scanner/BrowserScanner'
+import type { SampleType } from '@/lib/scanner/types'
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 
-import BrowserScanner from '@/components/scanner/BrowserScanner';
+export const metadata: Metadata = {
+  title: 'AI Trace Analyzer',
+  description:
+    'Upload AI traces or run a demo to analyze risk, leaks, and policy violations locally in your browser.',
+}
 
-export default function ScannerPage() {
+function resolveDemo(value: string | null): SampleType {
+  if (!value) return 'financial_advisor'
+  const normalized = value.toLowerCase()
+  if (normalized === 'support' || normalized === 'customer-support' || normalized === 'support-bot') return 'support_bot'
+  if (normalized === 'code' || normalized === 'code-assistant') return 'code_assistant'
+  if (normalized === 'claims' || normalized === 'claims-processor' || normalized === 'healthcare' || normalized === 'healthcare-ai') return 'claims_processor'
+  if (normalized === 'research' || normalized === 'research-pipeline' || normalized === 'multiagent' || normalized === 'multi-agent') return 'research_pipeline'
+  if (normalized === 'financial' || normalized === 'financial-bot' || normalized === 'financial-advisor') return 'financial_advisor'
+  return 'financial_advisor'
+}
+
+interface ScannerPageProps {
+  searchParams?: Promise<Record<string, string | string[] | undefined>> | Record<string, string | string[] | undefined>
+}
+
+export default async function ScannerPage({ searchParams }: ScannerPageProps) {
+  const params = searchParams
+    ? 'then' in searchParams
+      ? await searchParams
+      : searchParams
+    : undefined
+  const demoParam = params?.demo
+  const demoValue = Array.isArray(demoParam) ? demoParam[0] : demoParam ?? null
+  const hasDemoParam = !!demoValue
+  const defaultSample = resolveDemo(demoValue)
+
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      {/* Gradient background */}
-      <div className="fixed inset-0 bg-gradient-to-b from-blue-950/20 via-slate-950 to-slate-950 pointer-events-none" />
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent pointer-events-none" />
-
-      <section className="relative z-10 py-12 px-6">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-10">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              AI Trace Scanner
-            </h1>
-            <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-              Scan your AI traces for PII, secrets, cost anomalies, loops, and more.
-              100% client-side. Your data never leaves your browser.
-            </p>
+    <div className="min-h-screen bg-[var(--bg)] py-12 md:py-14">
+      <section className="section-container max-w-6xl">
+        <div className="mb-12 text-center">
+          <p className="eyebrow mb-4">AI Trace Analyzer</p>
+          <h1 className="text-4xl font-extrabold leading-[1.04] md:text-6xl lg:text-7xl">
+            Analyze your traces.
+            <br />
+            <span className="text-[var(--text-secondary)]">See where risk starts.</span>
+          </h1>
+          <p className="mx-auto mt-5 max-w-2xl text-[var(--text-secondary)]">
+            Local-first analysis with no data upload. Upload your trace file, then disconnect WiFi and run it.
+          </p>
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+            <Link href="#trace-analyzer-workspace" className="btn-primary gap-2">
+              Start Analysis <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link href="/switch#compare-upload" className="btn-secondary gap-2">
+              Open Model Compare <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
-
-          {/* Scanner */}
-          <BrowserScanner />
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-xs text-[var(--text-subtle)]">
+            <span>100% local processing</span>
+            <span>Disconnect WiFi and rerun</span>
+            <span>Zero signup required</span>
+            <span>JSON, JSONL, CSV, TSV, HAR</span>
+          </div>
         </div>
+
+        <BrowserScanner
+          defaultSample={defaultSample}
+          autoRunDemo={hasDemoParam}
+          showDemoBadge={hasDemoParam}
+        />
       </section>
     </div>
-  );
+  )
 }

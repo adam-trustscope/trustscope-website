@@ -136,11 +136,11 @@ export default function VerifyPage() {
               href="/scanner"
               className="inline-flex items-center justify-center gap-2 bg-[#C49B3A] hover:bg-[#D4A843] text-black font-medium px-6 py-3 rounded-lg transition-colors"
             >
-              Try the Scanner
+              Try Trace Analyzer
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
-              href="/comply"
+              href="/compliance"
               className="inline-flex items-center justify-center gap-2 border border-slate-600 hover:bg-slate-800 text-white px-6 py-3 rounded-lg transition-colors"
             >
               Learn About Compliance

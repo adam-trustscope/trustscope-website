@@ -1,55 +1,55 @@
-import Link from 'next/link';
-import { Home, ArrowLeft, Search } from 'lucide-react';
+import Link from 'next/link'
+import { Home, Search } from 'lucide-react'
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-[#0f1117] flex items-center justify-center px-4">
-      <div className="max-w-md text-center">
-        <div className="text-8xl font-bold text-slate-700 mb-4">404</div>
-        <h1 className="text-2xl font-bold text-white mb-4">Page not found</h1>
-        <p className="text-slate-400 mb-8">
-          The page you're looking for doesn't exist or has been moved.
+    <div className="min-h-screen bg-[var(--bg)] px-4 py-24">
+      <div className="mx-auto max-w-xl text-center">
+        <p className="eyebrow mb-4">404</p>
+        <h1 className="text-4xl font-extrabold text-[var(--text-primary)] md:text-5xl">Page not found</h1>
+        <p className="mt-4 text-[var(--text-secondary)]">
+          This URL does not exist or moved during the site restructure.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <Link
             href="/"
-            className="inline-flex items-center justify-center gap-2 bg-[#C49B3A] hover:bg-[#D4A843] text-black font-medium px-6 py-3 rounded-lg transition-colors"
+            className="btn-primary inline-flex items-center justify-center gap-2"
           >
             <Home className="w-4 h-4" />
             Go Home
           </Link>
           <Link
             href="/scanner"
-            className="inline-flex items-center justify-center gap-2 border border-slate-600 hover:bg-slate-800 text-white px-6 py-3 rounded-lg transition-colors"
+            className="btn-secondary inline-flex items-center justify-center gap-2"
           >
             <Search className="w-4 h-4" />
-            Try Scanner
+            Open Trace Analyzer
           </Link>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-slate-800">
-          <p className="text-slate-500 text-sm mb-4">Looking for something specific?</p>
+        <div className="mt-10 border-t border-[var(--border)] pt-6">
+          <p className="mb-3 text-sm text-[var(--text-muted)]">Looking for something specific?</p>
           <div className="flex flex-wrap justify-center gap-3 text-sm">
-            <Link href="/pricing" className="text-slate-400 hover:text-white transition-colors">
+            <Link href="/pricing" className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
               Pricing
             </Link>
-            <span className="text-slate-700">·</span>
+            <span className="text-[var(--text-subtle)]">·</span>
             <a
               href="https://docs.trustscope.ai"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-slate-400 hover:text-white transition-colors"
+              className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
             >
               Documentation
             </a>
-            <span className="text-slate-700">·</span>
-            <Link href="/contact" className="text-slate-400 hover:text-white transition-colors">
+            <span className="text-[var(--text-subtle)]">·</span>
+            <Link href="/contact" className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
               Contact
             </Link>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }

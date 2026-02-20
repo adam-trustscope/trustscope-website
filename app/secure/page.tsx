@@ -1,299 +1,171 @@
-'use client';
+import Link from 'next/link'
+import { AlertTriangle, ArrowRight, CheckCircle, Shield, ShieldAlert } from 'lucide-react'
 
-import Link from 'next/link';
-import {
-  ArrowRight,
-  Shield,
-  AlertTriangle,
-  Lock,
-  Eye,
-  Ban,
-  CheckCircle,
-  XCircle,
-  Zap,
-} from 'lucide-react';
-import { CTASection, TierBadge, FeatureGrid } from '@/components/ui';
+const incidents = [
+  {
+    title: 'The Credential Leak',
+    impact: '$230,000 incident response and rotation costs',
+    summary:
+      'A support agent returned database connection secrets in customer-visible output. The key rotation window left production exposed for hours.',
+    prevention: 'Secrets scanner + output policy enforcement in block mode.',
+  },
+  {
+    title: 'The PII Exposure',
+    impact: '$1.2M regulatory and legal exposure',
+    summary:
+      'A healthcare assistant returned SSNs and policy numbers during normal chat workflows. Discovery happened during audit sampling, not in production alerting.',
+    prevention: 'PII scanner, redaction policies, and sensitive field suppression.',
+  },
+  {
+    title: 'The DROP TABLE Disaster',
+    impact: '3 days of degraded operations and restoration work',
+    summary:
+      'A tool-enabled agent interpreted “clean up records” as destructive SQL and attempted privileged commands without human approval.',
+    prevention: 'Command firewall + tool allowlist + delegation depth caps.',
+  },
+]
 
-// Metadata moved to layout or head for client component
+const owaspRows = [
+  {
+    risk: 'ASI-01 Goal Hijacking',
+    response: 'Prompt injection + jailbreak AI detectors with escalation and block policies.',
+  },
+  {
+    risk: 'ASI-02 Tool Misuse',
+    response: 'Command firewall, A2A depth controls, and tool call policy validation.',
+  },
+  {
+    risk: 'ASI-06 Context Poisoning',
+    response: 'Context growth monitoring and guardrail policy checks.',
+  },
+  {
+    risk: 'ASI-08 Cascading Failures',
+    response: 'Loop, velocity, cost, and error-rate controls to stop chain failure.',
+  },
+  {
+    risk: 'ASI-10 Rogue Agents',
+    response: 'Agent DNA drift detection and kill-switch controls.',
+  },
+]
 
-const THREAT_STATS = [
-  { stat: '34%', label: 'of deployments leaked PII in 2025' },
-  { stat: '23%', label: 'vulnerable to prompt injection' },
-  { stat: '12%', label: 'had secrets in responses' },
-];
-
-// Note: Stats based on OWASP Agentic Top 10 research and industry incident reports
-
-const OWASP_MAPPING = [
+const engines = [
   {
-    code: 'AG01',
-    name: 'Agentic Misuse',
-    engine: 'Session limits, approval workflows',
+    stage: 'Detect',
+    items: ['PII scanner', 'Secrets scanner', 'Prompt injection detection', 'Jailbreak detection'],
   },
   {
-    code: 'AG02',
-    name: 'Tool Misuse',
-    engine: 'Command Firewall, Tool Risk Scoring',
+    stage: 'Block',
+    items: ['Command firewall', 'Policy enforcement mode', 'Redaction policies', 'Agent lock / kill switch'],
   },
   {
-    code: 'AG03',
-    name: 'Privilege Escalation',
-    engine: 'Delegation policies',
+    stage: 'Prove',
+    items: ['Signed decision receipts', 'Hash-chained logs', 'Control mapping exports', 'Incident timeline reconstruction'],
   },
-  {
-    code: 'AG04',
-    name: 'Prompt Injection',
-    engine: 'Pattern + AI detection',
-  },
-  {
-    code: 'AG05',
-    name: 'Data Exfiltration',
-    engine: 'Data flow monitoring',
-  },
-  {
-    code: 'AG06',
-    name: 'Jailbreaking',
-    engine: 'Pattern + AI detection',
-  },
-];
-
-const SECURITY_ENGINES = [
-  {
-    icon: Shield,
-    title: 'PII Scanner',
-    description: '88 patterns for SSN, email, phone, credit cards. All tiers (alert) · Protect+ (block) · ML-powered (Presidio)',
-    tier: 'monitor' as const,
-  },
-  {
-    icon: Lock,
-    title: 'Secrets Scanner',
-    description: '50+ patterns for API keys, AWS creds, private keys. All tiers (alert) · Protect+ (block)',
-    tier: 'monitor' as const,
-  },
-  {
-    icon: AlertTriangle,
-    title: 'Prompt Injection',
-    description: 'Pattern pre-filter + AI verification for <1% false positives. All tiers (alert) · Protect+ (block) · ML-powered (Prompt Guard 2)',
-    tier: 'monitor' as const,
-  },
-  {
-    icon: Ban,
-    title: 'Jailbreak Detection',
-    description: 'Two-stage detection for known and novel attacks. All tiers (alert) · Protect+ (block) · ML-powered (Prompt Guard 2)',
-    tier: 'monitor' as const,
-  },
-  {
-    icon: Eye,
-    title: 'Toxicity Filter',
-    description: 'Content safety across multiple categories. All tiers (alert) · Protect+ (block) · ML-powered (Detoxify)',
-    tier: 'monitor' as const,
-  },
-  {
-    icon: Zap,
-    title: 'Command Firewall',
-    description: 'Block dangerous system operations inline. All tiers (alert) · Protect+ (block) · Pattern-based',
-    tier: 'monitor' as const,
-  },
-];
-
-const AI_HYBRID_ENGINES = [
-  {
-    icon: Shield,
-    title: 'Semantic Firewall',
-    description: 'Enforce+ · AI Hybrid (LLM-powered) — understands intent, not just patterns',
-    tier: 'enforce' as const,
-  },
-  {
-    icon: AlertTriangle,
-    title: 'Hallucination Detector',
-    description: 'Enforce+ · AI Hybrid (LLM-powered) — catches factual inconsistencies',
-    tier: 'enforce' as const,
-  },
-  {
-    icon: Eye,
-    title: 'Reasoning Drift',
-    description: 'Enforce+ · AI Hybrid (LLM-powered) — detects when agent reasoning goes off-track',
-    tier: 'enforce' as const,
-  },
-];
+]
 
 export default function SecurePage() {
   return (
-    <main className="min-h-screen bg-[#0f1117]">
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-red-500/5 via-transparent to-transparent" />
-        <div className="max-w-6xl mx-auto relative">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-sm mb-6">
-              <Shield className="w-4 h-4" />
-              Runtime Protection
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-              Block what your AI
-              <br />
-              <span className="text-[#C49B3A]">shouldn't do.</span>
-            </h1>
-            <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-8">
-              PII leaks. Prompt injections. Jailbreaks. See them. Stop them. Prove you
-              stopped them.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link
-                href="/scanner"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium bg-[#C49B3A] hover:bg-[#D4A843] text-white transition-colors"
-              >
-                Scan for Security Issues
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link
-                href="https://docs.trustscope.ai/security"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium border border-slate-700 hover:border-slate-600 text-slate-300 hover:text-white transition-colors"
-              >
-                Read OWASP Mapping
-              </Link>
-            </div>
-          </div>
+    <div className="min-h-screen bg-[var(--bg)] py-14">
+      <section className="section-container max-w-5xl text-center">
+        <p className="eyebrow mb-4">Security</p>
+        <h1 className="text-4xl font-extrabold md:text-6xl">Block what your AI shouldn&apos;t do.</h1>
+        <p className="mx-auto mt-4 max-w-3xl text-lg text-[var(--text-secondary)]">
+          PII leaks, prompt injection, unsafe tool calls, and runtime drift are operational events, not hypotheticals.
+        </p>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <Link href="/scanner?demo=support-bot" className="btn-primary gap-2">
+            Open Trace Analyzer (Security-focused) <ArrowRight className="h-4 w-4" />
+          </Link>
+          <Link href="/incidents" className="btn-secondary">Read Incident Stories</Link>
         </div>
       </section>
 
-      {/* Threat Landscape */}
-      <section className="py-20 px-4 border-y border-slate-800">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-8 text-center">
-            The Threat Landscape
-          </h2>
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {THREAT_STATS.map((item, i) => (
-              <div
-                key={i}
-                className="p-6 rounded-xl bg-red-500/10 border border-red-500/20 text-center"
-              >
-                <div className="text-4xl font-bold text-red-400 mb-2">{item.stat}</div>
-                <div className="text-sm text-slate-400">{item.label}</div>
+      <section className="section-container mt-14 max-w-5xl">
+        <p className="eyebrow mb-3">Real incidents</p>
+        <p className="mb-3 text-sm text-[var(--text-muted)]">
+          Composite scenarios based on recurring production failures. Names changed. Failure modes preserved.
+        </p>
+        <div className="space-y-3">
+          {incidents.map((incident) => (
+            <article key={incident.title} className="card">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <h2 className="text-2xl font-bold">{incident.title}</h2>
+                <span className="rounded-md border border-[color:rgba(220,38,38,.35)] bg-[color:rgba(220,38,38,.1)] px-3 py-1 text-xs text-[var(--status-danger)]">
+                  {incident.impact}
+                </span>
               </div>
-            ))}
-          </div>
-          <p className="text-center text-slate-500">
-            Based on OWASP Agentic Top 10 research and industry incident reports
+              <p className="mt-3 text-[var(--text-secondary)]">{incident.summary}</p>
+              <p className="mt-3 text-sm text-[var(--text-muted)]">
+                <span className="font-semibold text-[var(--status-success)]">What would have stopped it:</span> {incident.prevention}
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-container mt-14 max-w-5xl">
+        <p className="eyebrow mb-3">OWASP Agentic Top 10 coverage</p>
+        <div className="card overflow-x-auto !p-0">
+          <table className="w-full min-w-[620px] text-left text-sm">
+            <thead className="border-b border-[var(--border)] bg-[var(--surface-hover)]">
+              <tr>
+                <th className="px-4 py-3 font-semibold text-[var(--text-secondary)]">OWASP Risk</th>
+                <th className="px-4 py-3 font-semibold text-[var(--text-secondary)]">TrustScope Response</th>
+              </tr>
+            </thead>
+            <tbody>
+              {owaspRows.map((row) => (
+                <tr key={row.risk} className="border-b border-[var(--border)] last:border-0">
+                  <td className="px-4 py-3 text-[var(--text-primary)]">{row.risk}</td>
+                  <td className="px-4 py-3 text-[var(--text-secondary)]">{row.response}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="section-container mt-14 max-w-5xl">
+        <p className="eyebrow mb-3">Security engine workflow</p>
+        <div className="grid gap-3 md:grid-cols-3">
+          {engines.map((stage) => (
+            <article key={stage.stage} className="card">
+              <div className="mb-3 flex items-center gap-2">
+                {stage.stage === 'Detect' ? (
+                  <Shield className="h-4 w-4 text-[var(--interactive)]" />
+                ) : stage.stage === 'Block' ? (
+                  <ShieldAlert className="h-4 w-4 text-[var(--status-warning)]" />
+                ) : (
+                  <CheckCircle className="h-4 w-4 text-[var(--status-success)]" />
+                )}
+                <h3 className="text-lg font-semibold">{stage.stage}</h3>
+              </div>
+              <ul className="space-y-2 text-sm text-[var(--text-secondary)]">
+                {stage.items.map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <span className="mt-[7px] h-1.5 w-1.5 rounded-full bg-[var(--border-hover)]" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-container mt-14 max-w-5xl">
+        <div className="card text-center">
+          <AlertTriangle className="mx-auto h-5 w-5 text-[var(--status-warning)]" />
+          <h2 className="mt-3 text-3xl font-bold">Don&apos;t learn from your customer first.</h2>
+          <p className="mx-auto mt-3 max-w-2xl text-[var(--text-secondary)]">
+            Run a local scan and identify where your agent stack is exposed before rollout.
           </p>
-        </div>
-      </section>
-
-      {/* OWASP Mapping */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              OWASP Top 10 for Agentic Applications
-            </h2>
-            <p className="text-lg text-slate-400">
-              How each risk maps to TrustScope engines
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {OWASP_MAPPING.map((item) => (
-              <div
-                key={item.code}
-                className="p-4 rounded-xl bg-[#1a1f2e] border border-slate-700/50"
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono text-red-400 bg-red-500/10 px-2 py-0.5 rounded">
-                    {item.code}
-                  </span>
-                  <span className="font-medium text-white">{item.name}</span>
-                </div>
-                <p className="text-sm text-slate-500">{item.engine}</p>
-              </div>
-            ))}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <Link href="/scanner?demo=support-bot" className="btn-primary">Open Trace Analyzer (Security-focused)</Link>
+            <Link href="/pricing" className="btn-secondary">Compare Plans</Link>
           </div>
         </div>
       </section>
-
-      {/* Security Engines */}
-      <section className="py-20 px-4 bg-slate-900/30 border-y border-slate-800">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Security Detection Engines
-            </h2>
-            <p className="text-lg text-slate-400">
-              19 engines protect your AI agents at all tiers. 25 with AI hybrid at Enforce+.
-            </p>
-          </div>
-
-          <FeatureGrid features={SECURITY_ENGINES} columns={3} />
-
-          <div className="mt-12">
-            <h3 className="text-xl font-bold text-white mb-6 text-center">
-              +6 AI Hybrid Engines (Enforce+)
-            </h3>
-            <FeatureGrid features={AI_HYBRID_ENGINES} columns={3} />
-          </div>
-        </div>
-      </section>
-
-      {/* Inline Blocking */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Not Just Detection — Prevention
-            </h2>
-            <p className="text-lg text-slate-400">
-              Evidence of prevention, not just detection
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* What was blocked */}
-            <div className="p-6 rounded-xl bg-green-500/10 border border-green-500/20">
-              <div className="flex items-center gap-2 mb-4">
-                <CheckCircle className="w-5 h-5 text-green-400" />
-                <span className="font-medium text-green-400">What Happened</span>
-              </div>
-              <div className="font-mono text-sm bg-slate-900/50 p-4 rounded-lg">
-                <div className="text-slate-500">Request:</div>
-                <div className="text-white mb-2">"What's my account balance?"</div>
-                <div className="text-slate-500">Response:</div>
-                <div className="text-green-400">"Your balance is $[REDACTED]"</div>
-                <div className="mt-2 text-xs text-green-500">
-                  PII blocked: Credit card number
-                </div>
-              </div>
-            </div>
-
-            {/* What would have happened */}
-            <div className="p-6 rounded-xl bg-red-500/10 border border-red-500/20">
-              <div className="flex items-center gap-2 mb-4">
-                <XCircle className="w-5 h-5 text-red-400" />
-                <span className="font-medium text-red-400">Without Protection</span>
-              </div>
-              <div className="font-mono text-sm bg-slate-900/50 p-4 rounded-lg">
-                <div className="text-slate-500">Request:</div>
-                <div className="text-white mb-2">"What's my account balance?"</div>
-                <div className="text-slate-500">Response:</div>
-                <div className="text-red-400">
-                  "Your balance is $5,432.10. Card ending 4532-XXXX-XXXX-1234"
-                </div>
-                <div className="mt-2 text-xs text-red-500">
-                  PII exposed: Credit card number
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <CTASection
-        headline="Secure your AI agents"
-        subtext="Upload traces to scan for security issues. See what you're missing."
-        primaryCTA={{ label: 'Scan for Issues', href: '/scanner' }}
-        secondaryCTA={{ label: 'Read Security Docs', href: '/docs/security' }}
-        variant="gradient"
-      />
-    </main>
-  );
+    </div>
+  )
 }

@@ -69,6 +69,7 @@ export interface ScanResult {
   findings: Finding[];
   redactedContent: string;
   classification: ContentClassification;
+  traces: ScannedTrace[];
 }
 
 export async function scanSampleData(sampleType: SampleType, callbacks: ScanCallbacks): Promise<void> {
@@ -111,6 +112,7 @@ export async function scanContent(
           traceCount: 0,
           modelNames: [],
         },
+        traces: [],
       });
       return;
     }
@@ -233,6 +235,7 @@ export async function scanContent(
       findings,
       redactedContent,
       classification,
+      traces: parsed.traces,
     });
   } catch (error) {
     callbacks.onError(error instanceof Error ? error.message : 'Unknown error occurred');
@@ -259,11 +262,12 @@ function updateProgress(
 // PII Detection
 function scanForPII(trace: ScannedTrace): Finding[] {
   const findings: Finding[] = [];
-  const fieldsToScan: { field: 'input' | 'output' | 'raw'; value: string }[] = [
-    { field: 'input', value: trace.input || '' },
-    { field: 'output', value: trace.output || '' },
-    { field: 'raw', value: trace.raw },
-  ];
+  const fieldsToScan: { field: 'input' | 'output' | 'raw'; value: string }[] = [];
+  const hasStructuredText = Boolean(trace.input || trace.output);
+  if (trace.input) fieldsToScan.push({ field: 'input', value: trace.input });
+  if (trace.output) fieldsToScan.push({ field: 'output', value: trace.output });
+  // Fallback to raw only when structured input/output fields are unavailable.
+  if (!hasStructuredText) fieldsToScan.push({ field: 'raw', value: trace.raw });
 
   for (const { field, value } of fieldsToScan) {
     if (!value) continue;
@@ -298,11 +302,12 @@ function scanForPII(trace: ScannedTrace): Finding[] {
 // Secrets Detection
 function scanForSecrets(trace: ScannedTrace): Finding[] {
   const findings: Finding[] = [];
-  const fieldsToScan: { field: 'input' | 'output' | 'raw'; value: string }[] = [
-    { field: 'input', value: trace.input || '' },
-    { field: 'output', value: trace.output || '' },
-    { field: 'raw', value: trace.raw },
-  ];
+  const fieldsToScan: { field: 'input' | 'output' | 'raw'; value: string }[] = [];
+  const hasStructuredText = Boolean(trace.input || trace.output);
+  if (trace.input) fieldsToScan.push({ field: 'input', value: trace.input });
+  if (trace.output) fieldsToScan.push({ field: 'output', value: trace.output });
+  // Fallback to raw only when structured input/output fields are unavailable.
+  if (!hasStructuredText) fieldsToScan.push({ field: 'raw', value: trace.raw });
 
   for (const { field, value } of fieldsToScan) {
     if (!value) continue;
@@ -323,7 +328,7 @@ function scanForSecrets(trace: ScannedTrace): Finding[] {
           severity: pattern.severity,
           traceIndex: trace.index,
           field,
-          matchedValue: maskSecret(match[0]),
+          matchedValue: match[0],
           redactedPreview: pattern.redactTo,
           description: `${pattern.label} detected`,
         });
@@ -332,11 +337,6 @@ function scanForSecrets(trace: ScannedTrace): Finding[] {
   }
 
   return findings;
-}
-
-function maskSecret(value: string): string {
-  if (value.length <= 8) return '***';
-  return value.substring(0, 4) + '...' + value.substring(value.length - 4);
 }
 
 // Cost Anomaly Detection

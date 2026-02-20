@@ -1,247 +1,198 @@
 import Link from 'next/link'
-import { ArrowRight, CheckCircle, FileCheck, Shield, Scale, Award, AlertTriangle } from 'lucide-react'
+import { ArrowRight, FileCheck, Scale, Shield, AlertTriangle, CheckCircle } from 'lucide-react'
 
-// Framework cards
-const frameworks = [
+const complianceSources = [
   {
-    name: 'AIUC-1',
-    slug: 'aiuc1',
-    icon: Award,
-    description: '"SOC 2 for AI agents" · Microsoft, JPMorgan, Anthropic, 60+ Fortune 500 CISOs',
-    coverage: '45 of 51 requirements · 92% mandatory coverage',
-    ready: 45,
-    badge: 'PRIMARY',
-    primary: true,
+    label: 'EUR-Lex AI Act timeline',
+    href: 'https://eur-lex.europa.eu/EN/legal-content/summary/rules-for-trustworthy-artificial-intelligence.html',
   },
   {
-    name: 'NIST AI RMF',
-    slug: 'nist',
-    icon: Shield,
-    description: 'AI Risk Management Framework',
-    coverage: '39 of 63 controls',
-    ready: 39,
-    badge: 'Most Comprehensive',
-  },
-  {
-    name: 'EU AI Act',
-    slug: 'eu-ai-act',
-    icon: Scale,
-    description: 'Article 17 QMS Requirements',
-    coverage: '8 of 10 requirements',
-    ready: 8,
-    badge: 'Regulatory',
-    urgent: true,
-  },
-  {
-    name: 'SOC 2 Type II',
-    slug: 'soc2',
-    icon: FileCheck,
-    description: 'AI-Relevant Trust Service Criteria',
-    coverage: '6 of 10 controls',
-    ready: 6,
-    badge: 'Enterprise Standard',
-  },
-  {
-    name: 'ISO 42001',
-    slug: 'iso42001',
-    icon: Award,
-    description: 'AI Management System Standard',
-    coverage: '18 of 26 controls',
-    ready: 18,
-    badge: 'International',
+    label: 'TrustScope AIUC-1 mapping methodology',
+    href: '/compliance/aiuc-1',
   },
 ]
 
-// Evidence model
-const evidenceModel = [
-  { status: 'Evidence Ready', color: 'emerald', description: 'TrustScope generates automatically' },
-  { status: 'Conditional', color: 'purple', description: 'Available if traffic routed through TrustScope' },
-  { status: 'Integration Required', color: 'amber', description: 'Needs external integration (Jira, Okta)' },
-  { status: 'Customer Provided', color: 'blue', description: 'Customer owns this evidence' },
-  { status: 'Organizational', color: 'slate', description: 'HR/culture control outside software scope' },
-  { status: 'Out of Scope', color: 'slate', description: 'Not our domain (bias testing, TPRM)' },
+const frameworks = [
+  {
+    name: 'AIUC-1',
+    href: '/compliance/aiuc-1',
+    coverage: '21 ready / ~44 controls',
+    note: 'Primary standard with 6 domains.',
+  },
+  {
+    name: 'SOC 2',
+    href: '/compliance/soc2',
+    coverage: '6 ready / 10 AI-relevant controls',
+    note: 'Trust services criteria mapping.',
+  },
+  {
+    name: 'EU AI Act',
+    href: '/compliance/eu-ai-act',
+    coverage: 'Strong on Articles 9, 11, 12, 13, 14',
+    note: 'High-risk obligations converge by August 2, 2026.',
+  },
+  {
+    name: 'NIST AI RMF',
+    href: '/compliance/nist',
+    coverage: '42 ready / 63 applicable',
+    note: 'Safe-harbor relevant posture for TRAIGA contexts.',
+  },
+  {
+    name: 'ISO 42001',
+    href: '/compliance/iso42001',
+    coverage: '22 ready / 38 controls',
+    note: 'AIMS controls with organizational gaps clearly separated.',
+  },
+]
+
+const aiucDomains = [
+  { name: 'A. Data & Privacy', stat: '4 ready / 7', color: 'text-[var(--status-success)]' },
+  { name: 'B. Security', stat: '5 ready / 9', color: 'text-[var(--status-success)]' },
+  { name: 'C. Safety', stat: '7 ready / 12', color: 'text-[var(--status-success)]' },
+  { name: 'D. Reliability', stat: '1 ready / 4', color: 'text-[var(--status-warning)]' },
+  { name: 'E. Accountability', stat: '3 ready / 10+', color: 'text-[var(--status-warning)]' },
+  { name: 'F. Society', stat: '1 ready / 2', color: 'text-[var(--status-success)]' },
+]
+
+const gapSignals = [
+  'Third-party testing controls (AIUC-1 B001, C010-C012, D002, D004) require an external assessor.',
+  'Written policy documents are customer-authored; TrustScope enforces and evidences execution.',
+  'Training-data governance remains outside TrustScope runtime scope and must come from customer controls.',
 ]
 
 export default function CompliancePage() {
   return (
-    <div className="pt-20">
-      {/* Hero */}
-      <section className="py-24 bg-gradient-to-b from-blue-600/10 to-transparent">
-        <div className="section-container text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Framework Evidence Mapping
-          </h1>
-          <p className="text-xl text-slate-400 max-w-3xl mx-auto mb-4">
-            TrustScope generates evidence mapped to compliance frameworks.
-            Not alignment scores—verifiable evidence.
+    <div className="min-h-screen bg-[var(--bg)] py-14">
+      <section className="section-container max-w-5xl">
+        <div className="text-center">
+          <p className="eyebrow mb-4">Compliance</p>
+          <h1 className="text-4xl font-extrabold md:text-6xl">Your auditor asked about AI. Here&apos;s your answer.</h1>
+          <p className="mx-auto mt-4 max-w-3xl text-lg text-[var(--text-secondary)]">
+            TrustScope generates framework-mapped evidence across runtime governance controls, with verifiable records and explicit gap labeling.
           </p>
-          <p className="text-lg text-slate-500 max-w-2xl mx-auto mb-8">
-            We don't track your compliance journey. We generate evidence that auditors 
-            and regulators actually need.
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Link href="/scanner" className="btn-primary gap-2">
+              Run Compliance Assessment <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link href="/contact" className="btn-secondary">Book Compliance Walkthrough</Link>
+          </div>
+          <p className="mt-5 text-xs text-[var(--text-subtle)]">Last verified mapping date: February 19, 2026</p>
+        </div>
+      </section>
+
+      <section className="section-container mt-14 max-w-5xl">
+        <div className="card">
+          <p className="eyebrow">The compliance paradox</p>
+          <h2 className="mt-2 text-2xl font-bold">Prove the controls ran without exposing sensitive data.</h2>
+          <p className="mt-3 text-[var(--text-secondary)]">
+            Traditional logs either reveal too much data or too little proof. TrustScope evidence shows which checks executed, which policy path was taken, and what action was enforced, without disclosing protected payloads.
           </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="https://app.trustscope.ai" className="btn-primary flex items-center justify-center gap-2">
-              Start Generating Evidence <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link href="/contact" className="btn-secondary">
-              Talk to Compliance Team
-            </Link>
-          </div>
         </div>
       </section>
 
-      {/* What We Say vs Don't Say */}
-      <section className="py-12 border-y border-slate-800 bg-slate-900/30">
-        <div className="section-container">
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="card bg-emerald-500/5 border-emerald-500/20 p-6">
-              <h3 className="text-emerald-400 font-semibold mb-4">✓ What We Say</h3>
-              <p className="text-slate-300 text-lg">
-                "TrustScope generates evidence for 39 NIST AI RMF controls"
-              </p>
-            </div>
-            <div className="card bg-red-500/5 border-red-500/20 p-6">
-              <h3 className="text-red-400 font-semibold mb-4">✗ What We DON'T Say</h3>
-              <p className="text-slate-300 text-lg">
-                "TrustScope is 72% aligned with NIST AI RMF"
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Framework Cards */}
-      <section className="py-24">
-        <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Supported Frameworks</h2>
-            <p className="text-slate-400">Click any framework for detailed control mapping</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {frameworks.map((fw, i) => (
-              <Link 
-                key={i} 
-                href={`/compliance/${fw.slug}`}
-                className="card p-6 hover:border-blue-500/50 transition-colors group"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                    <fw.icon className="w-6 h-6 text-blue-400" />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {fw.urgent && (
-                      <span className="px-2 py-1 bg-amber-500/10 text-amber-400 text-xs rounded">
-                        Aug 2025 Enforcement
-                      </span>
-                    )}
-                    <span className="px-2 py-1 bg-slate-700 text-slate-300 text-xs rounded">
-                      {fw.badge}
-                    </span>
-                  </div>
-                </div>
-                
-                <h3 className="font-semibold text-xl mb-1 group-hover:text-blue-400 transition-colors">
-                  {fw.name}
-                </h3>
-                <p className="text-slate-500 text-sm mb-4">{fw.description}</p>
-                
-                <div className="flex items-center justify-between pt-4 border-t border-slate-700">
-                  <span className="text-emerald-400 font-semibold">{fw.coverage}</span>
-                  <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400 transition-colors" />
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Evidence Model */}
-      <section className="py-24 bg-slate-900/30">
-        <div className="section-container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">The 6-Status Evidence Model</h2>
-            <p className="text-slate-400">Honest categorization of what we can and can't generate</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto">
-            {evidenceModel.map((item, i) => (
-              <div key={i} className="card p-4">
-                <div className={`w-3 h-3 rounded-full bg-${item.color}-400 mb-3`} />
-                <h3 className="font-semibold text-sm mb-1">{item.status}</h3>
-                <p className="text-slate-500 text-xs">{item.description}</p>
+      <section className="section-container mt-14 max-w-5xl">
+        <p className="eyebrow mb-3">Evidence chain</p>
+        <div className="card overflow-x-auto">
+          <div className="flex min-w-[620px] items-center gap-2 text-sm">
+            {['Trace', '26 Engines', 'Policy', 'Receipt', 'Hash Chain', 'Framework Mapping', 'Export'].map((step, idx) => (
+              <div key={step} className="flex items-center gap-2">
+                <span className="rounded-md border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-[var(--text-secondary)]">{step}</span>
+                {idx < 6 && <ArrowRight className="h-4 w-4 text-[var(--text-subtle)]" />}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Evidence Pack */}
-      <section className="py-24">
-        <div className="section-container">
-          <div className="max-w-3xl mx-auto text-center">
-            <FileCheck className="w-12 h-12 text-blue-400 mx-auto mb-6" />
-            <h2 className="text-3xl font-bold mb-4">Evidence Packs</h2>
-            <p className="text-slate-400 mb-8">
-              The Govern tier ($2K+/mo) includes pre-built Evidence Pack templates with hash chains,
-              Ed25519 signatures, and blockchain anchoring. Export as PDF or structured data.
-            </p>
-            
-            <div className="grid md:grid-cols-2 gap-4 text-left">
-              {[
-                'SOC 2 CC8 Change Management',
-                'EU AI Act Article 17 QMS',
-                'Insurance Underwriter Pack',
-                'NIST AI RMF Operational',
-              ].map((pack, i) => (
-                <div key={i} className="card p-4 flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-emerald-500" />
-                  <span className="text-slate-300">{pack}</span>
+      <section className="section-container mt-14 max-w-5xl">
+        <p className="eyebrow mb-3">AIUC-1 domain snapshot</p>
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          {aiucDomains.map((domain) => (
+            <article key={domain.name} className="card !p-4">
+              <p className="text-sm font-semibold text-[var(--text-primary)]">{domain.name}</p>
+              <p className={`mt-1 text-sm ${domain.color}`}>{domain.stat}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-container mt-14 max-w-5xl">
+        <p className="eyebrow mb-3">Framework pages</p>
+        <div className="grid gap-3 md:grid-cols-2">
+          {frameworks.map((framework) => (
+            <Link key={framework.href} href={framework.href} className="card block">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-xl font-bold">{framework.name}</h3>
+                  <p className="mt-1 text-sm text-[var(--text-secondary)]">{framework.coverage}</p>
+                  <p className="mt-2 text-sm text-[var(--text-muted)]">{framework.note}</p>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Disclaimer */}
-      <section className="py-12 bg-slate-900/30">
-        <div className="section-container">
-          <div className="card bg-amber-500/5 border-amber-500/20 p-6 max-w-4xl mx-auto">
-            <div className="flex items-start gap-4">
-              <AlertTriangle className="w-6 h-6 text-amber-400 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold text-amber-400 mb-2">Legal Disclaimer</h3>
-                <p className="text-slate-400 text-sm">
-                  TrustScope generates evidence artifacts mapped to compliance frameworks. Evidence 
-                  availability depends on configuration, retention, and integration status. Compliance 
-                  determination requires qualified assessors. Framework mappings include rationale but 
-                  may not reflect official regulatory guidance. Evidence Packs are auditor-consumable, 
-                  not auditor-ready—meaning we generate evidence, but compliance determination requires 
-                  qualified assessors.
-                </p>
+                <ArrowRight className="mt-1 h-4 w-4 text-[var(--interactive)]" />
               </div>
-            </div>
+            </Link>
+          ))}
+        </div>
+        <div className="mt-3 text-xs text-[var(--text-muted)]">
+          {complianceSources.map((source) => (
+            <a key={source.href} href={source.href} target="_blank" rel="noopener noreferrer" className="mr-4 font-semibold text-[var(--interactive)] hover:underline">
+              Source: {source.label}
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-container mt-14 max-w-5xl">
+        <div className="card">
+          <p className="eyebrow mb-3">Critical customer requirements</p>
+          <div className="space-y-3 text-sm text-[var(--text-secondary)]">
+            {gapSignals.map((signal) => (
+              <div key={signal} className="flex items-start gap-2">
+                <AlertTriangle className="mt-0.5 h-4 w-4 text-[var(--status-warning)]" />
+                <span>{signal}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24">
-        <div className="section-container text-center">
-          <h2 className="text-3xl font-bold mb-6">Ready to generate compliance evidence?</h2>
-          <p className="text-xl text-slate-400 mb-8">
-            Start with observation (free), upgrade to evidence generation when auditors come knocking.
+      <section className="section-container mt-14 max-w-5xl">
+        <div className="grid gap-3 md:grid-cols-2">
+          <article className="card">
+            <p className="eyebrow mb-2">Enforce</p>
+            <h3 className="text-2xl font-bold">$249/mo</h3>
+            <ul className="mt-4 space-y-2 text-sm text-[var(--text-secondary)]">
+              <li className="flex gap-2"><CheckCircle className="h-4 w-4 text-[var(--status-success)]" />26 engines with AI-hybrid detections</li>
+              <li className="flex gap-2"><CheckCircle className="h-4 w-4 text-[var(--status-success)]" />Compliance exports and retention controls</li>
+              <li className="flex gap-2"><CheckCircle className="h-4 w-4 text-[var(--status-success)]" />Most teams start here for audit prep</li>
+            </ul>
+          </article>
+          <article className="card">
+            <p className="eyebrow mb-2">Govern</p>
+            <h3 className="text-2xl font-bold">$2K+/mo</h3>
+            <ul className="mt-4 space-y-2 text-sm text-[var(--text-secondary)]">
+              <li className="flex gap-2"><FileCheck className="h-4 w-4 text-[var(--status-success)]" />Signed evidence chain and long-term retention</li>
+              <li className="flex gap-2"><Shield className="h-4 w-4 text-[var(--status-success)]" />BYOK signing and underwriting-grade exports</li>
+              <li className="flex gap-2"><Scale className="h-4 w-4 text-[var(--status-success)]" />Advanced compliance workflows and reviews</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section className="section-container mt-14 max-w-5xl">
+        <div className="compliance-disclaimer">
+          <p className="font-semibold text-[var(--status-warning)]">Evidence, not legal determination</p>
+          <p className="mt-1 text-[var(--text-secondary)]">
+            TrustScope provides governance evidence, not compliance determinations. Compliance assessment requires review by qualified legal, audit, or compliance professionals.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="https://app.trustscope.ai" className="btn-primary">
-              Get Started Free
-            </Link>
-            <Link href="/pricing" className="btn-secondary">
-              View Pricing
-            </Link>
-          </div>
+        </div>
+      </section>
+
+      <section className="section-container mt-14 max-w-5xl text-center">
+        <h2 className="text-3xl font-bold">Need framework-specific mapping detail?</h2>
+        <p className="mt-3 text-[var(--text-secondary)]">Open the framework pages for control-level tables and evidence references.</p>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <Link href="/compliance/aiuc-1" className="btn-primary">View AIUC-1 Mapping</Link>
+          <Link href="/pricing" className="btn-secondary">Compare Plans</Link>
         </div>
       </section>
     </div>

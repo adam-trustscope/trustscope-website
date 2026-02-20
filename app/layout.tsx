@@ -1,38 +1,58 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { DM_Sans, JetBrains_Mono, Outfit } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
-const inter = Inter({ subsets: ['latin'] })
+const displayFont = Outfit({
+  subsets: ['latin'],
+  variable: '--font-display',
+  weight: ['500', '600', '700', '800', '900'],
+})
+
+const bodyFont = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-body',
+  weight: ['400', '500', '600', '700'],
+})
+
+const monoFont = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  weight: ['400', '500', '600'],
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://trustscope.ai'),
   title: {
-    default: 'TrustScope - Evidence Infrastructure for AI Agents',
+    default: 'TrustScope | Know. Control. Prove.',
     template: '%s | TrustScope',
   },
-  description: 'Know what your AI agents are doing. Control what they can do. Prove it to anyone who asks. 19 detection engines (25 with AI hybrid), 50+ policy types, cryptographic evidence.',
-  keywords: ['AI governance', 'AI compliance', 'AI agents', 'AI safety', 'audit trail', 'SOC 2', 'EU AI Act', 'NIST AI RMF', 'agent monitoring', 'LLM observability'],
+  description:
+    'Know what your AI is doing. Control it. Prove it. AI agent governance with 26 detection engines and cryptographic evidence.',
+  keywords: [
+    'AI governance',
+    'AI compliance',
+    'AI agent security',
+    'AIUC-1',
+    'EU AI Act',
+    'NIST AI RMF',
+    'agent monitoring',
+  ],
   authors: [{ name: 'TrustScope' }],
-  creator: 'TrustScope',
-  publisher: 'TrustScope',
-  robots: {
-    index: true,
-    follow: true,
-  },
   openGraph: {
-    title: 'TrustScope - Evidence Infrastructure for AI Agents',
-    description: 'Know. Control. Prove. The governance platform for AI agents.',
+    title: 'TrustScope | Know. Control. Prove.',
+    description: 'Safe Mode for AI Agents.',
     url: 'https://trustscope.ai',
     siteName: 'TrustScope',
     type: 'website',
-    locale: 'en_US',
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'TrustScope' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TrustScope - Evidence Infrastructure for AI Agents',
-    description: 'Know. Control. Prove. The governance platform for AI agents.',
+    title: 'TrustScope | Know. Control. Prove.',
+    description: 'Safe Mode for AI Agents.',
+    images: ['/og.png'],
     creator: '@trustscope',
   },
 }
@@ -44,11 +64,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${displayFont.variable} ${bodyFont.variable} ${monoFont.variable}`}>
         <Header />
-        <main className="pt-20">
-          {children}
-        </main>
+        <main className="pt-20 md:pt-24">{children}</main>
         <Footer />
       </body>
     </html>

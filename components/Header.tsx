@@ -2,320 +2,199 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Menu, X, ChevronDown, DollarSign, ShieldCheck, Bug, FileCheck, Terminal, Scale, Users, Puzzle, Gauge, CreditCard, Scan } from 'lucide-react'
+import { Menu, X, ChevronDown } from 'lucide-react'
 
-const navigation = {
-  product: {
-    label: 'Product',
-    items: [
-      { name: 'Overview', href: '/', description: 'AI Agent Governance Platform', icon: Scan },
-      { name: 'Model Migration', href: '/switch', description: 'Prove new models are safe', icon: Gauge },
-      { name: 'Compliance', href: '/comply', description: 'Evidence for auditors', icon: Scale },
-      { name: 'Security', href: '/secure', description: 'Block threats inline', icon: ShieldCheck },
-      { name: 'Cost Management', href: '/cost', description: 'Track and control spend', icon: DollarSign },
-      { name: 'For Developers', href: '/build', description: 'Governance from first line', icon: Terminal },
-    ],
+const solutionLinks = [
+  {
+    name: 'Security Governance',
+    href: '/secure',
+    description: 'Runtime controls for leaks, injection, and unsafe actions',
   },
-  solutions: {
-    label: 'Solutions',
-    sections: [
-      {
-        title: 'By Use Case',
-        items: [
-          { name: 'Stop Runaway Costs', href: '/solutions/stop-runaway-costs', description: 'Loop detection, budget caps', icon: DollarSign },
-          { name: 'Prevent Data Leaks', href: '/solutions/prevent-data-leaks', description: 'PII scanner, secrets detection', icon: ShieldCheck },
-          { name: 'Debug Agents', href: '/solutions/debug-agents', description: 'Traces, replay, Agent DNA', icon: Bug },
-          { name: 'Pass Audits', href: '/solutions/pass-audits', description: 'Evidence Packs for compliance', icon: FileCheck },
-        ],
-      },
-      {
-        title: 'By Role',
-        items: [
-          { name: 'For Developers', href: '/build', description: 'CLI-first, 30-second setup', icon: Terminal },
-          { name: 'For Compliance', href: '/comply', description: 'SOC 2, EU AI Act, NIST', icon: Scale },
-          { name: 'For CTOs', href: '/leadership', description: 'Risk visibility, insurance-ready', icon: Users },
-        ],
-      },
-    ],
+  {
+    name: 'Cost Governance',
+    href: '/cost',
+    description: 'Budget, loop, and token controls for production agents',
   },
-  frameworks: {
-    label: 'Frameworks',
-    items: [
-      { name: 'Overview', href: '/compliance', description: 'All supported frameworks' },
-      { name: 'SOC 2', href: '/compliance/soc2', description: 'CC8.1 evidence mapping' },
-      { name: 'EU AI Act', href: '/compliance/eu-ai-act', description: 'Article 17 QMS requirements' },
-      { name: 'NIST AI RMF', href: '/compliance/nist', description: '39 of 63 controls' },
-      { name: 'ISO 42001', href: '/compliance/iso42001', description: 'AI management system' },
-    ],
+  {
+    name: 'Migration Governance',
+    href: '/switch#compare-upload',
+    description: 'Baseline vs candidate trace comparison before cutover',
   },
-}
+  {
+    name: 'Compliance Evidence',
+    href: '/compliance',
+    description: 'Framework-mapped receipts and audit-ready exports',
+  },
+  {
+    name: 'Incident Response',
+    href: '/incidents',
+    description: 'Trace-level triage after production events',
+  },
+]
 
-const directLinks = [
-  { name: 'Developers', href: '/build' },
-  { name: 'Scanner', href: '/scanner' },
+const complianceLinks = [
+  { name: 'Overview', href: '/compliance' },
+  { name: 'AIUC-1', href: '/compliance/aiuc-1' },
+  { name: 'SOC 2', href: '/compliance/soc2' },
+  { name: 'EU AI Act', href: '/compliance/eu-ai-act' },
+  { name: 'NIST AI RMF', href: '/compliance/nist' },
+  { name: 'ISO 42001', href: '/compliance/iso42001' },
+]
+
+const topLinks = [
+  { name: 'Trace Analyzer', href: '/scanner' },
+  { name: 'Developers', href: '/developers' },
   { name: 'Pricing', href: '/pricing' },
-  { name: 'Docs', href: 'https://docs.trustscope.ai', external: true },
 ]
 
 export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const [openDropdown, setOpenDropdown] = useState<null | 'solutions' | 'compliance'>(null)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const navItemClass =
+    'whitespace-nowrap px-3 py-2 text-[17px] font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800">
-      <nav className="section-container flex items-center justify-between h-16">
-        {/* Logo */}
-        <Link href="/" className="flex items-center flex-shrink-0">
-          <img src="/logo.png" alt="TrustScope" className="h-16" />
-        </Link>
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-[var(--border)] bg-[color:rgba(9,9,11,.9)] backdrop-blur-xl">
+      <nav className="w-full">
+        <div className="hidden h-20 w-full grid-cols-[260px_1fr_260px] items-center px-6 xl:px-8 lg:grid">
+          <Link href="/" className="flex items-center justify-start">
+            <img
+              src="/brand/logo-horizontal-white.png"
+              alt="TrustScope"
+              className="h-auto w-[236px] max-w-none"
+            />
+          </Link>
 
-        {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center gap-0">
-          {/* Product Dropdown */}
-          <div 
-            className="relative"
-            onMouseEnter={() => setOpenDropdown('product')}
-            onMouseLeave={() => setOpenDropdown(null)}
-          >
-            <button className="flex items-center gap-1 px-4 py-2 text-slate-400 hover:text-white transition-colors">
-              {navigation.product.label}
-              <ChevronDown className={`w-4 h-4 transition-transform ${openDropdown === 'product' ? 'rotate-180' : ''}`} />
-            </button>
-            
-            {openDropdown === 'product' && (
-              <div className="absolute top-full left-0 pt-2">
-                <div className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-4 min-w-[280px]">
-                  {navigation.product.items.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-800 transition-colors"
-                    >
-                      <item.icon className="w-5 h-5 text-blue-400 mt-0.5" />
-                      <div>
-                        <div className="font-medium text-white">{item.name}</div>
-                        <div className="text-sm text-slate-500">{item.description}</div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Solutions Dropdown (Mega Menu) */}
-          <div 
-            className="relative"
-            onMouseEnter={() => setOpenDropdown('solutions')}
-            onMouseLeave={() => setOpenDropdown(null)}
-          >
-            <button className="flex items-center gap-1 px-4 py-2 text-slate-400 hover:text-white transition-colors">
-              {navigation.solutions.label}
-              <ChevronDown className={`w-4 h-4 transition-transform ${openDropdown === 'solutions' ? 'rotate-180' : ''}`} />
-            </button>
-            
-            {openDropdown === 'solutions' && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2">
-                <div className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-6 min-w-[600px]">
-                  <div className="grid grid-cols-2 gap-8">
-                    {navigation.solutions.sections.map((section) => (
-                      <div key={section.title}>
-                        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
-                          {section.title}
-                        </div>
-                        <div className="space-y-1">
-                          {section.items.map((item) => (
-                            <Link
-                              key={item.name}
-                              href={item.href}
-                              className="flex items-start gap-3 p-2 rounded-lg hover:bg-slate-800 transition-colors"
-                            >
-                              <item.icon className="w-5 h-5 text-blue-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium text-white text-sm">{item.name}</div>
-                                <div className="text-xs text-slate-500">{item.description}</div>
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
+          <div className="flex items-center justify-center gap-1">
+            <div
+              className="relative"
+              onMouseEnter={() => setOpenDropdown('solutions')}
+              onMouseLeave={() => setOpenDropdown(null)}
+            >
+              <button className={`flex items-center gap-1 whitespace-nowrap ${navItemClass}`}>
+                Use Cases <ChevronDown className={`h-4 w-4 transition-transform ${openDropdown === 'solutions' ? 'rotate-180' : ''}`} />
+              </button>
+              {openDropdown === 'solutions' && (
+                <div className="absolute left-0 top-full pt-2">
+                  <div className="w-72 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-2 shadow-2xl">
+                    {solutionLinks.map((link) => (
+                      <Link key={link.href} href={link.href} className="block rounded-lg px-3 py-2 hover:bg-[var(--surface-hover)]">
+                        <div className="text-sm font-medium text-[var(--text-primary)]">{link.name}</div>
+                        <div className="text-xs text-[var(--text-muted)]">{link.description}</div>
+                      </Link>
                     ))}
                   </div>
-                  <div className="mt-4 pt-4 border-t border-slate-700">
-                    <Link 
-                      href="/solutions" 
-                      className="text-sm text-blue-400 hover:text-blue-300"
-                    >
-                      View all solutions →
-                    </Link>
+                </div>
+              )}
+            </div>
+
+            <div
+              className="relative"
+              onMouseEnter={() => setOpenDropdown('compliance')}
+              onMouseLeave={() => setOpenDropdown(null)}
+            >
+              <button className={`flex items-center gap-1 whitespace-nowrap ${navItemClass}`}>
+                Compliance <ChevronDown className={`h-4 w-4 transition-transform ${openDropdown === 'compliance' ? 'rotate-180' : ''}`} />
+              </button>
+              {openDropdown === 'compliance' && (
+                <div className="absolute left-0 top-full pt-2">
+                  <div className="w-64 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-2 shadow-2xl">
+                    {complianceLinks.map((link) => (
+                      <Link key={link.href} href={link.href} className="block rounded-lg px-3 py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)]">
+                        {link.name}
+                      </Link>
+                    ))}
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
 
-          {/* Frameworks Dropdown */}
-          <div 
-            className="relative"
-            onMouseEnter={() => setOpenDropdown('frameworks')}
-            onMouseLeave={() => setOpenDropdown(null)}
-          >
-            <button className="flex items-center gap-1 px-4 py-2 text-slate-400 hover:text-white transition-colors">
-              {navigation.frameworks.label}
-              <ChevronDown className={`w-4 h-4 transition-transform ${openDropdown === 'frameworks' ? 'rotate-180' : ''}`} />
-            </button>
-            
-            {openDropdown === 'frameworks' && (
-              <div className="absolute top-full left-0 pt-2">
-                <div className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-4 min-w-[260px]">
-                  {navigation.frameworks.items.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="flex flex-col p-3 rounded-lg hover:bg-slate-800 transition-colors"
-                    >
-                      <div className="font-medium text-white">{item.name}</div>
-                      <div className="text-sm text-slate-500">{item.description}</div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Direct Links */}
-          {directLinks.map((link) => (
-            link.external ? (
-              <a
-                key={link.name}
-                href={link.href}
-                className="px-4 py-2 text-slate-400 hover:text-white transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {link.name}
-              </a>
-            ) : (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="px-4 py-2 text-slate-400 hover:text-white transition-colors"
-              >
+            {topLinks.map((link) => (
+              <Link key={link.href} href={link.href} className={navItemClass}>
                 {link.name}
               </Link>
-            )
-          ))}
+            ))}
+
+            <a
+              href="https://docs.trustscope.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={navItemClass}
+            >
+              Docs
+            </a>
+          </div>
+
+          <div className="flex justify-end">
+            <a href="https://app.trustscope.ai" className="btn-primary whitespace-nowrap !px-6 !py-2.5 !text-base">
+              Start Free
+            </a>
+          </div>
         </div>
 
-        {/* Desktop CTAs */}
-        <div className="hidden lg:flex items-center gap-4">
-          <Link href="https://app.trustscope.ai" className="text-slate-400 hover:text-white transition-colors">
-            Sign In
+        <div className="flex h-20 items-center px-4 lg:hidden">
+          <Link href="/" className="flex items-center">
+            <img
+              src="/brand/logo-horizontal-white.png"
+              alt="TrustScope"
+              className="h-auto w-[206px] max-w-none sm:w-[220px]"
+            />
           </Link>
-          <Link href="https://app.trustscope.ai" className="btn-primary">
-            Get Started Free
-          </Link>
-        </div>
 
-        {/* Mobile menu button */}
-        <button
-          className="lg:hidden p-2 text-slate-400 hover:text-white"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+          <button
+            className="ml-auto p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+            onClick={() => setMobileOpen((v) => !v)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
       </nav>
 
-      {/* Mobile Navigation */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden bg-slate-900 border-b border-slate-800 max-h-[80vh] overflow-y-auto">
-          <div className="section-container py-4 space-y-6">
-            {/* Product Section */}
+      {mobileOpen && (
+        <div className="border-t border-[var(--border)] bg-[var(--surface)] lg:hidden">
+          <div className="section-container space-y-5 py-4">
             <div>
-              <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Product</div>
-              {navigation.product.items.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="block py-2 text-slate-300 hover:text-white"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-
-            {/* Solutions Section */}
-            <div>
-              <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Solutions</div>
-              {navigation.solutions.sections.map((section) => (
-                <div key={section.title} className="mb-4">
-                  <div className="text-xs text-slate-600 mb-1">{section.title}</div>
-                  {section.items.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="block py-2 text-slate-300 hover:text-white"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-              ))}
-            </div>
-
-            {/* Frameworks Section */}
-            <div>
-              <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Frameworks</div>
-              {navigation.frameworks.items.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="block py-2 text-slate-300 hover:text-white"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-
-            {/* Direct Links */}
-            <div className="pt-4 border-t border-slate-800">
-              {directLinks.map((link) => (
-                link.external ? (
-                  <a
-                    key={link.name}
-                    href={link.href}
-                    className="block py-2 text-slate-300 hover:text-white"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {link.name}
-                  </a>
-                ) : (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className="block py-2 text-slate-300 hover:text-white"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
+              <div className="eyebrow mb-2">Use Cases</div>
+              <div className="space-y-1">
+                {solutionLinks.map((link) => (
+                  <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className="block py-1.5 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
                     {link.name}
                   </Link>
-                )
-              ))}
+                ))}
+              </div>
             </div>
 
-            {/* CTAs */}
-            <div className="pt-4 border-t border-slate-800 space-y-4">
-              <Link href="https://app.trustscope.ai" className="block text-slate-400 hover:text-white">
-                Sign In
-              </Link>
-              <Link href="https://app.trustscope.ai" className="btn-primary block text-center">
-                Get Started Free
-              </Link>
+            <div>
+              <div className="eyebrow mb-2">Compliance</div>
+              <div className="space-y-1">
+                {complianceLinks.map((link) => (
+                  <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className="block py-1.5 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
             </div>
+
+            <div className="space-y-1 border-t border-[var(--border)] pt-4">
+              {topLinks.map((link) => (
+                <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className="block py-1.5 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
+                  {link.name}
+                </Link>
+              ))}
+              <a
+                href="https://docs.trustscope.ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block py-1.5 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+              >
+                Docs
+              </a>
+            </div>
+
+            <a href="https://app.trustscope.ai" className="btn-primary block text-center">
+              Get Started
+            </a>
           </div>
         </div>
       )}

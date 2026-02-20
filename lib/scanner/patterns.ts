@@ -39,7 +39,7 @@ export const PII_PATTERNS: Record<string, DetectionPattern> = {
     redactTo: '[EMAIL REDACTED]',
   },
   phone: {
-    pattern: /\b(?:\+?1[-.\s]?)?(?:\(?\d{3}\)?[-.\s]?)?\d{3}[-.\s]?\d{4}\b/g,
+    pattern: /\b(?:\+?1[-.\s]?)?(?:\(\d{3}\)|\d{3})[-.\s]\d{3}[-.\s]\d{4}\b/g,
     label: 'Phone Number',
     severity: 'high',
     example: '(555) 123-4567',
@@ -73,6 +73,34 @@ export const PII_PATTERNS: Record<string, DetectionPattern> = {
     severity: 'critical',
     example: 'MRN-12345678',
     redactTo: '[MED-ID REDACTED]',
+  },
+  policy_number: {
+    pattern: /\b(?:POL|POLICY|CLM|CLAIM)[-:\s]?\d{6,12}\b/gi,
+    label: 'Policy or Claim Number',
+    severity: 'high',
+    example: 'POL-48291073',
+    redactTo: '[POLICY-ID REDACTED]',
+  },
+  member_id: {
+    pattern: /\b(?:MEM|MBR|MEMBER)[-:\s]?\d{6,12}\b/gi,
+    label: 'Member ID',
+    severity: 'high',
+    example: 'MEM-55821044',
+    redactTo: '[MEMBER-ID REDACTED]',
+  },
+  npi: {
+    pattern: /\bNPI[-:\s]?\d{10}\b/gi,
+    label: 'Provider NPI',
+    severity: 'high',
+    example: 'NPI 1234567890',
+    redactTo: '[NPI REDACTED]',
+  },
+  icd10_code: {
+    pattern: /\b[A-TV-Z][0-9][0-9AB](?:\.[0-9A-TV-Z]{1,4})?\b/g,
+    label: 'Diagnosis Code',
+    severity: 'medium',
+    example: 'E11.9',
+    redactTo: '[ICD-CODE REDACTED]',
   },
   drivers_license: {
     pattern: /\b[A-Z]\d{7,8}\b/g,
