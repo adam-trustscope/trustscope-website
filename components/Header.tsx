@@ -6,6 +6,11 @@ import { Menu, X, ChevronDown } from 'lucide-react'
 
 const solutionLinks = [
   {
+    name: 'Development Governance',
+    href: '/build',
+    description: 'Ship agents with guardrails from day one',
+  },
+  {
     name: 'Security Governance',
     href: '/secure',
     description: 'Runtime controls for leaks, injection, and unsafe actions',
@@ -14,6 +19,11 @@ const solutionLinks = [
     name: 'Cost Governance',
     href: '/cost',
     description: 'Budget, loop, and token controls for production agents',
+  },
+  {
+    name: 'Compliance Urgency',
+    href: '/comply',
+    description: 'Audit-ready evidence when your auditor asks now',
   },
   {
     name: 'Migration Governance',

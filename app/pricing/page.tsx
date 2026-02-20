@@ -95,7 +95,7 @@ const faqs = [
   },
   {
     q: 'Can I try Enforce features before upgrading?',
-    a: 'Yes. Simulate mode shows what Enforce engines would catch on your current traffic before you enable blocking.',
+    a: 'Yes. Simulate mode lets you test any engine at your current tier in observe-only mode — see what would have been blocked without affecting production traffic.',
   },
   {
     q: 'Do I need a credit card to start?',

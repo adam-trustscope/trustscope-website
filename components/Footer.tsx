@@ -9,8 +9,10 @@ const footer = {
     { name: 'Pricing', href: '/pricing' },
   ],
   solutions: [
+    { name: 'Development Governance', href: '/build' },
     { name: 'Security Governance', href: '/secure' },
     { name: 'Cost Governance', href: '/cost' },
+    { name: 'Compliance Urgency', href: '/comply' },
     { name: 'Migration Governance', href: '/switch#compare-upload' },
     { name: 'Compliance Evidence', href: '/compliance' },
     { name: 'Incident Response', href: '/incidents' },

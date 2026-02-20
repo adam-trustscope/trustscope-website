@@ -16,20 +16,36 @@ type EngineGroup = {
 }
 
 const engineRows: EngineRow[] = [
-  { engine: 'PII Scanner', detects: 'SSN, email, phone, policy/member IDs', tier: 'Monitor+', mode: 'Alert + redact + block' },
-  { engine: 'Secrets Scanner', detects: 'API keys, bearer tokens, DB URLs', tier: 'Monitor+', mode: 'Alert + block' },
-  { engine: 'Command Firewall', detects: 'Unsafe shell / SQL / tool actions', tier: 'Monitor+', mode: 'Alert + block' },
-  { engine: 'Loop Killer', detects: 'Recursive or oscillating agent behavior', tier: 'Monitor+', mode: 'Alert + block' },
-  { engine: 'Velocity Monitor', detects: 'Runaway request bursts', tier: 'Monitor+', mode: 'Alert + block' },
-  { engine: 'Cost Velocity', detects: 'Spend anomalies and growth spikes', tier: 'Monitor+', mode: 'Alert + block' },
-  { engine: 'Context Expansion', detects: 'Context window bloat and drift', tier: 'Monitor+', mode: 'Alert' },
-  { engine: 'PII Confidence Model', detects: 'Context-aware sensitive data', tier: 'Protect+', mode: 'Alert + block' },
-  { engine: 'Intent Classification', detects: 'Risky user intent patterns', tier: 'Protect+', mode: 'Alert + policy route' },
-  { engine: 'Toxicity Scoring', detects: 'Harmful output risk', tier: 'Protect+', mode: 'Alert + block' },
-  { engine: 'Prompt Injection (AI)', detects: 'Goal hijacking and instructions tampering', tier: 'Enforce+', mode: 'Alert + block' },
-  { engine: 'Jailbreak Detection (AI)', detects: 'Guardrail evasion attempts', tier: 'Enforce+', mode: 'Alert + block' },
-  { engine: 'Hallucination Scoring (AI)', detects: 'Ungrounded or fabricated output', tier: 'Enforce+', mode: 'Alert + approval gates' },
-  { engine: 'Groundedness / Citation', detects: 'Unsupported claims and missing evidence', tier: 'Enforce+', mode: 'Alert + policy route' },
+  // STATISTICAL (10) - Monitor tier
+  { engine: 'Loop Killer', detects: 'Infinite loops and recursive patterns', tier: 'Monitor+', mode: 'Alert + block' },
+  { engine: 'Velocity Monitor', detects: 'Request rate and burst patterns', tier: 'Monitor+', mode: 'Alert + block' },
+  { engine: 'Cost Velocity', detects: 'Rapid cost increases', tier: 'Monitor+', mode: 'Alert + block' },
+  { engine: 'Budget Caps', detects: 'Spending limit enforcement', tier: 'Monitor+', mode: 'Alert + block' },
+  { engine: 'Token Growth', detects: 'Token usage growth over time', tier: 'Monitor+', mode: 'Alert' },
+  { engine: 'Context Expansion', detects: 'Context window abuse', tier: 'Monitor+', mode: 'Alert' },
+  { engine: 'Oscillation Detector', detects: 'A-B-A-B behavioral patterns', tier: 'Monitor+', mode: 'Alert' },
+  { engine: 'Error Rate', detects: 'Error frequency and patterns', tier: 'Monitor+', mode: 'Alert' },
+  { engine: 'Session Duration', detects: 'Unusually long sessions', tier: 'Monitor+', mode: 'Alert' },
+  { engine: 'Session Action Limit', detects: 'Actions per session caps', tier: 'Monitor+', mode: 'Alert + block' },
+  // PATTERN / CONTENT (6) - Monitor tier
+  { engine: 'Secrets Scanner', detects: '60 patterns: API keys, tokens, DB URLs', tier: 'Monitor+', mode: 'Alert + block' },
+  { engine: 'Command Firewall', detects: '56 dangerous command patterns', tier: 'Monitor+', mode: 'Alert + block' },
+  { engine: 'Blocked Phrases', detects: 'Custom phrase blocklist', tier: 'Monitor+', mode: 'Alert + block' },
+  { engine: 'Prompt Injection', detects: '57 patterns across 8 categories', tier: 'Monitor+', mode: 'Alert + block' },
+  { engine: 'Jailbreak Detector', detects: '46 patterns across 6 categories', tier: 'Monitor+', mode: 'Alert + block' },
+  { engine: 'Action Label Mismatch', detects: 'Safe labels hiding destructive content', tier: 'Monitor+', mode: 'Alert' },
+  // ML / CONTENT (4) - Protect tier
+  { engine: 'PII Scanner', detects: '90 patterns: SSN, email, phone, IDs', tier: 'Protect+', mode: 'Alert + redact + block' },
+  { engine: 'Toxicity Filter', detects: '6 keyword categories', tier: 'Protect+', mode: 'Alert + block' },
+  { engine: 'Hate Speech Detector', detects: 'AI-powered hate speech detection', tier: 'Protect+', mode: 'Alert + block' },
+  { engine: 'Data Exfiltration', detects: 'Data extraction attempts', tier: 'Protect+', mode: 'Alert + block' },
+  // AI HYBRID (6) - Enforce tier
+  { engine: 'Semantic Firewall', detects: 'AI-powered intent analysis', tier: 'Enforce+', mode: 'Alert + block' },
+  { engine: 'Hallucination Detector', detects: 'Fact verification against sources', tier: 'Enforce+', mode: 'Alert + approval gates' },
+  { engine: 'Reasoning Drift', detects: 'Logical inconsistencies', tier: 'Enforce+', mode: 'Alert' },
+  { engine: 'A2A Depth', detects: 'Agent-to-agent delegation depth limits', tier: 'Enforce+', mode: 'Alert + block' },
+  { engine: 'Tool Parameter Validator', detects: 'Tool call parameter validation', tier: 'Enforce+', mode: 'Alert + block' },
+  { engine: 'Reasoning Quality Monitor', detects: 'Reasoning chain quality checks', tier: 'Enforce+', mode: 'Alert' },
 ]
 
 const integrations = [
@@ -110,7 +126,7 @@ export default function FeaturesPage() {
         <p className="eyebrow mb-4">Features</p>
         <h1 className="text-4xl font-extrabold md:text-6xl">Everything TrustScope does.</h1>
         <p className="mx-auto mt-4 max-w-3xl text-lg text-[var(--text-secondary)]">
-          26 detection engines, 4 integration paths, and one runtime governance platform.
+          26 detection engines, Agent DNA behavioral profiling, 4 integration paths, and one runtime governance platform.
         </p>
       </section>
 
@@ -150,6 +166,27 @@ export default function FeaturesPage() {
               ))}
             </tbody>
           </table>
+        </div>
+      </section>
+
+      <section className="section-container mt-14 max-w-6xl">
+        <p className="eyebrow mb-3">Agent DNA behavioral profiling</p>
+        <p className="mb-3 text-sm text-[var(--text-muted)]">
+          Aggregate behavioral analysis that runs across traces, not on individual requests.
+        </p>
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          <article className="card">
+            <h3 className="text-lg font-semibold">Behavioral Fingerprint</h3>
+            <p className="mt-2 text-sm text-[var(--text-secondary)]">Tracks agent behavior patterns over time to detect drift from baseline.</p>
+          </article>
+          <article className="card">
+            <h3 className="text-lg font-semibold">Fairness Strand</h3>
+            <p className="mt-2 text-sm text-[var(--text-secondary)]">Detects systemic bias across outputs. AIUC-1 C003 coverage for aggregate bias patterns.</p>
+          </article>
+          <article className="card">
+            <h3 className="text-lg font-semibold">Migration Drift</h3>
+            <p className="mt-2 text-sm text-[var(--text-secondary)]">Compares baseline vs candidate agent behavior during model changes.</p>
+          </article>
         </div>
       </section>
 

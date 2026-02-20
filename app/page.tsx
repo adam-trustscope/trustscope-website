@@ -27,7 +27,7 @@ const pillars = [
   {
     title: 'Know',
     headline: 'See every decision your agents make.',
-    body: '26 detection engines surface PII leaks, prompt injection, jailbreak attempts, cost spikes, and drift before they become incidents.',
+    body: '26 detection engines and Agent DNA profiling surface PII leaks, prompt injection, jailbreak attempts, cost spikes, and drift before they become incidents.',
     details: [
       'Trace-level findings by model and severity',
       'Timeline view to spot where drift starts',

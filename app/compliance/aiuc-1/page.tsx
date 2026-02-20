@@ -3,52 +3,46 @@ import { AlertTriangle, ArrowRight, CheckCircle } from 'lucide-react'
 
 const domains = [
   {
-    domain: 'A. Data & Privacy',
-    controls: '~7',
-    ready: '4',
-    partial: '3',
-    gap: '0',
+    id: 'A',
+    name: 'Data & Privacy',
+    quality: 'Strong',
+    engines: ['pii_scanner', 'secrets_scanner', 'pii_confidence'],
     note: 'Policy docs are customer-authored; TrustScope proves enforcement.',
   },
   {
-    domain: 'B. Security',
-    controls: '~9',
-    ready: '5',
-    partial: '1',
-    gap: '1',
-    note: 'B001 requires third-party adversarial testing.',
+    id: 'B',
+    name: 'Security',
+    quality: 'Strong',
+    engines: ['prompt_injection_ai', 'jailbreak_ai', 'command_firewall'],
+    note: 'B001 requires third-party adversarial testing (partial).',
   },
   {
-    domain: 'C. Safety',
-    controls: '~12',
-    ready: '7',
-    partial: '2',
-    gap: '3',
-    note: 'C010-C012 require external testing engagements.',
+    id: 'C',
+    name: 'Safety',
+    quality: 'Strong',
+    engines: ['toxicity_filter', 'hallucination_detector', 'hate_speech_detector'],
+    note: 'C003 bias coverage via toxicity + hate speech (per-trace) and Agent DNA fairness strand (aggregate). C010-C012 require external testing (partial).',
   },
   {
-    domain: 'D. Reliability',
-    controls: '~4',
-    ready: '1',
-    partial: '1',
-    gap: '2',
-    note: 'D002/D004 are third-party testing controls.',
+    id: 'D',
+    name: 'Reliability',
+    quality: 'Good',
+    engines: ['loop_killer', 'velocity_monitor', 'error_rate'],
+    note: 'D002/D004 are third-party testing controls (partial).',
   },
   {
-    domain: 'E. Accountability',
-    controls: '~10+',
-    ready: '3',
-    partial: '6+',
-    gap: '0',
-    note: 'Failure-plan docs are customer-authored but evidence-backed by TrustScope.',
+    id: 'E',
+    name: 'Accountability',
+    quality: 'Strong',
+    engines: ['evidence_signer', 'hash_chain', 'audit_export'],
+    note: 'Failure-plan docs are customer-authored but evidence-backed.',
   },
   {
-    domain: 'F. Society',
-    controls: '~2',
-    ready: '1',
-    partial: '1',
-    gap: '0',
-    note: 'CBRN and misuse policy depth is customer-taxonomy dependent.',
+    id: 'F',
+    name: 'Cyber Misuse',
+    quality: 'Strong',
+    engines: ['command_firewall', 'secrets_scanner', 'prompt_injection_ai'],
+    note: 'CBRN and misuse prevention via security engines.',
   },
 ]
 
@@ -74,26 +68,23 @@ export default function AIUC1Page() {
       </section>
 
       <section className="section-container mt-14 max-w-5xl">
+        <p className="mb-3 text-sm text-[var(--text-muted)]">45 addressed / 50 requirements (90%)</p>
         <div className="card overflow-x-auto !p-0">
           <table className="w-full min-w-[760px] text-left text-sm">
             <thead className="border-b border-[var(--border)] bg-[var(--surface-hover)]">
               <tr>
                 <th className="px-4 py-3 text-[var(--text-secondary)]">Domain</th>
-                <th className="px-4 py-3 text-[var(--text-secondary)]">Controls</th>
-                <th className="px-4 py-3 text-[var(--text-secondary)]">Ready</th>
-                <th className="px-4 py-3 text-[var(--text-secondary)]">Partial</th>
-                <th className="px-4 py-3 text-[var(--text-secondary)]">Gap</th>
+                <th className="px-4 py-3 text-[var(--text-secondary)]">Evidence Quality</th>
+                <th className="px-4 py-3 text-[var(--text-secondary)]">Key Engines</th>
                 <th className="px-4 py-3 text-[var(--text-secondary)]">Notes</th>
               </tr>
             </thead>
             <tbody>
               {domains.map((row) => (
-                <tr key={row.domain} className="border-b border-[var(--border)] last:border-0">
-                  <td className="px-4 py-3 text-[var(--text-primary)]">{row.domain}</td>
-                  <td className="px-4 py-3 text-[var(--text-secondary)]">{row.controls}</td>
-                  <td className="px-4 py-3 text-[var(--status-success)]">{row.ready}</td>
-                  <td className="px-4 py-3 text-[var(--status-warning)]">{row.partial}</td>
-                  <td className="px-4 py-3 text-[var(--status-danger)]">{row.gap}</td>
+                <tr key={row.id} className="border-b border-[var(--border)] last:border-0">
+                  <td className="px-4 py-3 text-[var(--text-primary)]">{row.id}. {row.name}</td>
+                  <td className={`px-4 py-3 font-semibold ${row.quality === 'Strong' ? 'text-[var(--status-success)]' : 'text-[var(--status-success)]'}`}>{row.quality}</td>
+                  <td className="px-4 py-3 text-[var(--text-secondary)]">{row.engines.join(', ')}</td>
                   <td className="px-4 py-3 text-[var(--text-muted)]">{row.note}</td>
                 </tr>
               ))}

@@ -16,7 +16,7 @@ const frameworks = [
   {
     name: 'AIUC-1',
     href: '/compliance/aiuc-1',
-    coverage: '21 ready / ~44 controls',
+    coverage: '45 addressed / 50 requirements (90%)',
     note: 'Primary standard with 6 domains.',
   },
   {
@@ -46,12 +46,12 @@ const frameworks = [
 ]
 
 const aiucDomains = [
-  { name: 'A. Data & Privacy', stat: '4 ready / 7', color: 'text-[var(--status-success)]' },
-  { name: 'B. Security', stat: '5 ready / 9', color: 'text-[var(--status-success)]' },
-  { name: 'C. Safety', stat: '7 ready / 12', color: 'text-[var(--status-success)]' },
-  { name: 'D. Reliability', stat: '1 ready / 4', color: 'text-[var(--status-warning)]' },
-  { name: 'E. Accountability', stat: '3 ready / 10+', color: 'text-[var(--status-warning)]' },
-  { name: 'F. Society', stat: '1 ready / 2', color: 'text-[var(--status-success)]' },
+  { name: 'A. Data & Privacy', quality: 'Strong', note: 'PII, secrets, redaction controls', color: 'text-[var(--status-success)]' },
+  { name: 'B. Security', quality: 'Strong', note: 'Injection, jailbreak, command firewall', color: 'text-[var(--status-success)]' },
+  { name: 'C. Safety', quality: 'Strong', note: 'Toxicity, hallucination, fairness strand (C003)', color: 'text-[var(--status-success)]' },
+  { name: 'D. Reliability', quality: 'Good', note: 'Loop killer, velocity, error rate', color: 'text-[var(--status-success)]' },
+  { name: 'E. Accountability', quality: 'Strong', note: 'Hash-chained receipts, audit exports', color: 'text-[var(--status-success)]' },
+  { name: 'F. Cyber Misuse', quality: 'Strong', note: 'CBRN prevention via security engines', color: 'text-[var(--status-success)]' },
 ]
 
 const gapSignals = [
@@ -110,7 +110,8 @@ export default function CompliancePage() {
           {aiucDomains.map((domain) => (
             <article key={domain.name} className="card !p-4">
               <p className="text-sm font-semibold text-[var(--text-primary)]">{domain.name}</p>
-              <p className={`mt-1 text-sm ${domain.color}`}>{domain.stat}</p>
+              <p className={`mt-1 text-sm font-semibold ${domain.color}`}>{domain.quality}</p>
+              <p className="mt-1 text-xs text-[var(--text-muted)]">{domain.note}</p>
             </article>
           ))}
         </div>
