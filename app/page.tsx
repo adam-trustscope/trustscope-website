@@ -4,16 +4,16 @@ import HeroGovernanceDemo from '@/components/HeroGovernanceDemo'
 
 const urgencySignals = [
   {
-    value: '88%',
-    label: 'of organizations had confirmed or suspected AI agent security incidents this year.',
-    sourceLabel: 'State of AI Agent Security 2026, Gravitee (900+ executives), Feb 2026',
-    sourceHref: 'https://gravitee.io/resources/state-of-ai-agent-security-2026',
+    value: '40%',
+    label: 'of enterprise apps will embed AI agents by end of 2026, up from 5% last year.',
+    sourceLabel: 'Gartner, Aug 2025',
+    sourceHref: 'https://www.gartner.com/en/newsroom/press-releases',
   },
   {
-    value: '14%',
-    label: 'of organizations have full security approval for their entire AI agent fleet. The rest are flying blind.',
-    sourceLabel: 'State of AI Agent Security 2026, Gravitee, Feb 2026',
-    sourceHref: 'https://gravitee.io/resources/state-of-ai-agent-security-2026',
+    value: '20%',
+    label: 'of all data breaches now involve shadow AI — unmonitored models operating outside governance.',
+    sourceLabel: 'IBM Cost of a Data Breach Report, 2025',
+    sourceHref: 'https://www.ibm.com/reports/data-breach',
   },
   {
     value: '$4.63M',
