@@ -84,7 +84,7 @@ export default function DPAPage() {
               <div className="card p-6">
                 <h3 className="font-semibold text-lg mb-3">Data Retention</h3>
                 <p className="text-slate-400 text-sm">
-                  Data is retained according to your subscription tier (3 days to 7 years) and 
+                  Data is retained according to your subscription tier (30 days to 7 years) and 
                   deleted upon termination in accordance with our retention policy.
                 </p>
               </div>

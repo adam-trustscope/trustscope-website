@@ -16,8 +16,8 @@ const frameworks = [
   {
     name: 'AIUC-1',
     href: '/compliance/aiuc-1',
-    coverage: '45 addressed / 50 requirements (90%)',
-    note: 'Primary standard with 6 domains.',
+    coverage: 'Strong across all 6 domains',
+    note: 'Primary framework for runtime AI governance.',
   },
   {
     name: 'SOC 2',
@@ -71,9 +71,9 @@ export default function CompliancePage() {
             TrustScope generates framework-mapped evidence across runtime governance controls, with verifiable records and explicit gap labeling.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Link href="/scanner" className="btn-primary gap-2">
-              Run Compliance Assessment <ArrowRight className="h-4 w-4" />
-            </Link>
+            <a href="https://app.trustscope.ai/signup" className="btn-primary gap-2">
+              Start Free <ArrowRight className="h-4 w-4" />
+            </a>
             <Link href="/contact" className="btn-secondary">Book Compliance Walkthrough</Link>
           </div>
           <p className="mt-5 text-xs text-[var(--text-subtle)]">Last verified mapping date: February 19, 2026</p>
@@ -94,7 +94,7 @@ export default function CompliancePage() {
         <p className="eyebrow mb-3">Evidence chain</p>
         <div className="card overflow-x-auto">
           <div className="flex min-w-[620px] items-center gap-2 text-sm">
-            {['Trace', '26 Engines', 'Policy', 'Receipt', 'Hash Chain', 'Framework Mapping', 'Export'].map((step, idx) => (
+            {['Trace', '27 Engines', 'Policy', 'Receipt', 'Hash Chain', 'Framework Mapping', 'Export'].map((step, idx) => (
               <div key={step} className="flex items-center gap-2">
                 <span className="rounded-md border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-[var(--text-secondary)]">{step}</span>
                 {idx < 6 && <ArrowRight className="h-4 w-4 text-[var(--text-subtle)]" />}
@@ -160,16 +160,16 @@ export default function CompliancePage() {
         <div className="grid gap-3 md:grid-cols-2">
           <article className="card">
             <p className="eyebrow mb-2">Enforce</p>
-            <h3 className="text-2xl font-bold">$249/mo</h3>
+            <h3 className="text-2xl font-bold">$199/mo</h3>
             <ul className="mt-4 space-y-2 text-sm text-[var(--text-secondary)]">
-              <li className="flex gap-2"><CheckCircle className="h-4 w-4 text-[var(--status-success)]" />26 engines with AI-hybrid detections</li>
-              <li className="flex gap-2"><CheckCircle className="h-4 w-4 text-[var(--status-success)]" />Compliance exports and retention controls</li>
-              <li className="flex gap-2"><CheckCircle className="h-4 w-4 text-[var(--status-success)]" />Most teams start here for audit prep</li>
+              <li className="flex gap-2"><CheckCircle className="h-4 w-4 text-[var(--status-success)]" />27 engines with AI-hybrid detections</li>
+              <li className="flex gap-2"><CheckCircle className="h-4 w-4 text-[var(--status-success)]" />Audit trail exports and retention controls</li>
+              <li className="flex gap-2"><CheckCircle className="h-4 w-4 text-[var(--status-success)]" />Popular tier for audit prep</li>
             </ul>
           </article>
           <article className="card">
             <p className="eyebrow mb-2">Govern</p>
-            <h3 className="text-2xl font-bold">$2K+/mo</h3>
+            <h3 className="text-2xl font-bold">Contact Sales</h3>
             <ul className="mt-4 space-y-2 text-sm text-[var(--text-secondary)]">
               <li className="flex gap-2"><FileCheck className="h-4 w-4 text-[var(--status-success)]" />Signed evidence chain and long-term retention</li>
               <li className="flex gap-2"><Shield className="h-4 w-4 text-[var(--status-success)]" />BYOK signing and underwriting-grade exports</li>

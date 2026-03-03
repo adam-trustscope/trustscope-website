@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
-import { DM_Sans, JetBrains_Mono, Outfit } from 'next/font/google'
+import { DM_Sans, JetBrains_Mono, Inter } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
-const displayFont = Outfit({
+const displayFont = Inter({
   subsets: ['latin'],
   variable: '--font-display',
   weight: ['500', '600', '700', '800', '900'],
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     template: '%s | TrustScope',
   },
   description:
-    'Know what your AI is doing. Control it. Prove it. AI agent governance with 26 detection engines and cryptographic evidence.',
+    'Know what your AI is doing. Control it. Prove it. AI agent governance with 27 detection engines and cryptographic evidence.',
   keywords: [
     'AI governance',
     'AI compliance',
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   authors: [{ name: 'TrustScope' }],
   openGraph: {
     title: 'TrustScope | Know. Control. Prove.',
-    description: 'Safe Mode for AI Agents.',
+    description: 'AI agent governance. Know. Control. Prove.',
     url: 'https://trustscope.ai',
     siteName: 'TrustScope',
     type: 'website',
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'TrustScope | Know. Control. Prove.',
-    description: 'Safe Mode for AI Agents.',
+    description: 'AI agent governance. Know. Control. Prove.',
     images: ['/og.png'],
     creator: '@trustscope',
   },

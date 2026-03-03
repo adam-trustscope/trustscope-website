@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { AlertTriangle, ArrowRight, CheckCircle, ShieldAlert } from 'lucide-react'
+import { AlertTriangle, ArrowRight, ShieldAlert } from 'lucide-react'
 
 const incidents = [
   {
@@ -125,21 +125,17 @@ export default function IncidentsPage() {
             Runtime governance converts unknown risk into measurable controls and verifiable evidence.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Link href="/scanner?demo=claims-processor" className="btn-primary gap-2">
-              Open Trace Analyzer (Incident demo) <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link href="/switch#compare-upload" className="btn-secondary">Open Model Compare (Migration)</Link>
-          </div>
-          <div className="mt-4 inline-flex items-center gap-2 text-xs text-[var(--text-muted)]">
-            <CheckCircle className="h-3.5 w-3.5 text-[var(--status-success)]" />
-            Start with local browser scan, then move to continuous protection.
+            <a href="https://app.trustscope.ai/signup" className="btn-primary gap-2">
+              Start Free <ArrowRight className="h-4 w-4" />
+            </a>
+            <Link href="/pricing" className="btn-secondary">Compare Plans</Link>
           </div>
         </div>
       </section>
 
       <section className="section-container mt-10 max-w-5xl text-center">
-        <Link href="/cost" className="text-sm font-semibold text-[var(--interactive)] hover:underline">
-          See cost-specific failures and controls
+        <Link href="/visibility" className="text-sm font-semibold text-[var(--interactive)] hover:underline">
+          See how TrustScope detects these patterns
         </Link>
       </section>
     </div>

@@ -647,11 +647,11 @@ export default function SwitchPage() {
           <div>
             <p className="eyebrow text-[var(--text-subtle)]">Where this fits</p>
             <p className="mt-1 text-sm text-[var(--text-secondary)]">
-              Simulate is for model replacement events. Daily trace review still starts in Trace Analyzer.
+              Simulate is for model replacement events. Daily trace review still starts in the browser scanner.
             </p>
           </div>
           <Link href="/scanner" className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--interactive)]">
-            Open Trace Analyzer <CheckCircle2 className="h-4 w-4" />
+            Start Free <CheckCircle2 className="h-4 w-4" />
           </Link>
         </div>
       </section>

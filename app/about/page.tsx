@@ -10,7 +10,7 @@ const team = [
 ]
 
 const patents = [
-  { label: 'Total claims', value: '274+' },
+  { label: 'Total claims', value: '800+' },
   { label: 'Evidence binding', value: 'MAX family' },
   { label: 'Coverage verification', value: 'AGB family' },
   { label: 'Semantic inspection', value: 'SMI family' },
@@ -78,7 +78,7 @@ export default function AboutPage() {
       <section className="section-container mt-14 max-w-5xl">
         <div className="card">
           <p className="eyebrow mb-2">Open source transparency</p>
-          <h2 className="text-2xl font-bold">CLI is MIT licensed</h2>
+          <h2 className="text-2xl font-bold">CLI is Apache-2.0 licensed</h2>
           <p className="mt-3 text-[var(--text-secondary)]">
             Inspect and run governance tooling locally. We believe governance systems should be auditable, not opaque.
           </p>
@@ -100,7 +100,7 @@ export default function AboutPage() {
               Contact TrustScope <ArrowRight className="h-4 w-4" />
             </Link>
             <Link href="/scanner" className="btn-secondary gap-2">
-              <FileCheck className="h-4 w-4" /> Try Trace Analyzer
+              <FileCheck className="h-4 w-4" /> Start Free
             </Link>
           </div>
         </div>

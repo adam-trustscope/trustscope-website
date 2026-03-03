@@ -2,20 +2,14 @@ import Link from 'next/link'
 import { Github, Linkedin, Twitter } from 'lucide-react'
 
 const footer = {
-  product: [
-    { name: 'Trace Analyzer', href: '/scanner' },
-    { name: 'Simulate', href: '/switch' },
+  platform: [
+    { name: 'Visibility', href: '/visibility' },
+    { name: 'Enforcement', href: '/enforcement' },
+    { name: 'Evidence', href: '/evidence' },
+    { name: 'Incidents', href: '/incidents' },
+    { name: 'Safe Mode', href: '/safe-mode' },
     { name: 'Features', href: '/features' },
     { name: 'Pricing', href: '/pricing' },
-  ],
-  solutions: [
-    { name: 'Development Governance', href: '/build' },
-    { name: 'Security Governance', href: '/secure' },
-    { name: 'Cost Governance', href: '/cost' },
-    { name: 'Compliance Urgency', href: '/comply' },
-    { name: 'Migration Governance', href: '/switch#compare-upload' },
-    { name: 'Compliance Evidence', href: '/compliance' },
-    { name: 'Incident Response', href: '/incidents' },
   ],
   compliance: [
     { name: 'Overview', href: '/compliance' },
@@ -25,21 +19,29 @@ const footer = {
     { name: 'NIST AI RMF', href: '/compliance/nist' },
     { name: 'ISO 42001', href: '/compliance/iso42001' },
   ],
+  resources: [
+    { name: 'Docs', href: 'https://docs.trustscope.ai' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'Changelog', href: '/changelog' },
+    { name: 'Developers', href: '/developers' },
+    { name: 'Scanner', href: '/scanner' },
+    { name: 'Model Compare', href: '/switch' },
+  ],
   company: [
     { name: 'About', href: '/about' },
     { name: 'Contact', href: '/contact' },
+    { name: 'Security', href: '/security' },
     { name: 'Privacy', href: '/privacy' },
     { name: 'Terms', href: '/terms' },
-    { name: 'Security', href: '/security' },
     { name: 'DPA', href: '/dpa' },
   ],
 }
 
 export default function Footer() {
   const sections = [
-    { title: 'Product', links: footer.product },
-    { title: 'Use Cases', links: footer.solutions },
+    { title: 'Platform', links: footer.platform },
     { title: 'Compliance', links: footer.compliance },
+    { title: 'Resources', links: footer.resources },
     { title: 'Company', links: footer.company },
   ]
 
@@ -58,8 +60,8 @@ export default function Footer() {
               <a href="https://linkedin.com/company/trustscope" aria-label="LinkedIn" className="hover:text-[var(--text-primary)]"><Linkedin className="h-5 w-5" /></a>
             </div>
             <div className="mt-4 space-y-1 text-[10px] text-[var(--text-subtle)]">
-              <div>274+ patent claims</div>
-              <div>MIT licensed CLI</div>
+              <div>800+ patent claims</div>
+              <div>Apache-2.0 CLI</div>
               <div>SOC 2 in progress</div>
             </div>
           </div>

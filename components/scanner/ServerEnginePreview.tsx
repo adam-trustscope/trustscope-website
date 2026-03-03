@@ -32,7 +32,7 @@ export default function ServerEnginePreview() {
       <p className="eyebrow">This was one file</p>
       <h4 className="mt-2 text-2xl font-bold">Imagine this running on every request.</h4>
       <p className="mt-3 text-sm leading-relaxed text-[var(--text-secondary)]">
-        Browser mode runs a local subset for fast triage. Cloud mode continuously runs the full 26-engine governance stack with alerting and blocking.
+        Browser mode runs a local subset for fast triage. Cloud mode continuously runs the full 27-engine governance stack with alerting and blocking.
       </p>
 
       <div className="mt-5 grid gap-0 overflow-hidden rounded-xl border border-[var(--border)] md:grid-cols-2">
@@ -47,7 +47,7 @@ export default function ServerEnginePreview() {
         <div className="bg-[var(--surface)] p-4">
           <p className="eyebrow mb-2 text-[var(--interactive)]">Cloud</p>
           <ul className="space-y-1 text-sm text-[var(--text-secondary)]">
-            <li>26 engines (15 + 5 + 6)</li>
+            <li>27 engines (15 + 5 + 7)</li>
             <li>Continuous monitoring</li>
             <li>Inline blocking and evidence chain</li>
           </ul>
@@ -59,7 +59,7 @@ export default function ServerEnginePreview() {
         className="mt-4 flex w-full items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-2 text-left text-xs text-[var(--text-secondary)] transition-colors hover:border-[var(--border-hover)] hover:bg-[var(--surface-hover)]"
       >
         {expanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-        All 26 engines by tier
+        All 27 engines by tier
       </button>
 
       {expanded && (

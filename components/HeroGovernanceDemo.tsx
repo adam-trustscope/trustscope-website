@@ -86,8 +86,8 @@ const EVIDENCE = 5
 const DONE = 6
 
 const PIPELINE = [
-  { key: 'ingest', label: 'INGEST', sub: 'capture trace', c: C.blue, at: INGEST },
-  { key: 'detect', label: 'DETECT', sub: '26 engines', c: C.red, at: DETECT },
+  { key: 'ingest', label: 'INGEST', sub: 'any source', c: C.blue, at: INGEST },
+  { key: 'detect', label: 'DETECT', sub: '27 engines', c: C.red, at: DETECT },
   { key: 'enforce', label: 'ENFORCE', sub: 'apply policies', c: C.amber, at: ENFORCE },
   { key: 'govern', label: 'GOVERN', sub: 'clean output + proof', c: C.gold, at: EVIDENCE },
 ] as const
@@ -462,7 +462,7 @@ export default function HeroGovernanceDemo() {
                 marginBottom: 10,
               }}
             >
-              Safe Mode <span style={{ color: C.gold }}>for AI Agents.</span>
+              Govern your AI agents. <span style={{ color: C.gold }}>Prove it happened.</span>
             </h1>
 
             <p
@@ -474,12 +474,13 @@ export default function HeroGovernanceDemo() {
                 marginBottom: 14,
               }}
             >
-              Know. Control. Prove.
+              27 detection engines. Runtime policy enforcement.{' '}
+              Cryptographic evidence for any compliance framework.
             </p>
 
             <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 9, marginBottom: 8 }}>
               <Link
-                href="/scanner"
+                href="https://app.trustscope.ai/signup"
                 style={{
                   fontFamily: 'var(--font-body), sans-serif',
                   fontSize: 14,
@@ -491,7 +492,7 @@ export default function HeroGovernanceDemo() {
                   boxShadow: `0 0 20px ${C.goldGlow}`,
                 }}
               >
-                Scan Your Traces Free
+                Start Free
               </Link>
               <Link
                 href="/switch#compare-upload"
@@ -1054,11 +1055,11 @@ export default function HeroGovernanceDemo() {
             >
               <span>Raw conversation with PII exposed</span>
               <span style={{ color: C.text4 }}>→</span>
-              <span>8 risks found</span>
+              <span>10 risks found</span>
               <span style={{ color: C.text4 }}>→</span>
               <span>Policy actions applied</span>
               <span style={{ color: C.text4 }}>→</span>
-              <span style={{ color: C.gold }}>Govern response delivered</span>
+              <span style={{ color: C.gold }}>Governed response delivered</span>
             </div>
           </div>
         </div>

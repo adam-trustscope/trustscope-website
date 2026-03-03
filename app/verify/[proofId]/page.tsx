@@ -24,7 +24,7 @@ const MOCK_PROOFS: Record<
     organization: 'Acme Corp',
     createdAt: '2026-02-15T10:30:00Z',
     hashChain: ['sha256:a1b2c3d4e5f6...', 'sha256:f6e5d4c3b2a1...', 'sha256:1a2b3c4d5e6f...'],
-    evidenceType: 'Compliance Evidence Pack',
+    evidenceType: 'Compliance Audit Trail',
     framework: 'SOC 2 Type II',
   },
 }

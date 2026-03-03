@@ -111,9 +111,9 @@ export default function NISTPage() {
       </section>
 
       <section className="section-container mt-14 max-w-5xl text-center">
-        <Link href="/scanner" className="btn-primary gap-2">
-          Run NIST-Oriented Scan <ArrowRight className="h-4 w-4" />
-        </Link>
+        <a href="https://app.trustscope.ai/signup" className="btn-primary gap-2">
+          Start Free <ArrowRight className="h-4 w-4" />
+        </a>
       </section>
     </div>
   )

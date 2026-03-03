@@ -29,7 +29,7 @@ export default function VerifyPage() {
             Verify TrustScope Evidence
           </h1>
           <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-8">
-            Enter a proof ID to cryptographically verify an evidence pack from TrustScope.
+            Enter a proof ID to cryptographically verify an audit trail from TrustScope.
           </p>
 
           {/* Search Form */}
@@ -79,7 +79,7 @@ export default function VerifyPage() {
               </div>
               <h3 className="font-semibold text-white mb-2">Ed25519 Signatures</h3>
               <p className="text-sm text-slate-400">
-                Evidence packs are cryptographically signed. Signatures verify authenticity.
+                Audit trails are cryptographically signed. Signatures verify authenticity.
               </p>
             </div>
             <div className="p-6 rounded-xl bg-[#1a1f2e] border border-slate-700/50 text-center">
@@ -136,14 +136,14 @@ export default function VerifyPage() {
               href="/scanner"
               className="inline-flex items-center justify-center gap-2 bg-[#C49B3A] hover:bg-[#D4A843] text-black font-medium px-6 py-3 rounded-lg transition-colors"
             >
-              Try Trace Analyzer
+              Start Free
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
-              href="/compliance"
+              href="/evidence"
               className="inline-flex items-center justify-center gap-2 border border-slate-600 hover:bg-slate-800 text-white px-6 py-3 rounded-lg transition-colors"
             >
-              Learn About Compliance
+              See Compliance Evidence
             </Link>
           </div>
         </div>

@@ -24,7 +24,7 @@ export default function NotFound() {
             className="btn-secondary inline-flex items-center justify-center gap-2"
           >
             <Search className="w-4 h-4" />
-            Open Trace Analyzer
+            Start Free
           </Link>
         </div>
 

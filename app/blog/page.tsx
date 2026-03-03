@@ -82,11 +82,11 @@ export default function BlogPage() {
         <div className="card">
           <h3 className="text-2xl font-bold">Need a walkthrough now?</h3>
           <p className="mx-auto mt-3 max-w-2xl text-[var(--text-secondary)]">
-            Use Trace Analyzer for a live local demo or contact the team for a guided review.
+            Try the browser scanner for a live local demo or contact the team for a guided review.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Link href="/scanner" className="btn-primary">
-              Open Trace Analyzer
+              Start Free
             </Link>
             <Link href="/contact" className="btn-secondary">
               Contact Team

@@ -40,24 +40,24 @@ That's what TrustScope provides.
 
 TrustScope is inline runtime governance infrastructure for AI agents. Three capabilities, one platform:
 
-**Know** — 26 detection engines analyze every AI action. PII, secrets, prompt injections, loops, anomalies, toxicity. See it all.
+**Know** — 27 detection engines analyze every AI action. PII, secrets, prompt injections, loops, anomalies, toxicity. See it all.
 
 **Control** — 50+ policy types enforce your rules inline. Block threats before they cause damage. Natural language policies for complex requirements.
 
-**Prove** — Cryptographic evidence for any framework. Hash chains, Ed25519 signatures, AIUC-1 mapping. Evidence packs that auditors can verify.
+**Prove** — Cryptographic evidence for any framework. Hash chains, Ed25519 signatures, AIUC-1 mapping. Audit trails that auditors can verify.
 
 ## How It Works
 
 1. **Connect** your agents via Gateway, SDK, MCP, or CLI
-2. **Detect** threats with 26 engines running on every trace
+2. **Detect** threats with 27 engines running on every trace
 3. **Enforce** policies that block violations inline
-4. **Prove** compliance with signed evidence packs
+4. **Prove** compliance with signed audit trails
 
 ## Start Today
 
-TrustScope is available now. Start free with 5,000 traces/month, or upgrade for blocking, AI engines, and evidence signing.
+TrustScope is available now. Start free, or upgrade for blocking, AI engines, and evidence signing.
 
-[Try Trace Analyzer →](/scanner)
+[Start Free →](/scanner)
     `,
   },
   'why-observability-isnt-enough': {
@@ -266,7 +266,7 @@ export default function BlogPostPage() {
               href="/scanner"
               className="inline-flex items-center gap-2 bg-[#C49B3A] hover:bg-[#D4A843] text-black font-medium px-6 py-3 rounded-lg transition-colors"
             >
-              Try Trace Analyzer
+              Start Free
             </Link>
           </div>
         </div>

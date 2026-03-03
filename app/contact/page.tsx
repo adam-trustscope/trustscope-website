@@ -215,6 +215,7 @@ export default function ContactPage() {
                   >
                     <option value="">Select an option</option>
                     <option value="demo">Request a demo</option>
+                    <option value="compliance">Compliance walkthrough</option>
                     <option value="pricing">Pricing question</option>
                     <option value="technical">Technical question</option>
                     <option value="partnership">Partnership inquiry</option>

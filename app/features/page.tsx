@@ -33,8 +33,8 @@ const engineRows: EngineRow[] = [
   { engine: 'Blocked Phrases', detects: 'Custom phrase blocklist', tier: 'Monitor+', mode: 'Alert + block' },
   { engine: 'Prompt Injection', detects: '57 patterns across 8 categories', tier: 'Monitor+', mode: 'Alert + block' },
   { engine: 'Jailbreak Detector', detects: '46 patterns across 6 categories', tier: 'Monitor+', mode: 'Alert + block' },
-  { engine: 'Action Label Mismatch', detects: 'Safe labels hiding destructive content', tier: 'Monitor+', mode: 'Alert' },
-  // ML / CONTENT (4) - Protect tier
+  // ML / CONTENT (5) - Protect tier
+  { engine: 'Action Label Mismatch', detects: 'Safe labels hiding destructive content', tier: 'Protect+', mode: 'Alert' },
   { engine: 'PII Scanner', detects: '90 patterns: SSN, email, phone, IDs', tier: 'Protect+', mode: 'Alert + redact + block' },
   { engine: 'Toxicity Filter', detects: '6 keyword categories', tier: 'Protect+', mode: 'Alert + block' },
   { engine: 'Hate Speech Detector', detects: 'AI-powered hate speech detection', tier: 'Protect+', mode: 'Alert + block' },
@@ -46,26 +46,61 @@ const engineRows: EngineRow[] = [
   { engine: 'A2A Depth', detects: 'Agent-to-agent delegation depth limits', tier: 'Enforce+', mode: 'Alert + block' },
   { engine: 'Tool Parameter Validator', detects: 'Tool call parameter validation', tier: 'Enforce+', mode: 'Alert + block' },
   { engine: 'Reasoning Quality Monitor', detects: 'Reasoning chain quality checks', tier: 'Enforce+', mode: 'Alert' },
+  { engine: 'Bias Monitor', detects: 'Aggregate fairness and bias pattern detection', tier: 'Enforce+', mode: 'Alert' },
 ]
 
 const integrations = [
   {
     method: 'Gateway proxy',
+    group: 'Full inline',
     setup: 'export OPENAI_BASE_URL=https://api.trustscope.ai/gateway',
     bestFor: 'Zero-code rollout in existing apps',
   },
   {
-    method: 'Python / Node SDK',
-    setup: 'TrustScope client + callback/decorator hooks',
-    bestFor: 'Deep per-agent policy control',
+    method: 'Python SDK',
+    group: 'Full inline',
+    setup: 'pip install trustscope + decorators/callbacks',
+    bestFor: 'Deep per-agent policy control (Python)',
+  },
+  {
+    method: 'Node SDK',
+    group: 'Full inline',
+    setup: 'npm install @trustscope/sdk + middleware hooks',
+    bestFor: 'Deep per-agent policy control (Node)',
   },
   {
     method: 'MCP server',
+    group: 'Full inline',
     setup: 'npx @trustscope/mcp-server',
-    bestFor: 'IDE-native governance workflows',
+    bestFor: 'IDE-native governance in Claude, Cursor, VS Code',
+  },
+  {
+    method: 'CLI',
+    group: 'Full inline',
+    setup: 'npx trustscope scan <file>',
+    bestFor: 'CI/CD pipeline checks and local analysis',
+  },
+  {
+    method: 'Webhook listener',
+    group: 'Detection + alerting',
+    setup: 'POST https://api.trustscope.ai/ingest/webhook',
+    bestFor: 'Existing event-driven architectures',
+  },
+  {
+    method: 'Log shipper (Fluentd / Vector)',
+    group: 'Detection + alerting',
+    setup: 'Sidecar or agent config',
+    bestFor: 'High-volume log pipelines',
+  },
+  {
+    method: 'SIEM forwarding',
+    group: 'Visibility + evidence',
+    setup: 'Splunk, Datadog, or Elastic output plugin',
+    bestFor: 'SOC integration and centralized monitoring',
   },
   {
     method: 'Batch trace import',
+    group: 'Visibility + evidence',
     setup: 'JSON, JSONL, CSV, TSV, HAR, OTel',
     bestFor: 'Offline and historical analysis',
   },
@@ -75,7 +110,7 @@ const capabilityGroups = [
   {
     title: 'Know',
     items: [
-      '26-engine runtime visibility',
+      '27-engine runtime visibility',
       'Agent DNA fingerprinting + drift detection',
       'Session replay and forensic trace context',
       'Cost and exposure telemetry by agent/model',
@@ -103,18 +138,18 @@ const capabilityGroups = [
 
 const engineGroups: EngineGroup[] = [
   {
-    label: 'Monitor Foundation',
-    description: 'Rule-based runtime controls available from Monitor tier upward.',
+    label: 'Monitor Foundation (15)',
+    description: 'CPU/regex runtime controls available from Monitor tier upward.',
     rows: engineRows.filter((row) => row.tier.startsWith('Monitor')),
   },
   {
-    label: 'Protect Layer',
-    description: 'ML-assisted controls for contextual risk routing and stronger blocking.',
+    label: 'Protect Layer (+5)',
+    description: 'Cloud-assisted controls for contextual risk routing and stronger blocking.',
     rows: engineRows.filter((row) => row.tier.startsWith('Protect')),
   },
   {
-    label: 'Enforce Layer',
-    description: 'AI-hybrid controls for advanced runtime reasoning and migration risk checks.',
+    label: 'Enforce Layer (+7)',
+    description: 'AI-powered controls for advanced runtime reasoning, bias detection, and migration risk checks.',
     rows: engineRows.filter((row) => row.tier.startsWith('Enforce')),
   },
 ]
@@ -126,7 +161,7 @@ export default function FeaturesPage() {
         <p className="eyebrow mb-4">Features</p>
         <h1 className="text-4xl font-extrabold md:text-6xl">Everything TrustScope does.</h1>
         <p className="mx-auto mt-4 max-w-3xl text-lg text-[var(--text-secondary)]">
-          26 detection engines, Agent DNA behavioral profiling, 4 integration paths, and one runtime governance platform.
+          27 detection engines, Agent DNA behavioral profiling, 9 integration paths, and one runtime governance platform.
         </p>
       </section>
 
@@ -237,9 +272,9 @@ export default function FeaturesPage() {
         <h2 className="text-3xl font-bold">See it on your own data.</h2>
         <p className="mt-3 text-[var(--text-secondary)]">Run local analysis first, then move to continuous governance.</p>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <Link href="/scanner" className="btn-primary gap-2">
-            Open Trace Analyzer <ArrowRight className="h-4 w-4" />
-          </Link>
+          <a href="https://app.trustscope.ai/signup" className="btn-primary gap-2">
+            Start Free <ArrowRight className="h-4 w-4" />
+          </a>
           <Link href="/developers" className="btn-secondary gap-2">
             <Code2 className="h-4 w-4" /> Developer Setup
           </Link>

@@ -1,6 +1,10 @@
 import Link from 'next/link'
 import { ArrowRight, Code2, FileCheck, Scale, ShieldAlert } from 'lucide-react'
 import HeroGovernanceDemo from '@/components/HeroGovernanceDemo'
+import UniversalGovernance from '@/components/UniversalGovernance'
+import UseCaseCards from '@/components/UseCaseCards'
+import DetectionEngines from '@/components/DetectionEngines'
+import ComplianceBridge from '@/components/ComplianceBridge'
 
 const urgencySignals = [
   {
@@ -26,92 +30,81 @@ const urgencySignals = [
 const pillars = [
   {
     title: 'Know',
-    headline: 'See every decision your agents make.',
-    body: '26 detection engines and Agent DNA profiling surface PII leaks, prompt injection, jailbreak attempts, cost spikes, and drift before they become incidents.',
+    headline: 'See every action your agents take.',
+    body: '27 detection engines surface PII leaks, prompt injection, jailbreak attempts, cost spikes, behavioral drift, and hallucinations — across every ingestion path, in real time.',
     details: [
-      'Trace-level findings by model and severity',
-      'Timeline view to spot where drift starts',
-      'Local browser analysis with no trace upload',
+      'Trace-level findings organized by agent, model, and severity',
+      'Agent DNA behavioral fingerprinting detects drift before users do',
+      'Works across 9 ingestion paths — Gateway, SDK, MCP, OTel, and more',
     ],
-    cta: 'Open Trace Analyzer',
-    href: '/scanner',
+    cta: 'See Detection Engines',
+    href: '/visibility',
   },
   {
     title: 'Control',
-    headline: 'Stop what should not happen.',
-    body: 'Inline policy enforcement blocks dangerous actions in real time while preserving developer workflows and uptime.',
+    headline: 'Stop dangerous actions before they execute.',
+    body: 'Policy enforcement runs inline with your agent traffic. Simulate first, then alert, then block — without breaking developer workflows or production uptime.',
     details: [
-      'Policy modes: simulate, alert, and block',
-      'Guardrails for tool calls and data boundaries',
-      'Escalation path for high-risk traces',
+      'Three policy modes: simulate, alert, and block',
+      'Redaction, command restrictions, and budget caps enforced in-line',
+      'Human approval gates for high-risk actions with evidence binding',
     ],
-    cta: 'View Security Controls',
-    href: '/secure',
+    cta: 'See Policy Controls',
+    href: '/enforcement',
   },
   {
     title: 'Prove',
-    headline: 'Generate evidence anyone can verify.',
-    body: 'Signed, tamper-evident evidence packs map to AIUC-1, SOC 2, EU AI Act, NIST AI RMF, and ISO 42001 reporting needs.',
+    headline: 'Generate evidence your auditor can verify.',
+    body: 'Every governance event produces a signed, tamper-evident receipt. Export evidence mapped to AIUC-1, SOC 2, EU AI Act, NIST AI RMF, or ISO 42001 — ready for audit review.',
     details: [
-      'Hash-chained receipts for each governance event',
-      'Framework-mapped exports for audit workflows',
-      'Explicit ready, partial, and gap labeling',
+      'Cryptographically signed evidence chain for every governed action',
+      'Framework-mapped exports with ready, partial, and gap labels',
+      'Verifiable without access to TrustScope — your auditor checks independently',
     ],
-    cta: 'Open Compliance Mapping',
-    href: '/compliance',
+    cta: 'See Compliance Evidence',
+    href: '/evidence',
   },
 ]
 
 const personas = [
   {
     title: 'Developers',
-    line: 'Governance from your first line of code.',
-    details: ['SDK, gateway, and MCP setup paths', 'Fast local validation before cloud rollout'],
-    cta: 'Go to Developers',
-    href: '/developers',
+    line: 'Connect your agents in minutes.',
+    details: [
+      'Gateway, SDK, MCP, and CLI integration paths',
+      'Local trace analysis before cloud deployment',
+      'Framework support for LangChain, CrewAI, AutoGen, OpenAI Agents, and more',
+    ],
+    cta: 'Developer setup',
+    href: '/visibility',
     icon: Code2,
   },
   {
-    title: 'Security and Engineering Leaders',
-    line: 'Catch leaks, injection, and runaway automation before customers do.',
-    details: ['Incident triage on trace history after an event', 'Policy controls to move from alert to block'],
-    cta: 'View Security',
-    href: '/secure',
+    title: 'Engineering & Security Leaders',
+    line: 'See your team. Set the rules. Block the threats.',
+    details: [
+      'Team dashboard with per-agent, per-member visibility',
+      'Policy enforcement with simulate → alert → block progression',
+      'Incident triage with full trace-level forensics',
+    ],
+    cta: 'See enforcement controls',
+    href: '/enforcement',
     icon: ShieldAlert,
   },
   {
     title: 'Compliance Teams',
-    line: 'When your auditor asks about AI controls, answer with evidence.',
-    details: ['Framework mappings with ready/partial/gap labels', 'Evidence exports aligned to review workflows'],
-    cta: 'View Compliance',
-    href: '/compliance',
+    line: 'Your auditor asked about AI controls. Hand them evidence.',
+    details: [
+      'Framework-mapped exports: AIUC-1, SOC 2, EU AI Act, NIST AI RMF, ISO 42001',
+      'Signed evidence chain with cryptographic verification',
+      'Explicit ready, partial, and gap labeling — no overclaiming',
+    ],
+    cta: 'See compliance evidence',
+    href: '/evidence',
     icon: Scale,
   },
 ]
 
-const criticalWorkflows = [
-  {
-    title: 'Deprecated Model Cutover',
-    when: 'When to use: your production model is being sunset or repriced',
-    body: 'Compare baseline versus replacement traces before cutover so you can catch behavior drift before customers do.',
-    cta: 'Run Simulate Cutover',
-    href: '/switch#compare-upload',
-  },
-  {
-    title: 'Live Leak Incident Response',
-    when: 'When to use: a bot exposed customer data or unsafe output',
-    body: 'Run incident-focused trace analysis to scope which sessions leaked, what was exposed, and which controls should move to block.',
-    cta: 'Start Incident Triage',
-    href: '/scanner?demo=claims-processor',
-  },
-  {
-    title: 'Friday Audit Evidence Request',
-    when: 'When to use: compliance, legal, or security asks for proof now',
-    body: 'Generate mapped evidence workflows aligned to AIUC-1, SOC 2, NIST AI RMF, and EU AI Act reporting expectations.',
-    cta: 'Open Compliance Evidence',
-    href: '/compliance',
-  },
-]
 
 export default function HomePage() {
   return (
@@ -119,7 +112,7 @@ export default function HomePage() {
       <HeroGovernanceDemo />
 
       <section className="section-container pt-8 pb-14">
-        <p className="eyebrow mb-4">Why governance urgency is rising</p>
+        <p className="eyebrow mb-4">THE AI GOVERNANCE GAP</p>
         <div className="grid gap-3 md:grid-cols-3">
           {urgencySignals.map((item) => (
             <div key={item.value} className="card py-8 text-center">
@@ -170,24 +163,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section-container py-16">
-        <h2 className="mb-8 text-3xl font-bold">Hard-hitting workflows</h2>
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {criticalWorkflows.map((workflow) => (
-            <article key={workflow.title} className="card flex h-full flex-col">
-              <p className="eyebrow mb-2">{workflow.title}</p>
-              <p className="text-sm font-semibold text-[var(--text-secondary)]">{workflow.when}</p>
-              <p className="text-[var(--text-secondary)]">{workflow.body}</p>
-              <Link href={workflow.href} className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[var(--interactive)]">
-                {workflow.cta} <ArrowRight className="h-4 w-4" />
-              </Link>
-            </article>
-          ))}
-        </div>
-      </section>
+      <UniversalGovernance />
+      <UseCaseCards />
+      <DetectionEngines />
 
       <section className="section-container py-16">
-        <h2 className="mb-8 text-3xl font-bold">Built for teams shipping AI into production.</h2>
+        <h2 className="mb-8 text-3xl font-bold">Built for everyone shipping AI into production.</h2>
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {personas.map((item) => (
             <Link key={item.title} href={item.href} className="card block h-full">
@@ -214,22 +195,24 @@ export default function HomePage() {
         </div>
       </section>
 
+      <ComplianceBridge />
+
       <section className="section-container py-20 text-center">
         <h2 className="text-4xl font-bold">Start free. See results in 5 minutes.</h2>
-        <p className="mt-3 text-[var(--text-secondary)]">
-          No credit card. 5,000 traces per month. Upgrade when you need continuous governance.
+        <p className="mt-3 max-w-2xl mx-auto text-[var(--text-secondary)]">
+          No credit card required. Monitor tier includes 27 detection engines, a full dashboard, and API access. Upgrade when you need team policies, advanced detection, or compliance evidence.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Link href="/scanner" className="btn-primary">
-            Scan Your Traces
-          </Link>
-          <Link href="/switch#compare-upload" className="btn-secondary">
-            Open Model Compare
+          <a href="https://app.trustscope.ai/signup" className="btn-primary">
+            Start Free
+          </a>
+          <Link href="/contact" className="btn-secondary">
+            Book a Demo
           </Link>
         </div>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-5 text-xs text-[var(--text-subtle)]">
-          <span className="inline-flex items-center gap-1"><FileCheck className="h-3.5 w-3.5" />274+ patent claims</span>
-          <span>MIT licensed CLI</span>
+          <span className="inline-flex items-center gap-1"><FileCheck className="h-3.5 w-3.5" />800+ patent claims</span>
+          <span>Apache-2.0 CLI</span>
           <span>SOC 2 in progress</span>
         </div>
       </section>

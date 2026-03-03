@@ -68,7 +68,7 @@ export default function AIUC1Page() {
       </section>
 
       <section className="section-container mt-14 max-w-5xl">
-        <p className="mb-3 text-sm text-[var(--text-muted)]">45 addressed / 50 requirements (90%)</p>
+        <p className="mb-3 text-sm text-[var(--text-muted)]">Strong coverage across all 6 domains. Gaps clearly labeled below.</p>
         <div className="card overflow-x-auto !p-0">
           <table className="w-full min-w-[760px] text-left text-sm">
             <thead className="border-b border-[var(--border)] bg-[var(--surface-hover)]">
@@ -105,7 +105,7 @@ export default function AIUC1Page() {
             ))}
           </ul>
           <p className="mt-4 text-sm text-[var(--text-muted)]">
-            These are not product failures. AIUC-1 requires accredited third-party testing engagements. TrustScope provides the evidence package those assessors review.
+            These are not product failures. AIUC-1 requires accredited third-party testing engagements. TrustScope provides the audit trail those assessors review.
           </p>
         </div>
       </section>
@@ -122,9 +122,9 @@ export default function AIUC1Page() {
       <section className="section-container mt-14 max-w-5xl text-center">
         <h2 className="text-3xl font-bold">Run AIUC-1 readiness on real traces.</h2>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <Link href="/scanner" className="btn-primary gap-2">
-            Start Assessment <ArrowRight className="h-4 w-4" />
-          </Link>
+          <a href="https://app.trustscope.ai/signup" className="btn-primary gap-2">
+            Start Free <ArrowRight className="h-4 w-4" />
+          </a>
           <Link href="/compliance" className="btn-secondary">Back to Compliance Hub</Link>
         </div>
         <div className="mt-4 inline-flex items-center gap-2 text-xs text-[var(--text-muted)]">

@@ -58,7 +58,7 @@ export default function HallucinationDetectionPage() {
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Link href="/scanner" className="btn-primary gap-2">
-            Run Trace Analyzer <ArrowRight className="h-4 w-4" />
+            Start Free <ArrowRight className="h-4 w-4" />
           </Link>
           <Link href="/pricing" className="btn-secondary">
             View Plan Coverage
@@ -155,16 +155,16 @@ export default function HallucinationDetectionPage() {
       <section className="section-container mt-14 max-w-5xl text-center">
         <h2 className="text-3xl font-bold">Run it on real traces.</h2>
         <p className="mt-3 text-[var(--text-secondary)]">
-          Start local in Trace Analyzer. Move to continuous enforcement when you are ready.
+          Start free. Move to continuous enforcement when you are ready.
         </p>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <Link href="/scanner" className="btn-primary gap-2">
-            <Search className="h-4 w-4" /> Open Trace Analyzer
+            <Search className="h-4 w-4" /> Start Free
           </Link>
           <Link href="/compliance" className="btn-secondary gap-2">
             <FileCheck className="h-4 w-4" /> Compliance Mapping
           </Link>
-          <Link href="/secure" className="btn-secondary gap-2">
+          <Link href="/visibility" className="btn-secondary gap-2">
             <ShieldCheck className="h-4 w-4" /> Security Coverage
           </Link>
         </div>

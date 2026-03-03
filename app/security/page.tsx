@@ -183,7 +183,7 @@ export default function SecurityPage() {
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5" />
-                  <span>Data retention follows your subscription tier (3 days to 7 years)</span>
+                  <span>Data retention follows your subscription tier (30 days to 7 years)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5" />

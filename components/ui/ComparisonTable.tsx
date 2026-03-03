@@ -23,7 +23,7 @@ interface ComparisonTableProps {
 const TIER_HEADERS: Record<Tier, { label: string; price: string }> = {
   monitor: { label: 'Monitor', price: 'Free' },
   protect: { label: 'Protect', price: '$49/mo' },
-  enforce: { label: 'Enforce', price: '$249/mo' },
+  enforce: { label: 'Enforce', price: '$199/mo' },
   govern: { label: 'Govern', price: 'Contact' },
 };
 

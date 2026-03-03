@@ -4,41 +4,36 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { Menu, X, ChevronDown } from 'lucide-react'
 
-const solutionLinks = [
+const platformLinks = [
   {
-    name: 'Development Governance',
-    href: '/build',
-    description: 'Ship agents with guardrails from day one',
+    name: 'Visibility',
+    href: '/visibility',
+    description: '27 detection engines across 9 ingestion paths',
   },
   {
-    name: 'Security Governance',
-    href: '/secure',
-    description: 'Runtime controls for leaks, injection, and unsafe actions',
+    name: 'Enforcement',
+    href: '/enforcement',
+    description: 'Simulate, alert, and block dangerous agent actions',
   },
   {
-    name: 'Cost Governance',
-    href: '/cost',
-    description: 'Budget, loop, and token controls for production agents',
+    name: 'Evidence',
+    href: '/evidence',
+    description: 'Signed governance evidence for any compliance framework',
   },
   {
-    name: 'Compliance Urgency',
-    href: '/comply',
-    description: 'Audit-ready evidence when your auditor asks now',
-  },
-  {
-    name: 'Migration Governance',
-    href: '/switch#compare-upload',
-    description: 'Baseline vs candidate trace comparison before cutover',
-  },
-  {
-    name: 'Compliance Evidence',
-    href: '/compliance',
-    description: 'Framework-mapped receipts and audit-ready exports',
-  },
-  {
-    name: 'Incident Response',
+    name: 'Incidents',
     href: '/incidents',
-    description: 'Trace-level triage after production events',
+    description: 'Real patterns from production AI failures',
+  },
+  {
+    name: 'Safe Mode',
+    href: '/safe-mode',
+    description: 'Local guardrails for AI agents via MCP',
+  },
+  {
+    name: 'Features',
+    href: '/features',
+    description: 'Everything TrustScope does',
   },
 ]
 
@@ -52,8 +47,6 @@ const complianceLinks = [
 ]
 
 const topLinks = [
-  { name: 'Trace Analyzer', href: '/scanner' },
-  { name: 'Developers', href: '/developers' },
   { name: 'Pricing', href: '/pricing' },
 ]
 
@@ -82,12 +75,12 @@ export default function Header() {
               onMouseLeave={() => setOpenDropdown(null)}
             >
               <button className={`flex items-center gap-1 whitespace-nowrap ${navItemClass}`}>
-                Use Cases <ChevronDown className={`h-4 w-4 transition-transform ${openDropdown === 'solutions' ? 'rotate-180' : ''}`} />
+                Platform <ChevronDown className={`h-4 w-4 transition-transform ${openDropdown === 'solutions' ? 'rotate-180' : ''}`} />
               </button>
               {openDropdown === 'solutions' && (
                 <div className="absolute left-0 top-full pt-2">
                   <div className="w-72 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-2 shadow-2xl">
-                    {solutionLinks.map((link) => (
+                    {platformLinks.map((link) => (
                       <Link key={link.href} href={link.href} className="block rounded-lg px-3 py-2 hover:bg-[var(--surface-hover)]">
                         <div className="text-sm font-medium text-[var(--text-primary)]">{link.name}</div>
                         <div className="text-xs text-[var(--text-muted)]">{link.description}</div>
@@ -165,9 +158,9 @@ export default function Header() {
         <div className="border-t border-[var(--border)] bg-[var(--surface)] lg:hidden">
           <div className="section-container space-y-5 py-4">
             <div>
-              <div className="eyebrow mb-2">Use Cases</div>
+              <div className="eyebrow mb-2">Platform</div>
               <div className="space-y-1">
-                {solutionLinks.map((link) => (
+                {platformLinks.map((link) => (
                   <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className="block py-1.5 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
                     {link.name}
                   </Link>
