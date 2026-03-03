@@ -62,8 +62,8 @@ export default function PrivacyPage() {
                 <ul className="list-disc pl-6 text-slate-400 space-y-2 mt-2">
                   <li>Monitor (Free): 30 days</li>
                   <li>Protect ($49/mo): 90 days</li>
-                  <li>Enforce ($249/mo): 1 year</li>
-                  <li>Govern ($2K+/mo): 7 years</li>
+                  <li>Enforce ($199/mo): 1 year</li>
+                  <li>Govern (Enterprise): 7 years</li>
                 </ul>
                 <p className="text-slate-400 mt-4">
                   You may request deletion of your data at any time by contacting privacy@trustscope.ai.

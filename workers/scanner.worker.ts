@@ -17,6 +17,7 @@ import { scanForToxicity, getCategoryLabel, ToxicityCategory } from '../lib/scan
 import {
   WorkerInMessage,
   WorkerOutMessage,
+  SampleType,
   Finding,
   ScannedTrace,
   ScanSummary,
@@ -24,7 +25,7 @@ import {
   FindingSeverity,
   ScanPhase,
 } from '../lib/scanner/types';
-import { generateSampleData, SampleType } from '../lib/scanner/sample-data';
+import { generateSampleData } from '../lib/scanner/sample-data';
 
 // Worker context
 const ctx: Worker = self as unknown as Worker;
@@ -124,6 +125,7 @@ async function scanFile(content: string, fileName: string, fileType: string): Pr
           traceCount: 0,
           modelNames: [],
         },
+        traces: [],
       },
     });
     return;
@@ -219,6 +221,7 @@ async function scanFile(content: string, fileName: string, fileType: string): Pr
       findings,
       redactedContent,
       classification,
+      traces: parsed.traces,
     },
   });
 }

@@ -40,24 +40,24 @@ That's what TrustScope provides.
 
 TrustScope is inline runtime governance infrastructure for AI agents. Three capabilities, one platform:
 
-**Know** — 19 detection engines analyze every AI action (25 with AI hybrid at Enforce tier). PII, secrets, prompt injections, loops, anomalies, toxicity. See it all.
+**Know** — 27 detection engines analyze every AI action. PII, secrets, prompt injections, loops, anomalies, toxicity. See it all.
 
 **Control** — 50+ policy types enforce your rules inline. Block threats before they cause damage. Natural language policies for complex requirements.
 
-**Prove** — Cryptographic evidence for any framework. Hash chains, Ed25519 signatures, AIUC-1 mapping. Evidence packs that auditors can verify.
+**Prove** — Cryptographic evidence for any framework. Hash chains, Ed25519 signatures, AIUC-1 mapping. Audit trails that auditors can verify.
 
 ## How It Works
 
 1. **Connect** your agents via Gateway, SDK, MCP, or CLI
-2. **Detect** threats with 19 engines running on every trace
+2. **Detect** threats with 27 engines running on every trace
 3. **Enforce** policies that block violations inline
-4. **Prove** compliance with signed evidence packs
+4. **Prove** compliance with signed audit trails
 
 ## Start Today
 
-TrustScope is available now. Start free with 5,000 traces/month, or upgrade for blocking, AI engines, and evidence signing.
+TrustScope is available now. Start free, or upgrade for blocking, AI engines, and evidence signing.
 
-[Try the Scanner →](/)
+[Start Free →](/scanner)
     `,
   },
   'why-observability-isnt-enough': {
@@ -96,7 +96,7 @@ export default function BlogPostPage() {
       <div className="min-h-screen bg-[#0f1117] flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-white mb-4">Post Not Found</h1>
-          <Link href="/blog" className="text-[#C49B3A] hover:underline">
+          <Link href="/blog" className="text-[var(--interactive)] hover:underline">
             Back to Blog
           </Link>
         </div>
@@ -151,17 +151,15 @@ export default function BlogPostPage() {
             <div className="bg-[#1a1f2e] border border-slate-700/50 rounded-xl p-8 text-center">
               <h2 className="text-xl font-bold text-white mb-4">Coming Soon</h2>
               <p className="text-slate-400 mb-6">
-                This article is currently being written. Subscribe to our newsletter to get notified when it's published.
+                This article is in editorial review and is not published yet.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
-                <input
-                  type="email"
-                  placeholder="you@company.com"
-                  className="flex-1 px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-[#C49B3A]"
-                />
-                <button className="bg-[#C49B3A] hover:bg-[#D4A843] text-black font-medium px-6 py-3 rounded-lg transition-colors">
-                  Notify Me
-                </button>
+                <Link href="/blog" className="btn-secondary">
+                  Back to Published Posts
+                </Link>
+                <Link href="/contact" className="btn-primary">
+                  Request Topic Coverage
+                </Link>
               </div>
             </div>
           ) : (
@@ -265,10 +263,10 @@ export default function BlogPostPage() {
               Start free. See what's hiding in your AI traces.
             </p>
             <Link
-              href="/"
+              href="/scanner"
               className="inline-flex items-center gap-2 bg-[#C49B3A] hover:bg-[#D4A843] text-black font-medium px-6 py-3 rounded-lg transition-colors"
             >
-              Try the Scanner
+              Start Free
             </Link>
           </div>
         </div>

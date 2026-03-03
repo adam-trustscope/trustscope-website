@@ -22,12 +22,12 @@ const TIER_CONFIG: Record<Tier, { label: string; price: string; colors: string }
   },
   enforce: {
     label: 'Enforce',
-    price: '$249/mo',
+    price: '$199/mo',
     colors: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
   },
   govern: {
     label: 'Govern',
-    price: '$2K+/mo',
+    price: 'Contact Sales',
     colors: 'bg-[#C49B3A]/20 text-[#D4A843] border-[#C49B3A]/30',
   },
 };

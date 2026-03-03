@@ -1,6 +1,6 @@
 'use client';
 
-import { Shield, Wifi, WifiOff, CheckCircle } from 'lucide-react';
+import { CheckCircle, Shield, WifiOff } from 'lucide-react';
 
 interface TrustProofBannerProps {
   offlineVerified?: boolean;
@@ -8,29 +8,25 @@ interface TrustProofBannerProps {
 
 export default function TrustProofBanner({ offlineVerified }: TrustProofBannerProps) {
   return (
-    <div className="bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border border-emerald-500/20 rounded-xl p-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center">
-            <Shield className="w-5 h-5 text-emerald-400" />
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 transition-colors hover:border-[var(--border-hover)]">
+      <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
+        <div className="flex items-start gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[color:rgba(22,163,74,.35)] bg-[color:rgba(22,163,74,.14)]">
+            <Shield className="h-4.5 w-4.5 text-[var(--status-success)]" />
           </div>
           <div>
-            <h4 className="font-medium text-emerald-400">100% Local Processing</h4>
-            <p className="text-sm text-slate-400">
-              Your data never leaves your browser. Zero network requests.
-            </p>
+            <p className="text-sm font-semibold text-[var(--text-primary)]">100% Local Processing</p>
+            <p className="text-xs leading-relaxed text-[var(--text-muted)]">Your trace data never leaves your browser session.</p>
           </div>
         </div>
 
         {offlineVerified ? (
-          <div className="flex items-center gap-2 bg-emerald-500/20 px-3 py-1.5 rounded-full">
-            <CheckCircle className="w-4 h-4 text-emerald-400" />
-            <span className="text-sm text-emerald-400">Verified Offline</span>
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-[color:rgba(22,163,74,.35)] bg-[color:rgba(22,163,74,.12)] px-3 py-1 text-xs text-[var(--status-success)]">
+            <CheckCircle className="h-3.5 w-3.5" /> Verified offline
           </div>
         ) : (
-          <div className="flex items-center gap-2 text-sm text-slate-400">
-            <WifiOff className="w-4 h-4" />
-            <span>Disconnect WiFi and try again to verify</span>
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--bg)] px-3 py-1 text-xs text-[var(--text-subtle)]">
+            <WifiOff className="h-3.5 w-3.5" /> Disconnect WiFi and rerun to verify
           </div>
         )}
       </div>

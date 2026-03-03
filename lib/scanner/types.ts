@@ -1,6 +1,15 @@
 // Scanner TypeScript Interfaces
 
-export type SampleType = 'healthcare' | 'financial' | 'support' | 'multiagent';
+export type SampleType =
+  | 'support_bot'
+  | 'code_assistant'
+  | 'claims_processor'
+  | 'research_pipeline'
+  | 'financial_advisor'
+  | 'healthcare'
+  | 'financial'
+  | 'support'
+  | 'multiagent';
 
 export type DetectedFormat =
   | 'langsmith'
@@ -155,6 +164,7 @@ export interface ScanComplete {
   findings: Finding[];
   redactedContent: string;
   classification: ContentClassification;
+  traces: ScannedTrace[];
 }
 
 // Internal trace representation
@@ -183,6 +193,7 @@ export interface ScannerState {
   summary: ScanSummary | null;
   classification: ContentClassification | null;
   redactedContent: string | null;
+  traces: ScannedTrace[];
   error: string | null;
   offlineVerified: boolean;
 }

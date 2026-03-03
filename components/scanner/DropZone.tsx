@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { Upload, FileJson, FileSpreadsheet, Globe, Sparkles } from 'lucide-react';
+import { Upload } from 'lucide-react';
 
 interface DropZoneProps {
   onFileSelect: (file: File) => void;
@@ -10,15 +10,6 @@ interface DropZoneProps {
 
 const ACCEPTED_EXTENSIONS = ['.json', '.jsonl', '.csv', '.tsv', '.txt', '.har'];
 const MAX_FILE_SIZE = 200 * 1024 * 1024; // 200MB
-
-const SUPPORTED_FORMATS = [
-  { name: 'LangSmith', icon: FileJson },
-  { name: 'LangFuse', icon: FileJson },
-  { name: 'OpenTelemetry', icon: Globe },
-  { name: 'HAR', icon: Globe },
-  { name: 'CSV/TSV', icon: FileSpreadsheet },
-  { name: 'JSONL', icon: FileJson },
-];
 
 export default function DropZone({ onFileSelect, disabled }: DropZoneProps) {
   const [isDragging, setIsDragging] = useState(false);
@@ -90,81 +81,39 @@ export default function DropZone({ onFileSelect, disabled }: DropZoneProps) {
   }, [disabled, handleFile]);
 
   return (
-    <div className="space-y-4">
-      <div
+    <div className="space-y-3">
+      <button
         onClick={handleClick}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        className={`
-          relative border-2 border-dashed rounded-2xl p-8 md:p-12 text-center cursor-pointer
-          transition-all duration-200
-          ${isDragging
-            ? 'border-amber-400 bg-amber-400/10 scale-[1.02]'
-            : 'border-white/20 hover:border-blue-400/50 hover:bg-white/5'
-          }
-          ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
-        `}
+        disabled={disabled}
+        className={`min-h-[84px] w-full rounded-xl border px-4 py-3 text-left transition-colors ${
+          isDragging
+            ? 'border-[var(--interactive)] bg-[color:rgba(37,99,235,.10)]'
+            : 'border-[var(--border)] bg-[var(--surface)] hover:border-[var(--border-hover)]'
+        } ${disabled ? 'opacity-60' : ''}`}
       >
-        <div className="flex flex-col items-center gap-6">
-          {/* Icon and headline */}
-          <div className="flex flex-col items-center gap-3">
-            <div className={`
-              w-16 h-16 rounded-2xl flex items-center justify-center
-              ${isDragging ? 'bg-amber-400/20' : 'bg-blue-500/20'}
-              transition-colors duration-200
-            `}>
-              <Upload className={`w-8 h-8 ${isDragging ? 'text-amber-400' : 'text-blue-400'}`} />
-            </div>
-
-            <div>
-              <h3 className="text-xl md:text-2xl font-bold mb-2">
-                {isDragging ? 'Drop to scan' : "What's hiding in your AI traces?"}
-              </h3>
-              <p className="text-slate-400">
-                Drop a file here or <span className="text-blue-400 underline">browse</span>
-              </p>
-            </div>
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--bg)]">
+            <Upload className="h-4 w-4 text-[var(--text-secondary)]" />
           </div>
-
-          {/* What we scan for */}
-          <div className="flex flex-wrap justify-center gap-2">
-            {['PII', 'API Keys', 'Credentials', 'Cost Spikes', 'Loops', 'Toxicity'].map((item) => (
-              <span
-                key={item}
-                className="bg-white/5 border border-white/10 rounded-full px-3 py-1 text-xs text-slate-400"
-              >
-                {item}
-              </span>
-            ))}
+          <div className="flex-1">
+            <p className="text-sm font-medium text-[var(--text-primary)]">
+              Drop your trace file or <span className="text-[var(--interactive)]">browse</span>
+            </p>
+            <p className="mt-1 text-[11px] text-[var(--text-subtle)]">
+              LangSmith · LangFuse · OTel · HAR · CSV/TSV · JSONL
+            </p>
           </div>
-
-          {/* Supported formats */}
-          <div className="pt-4 border-t border-white/10 w-full">
-            <p className="text-xs text-slate-500 mb-3">Supported formats:</p>
-            <div className="flex flex-wrap justify-center gap-4">
-              {SUPPORTED_FORMATS.map((format) => (
-                <div
-                  key={format.name}
-                  className="flex items-center gap-1.5 text-slate-500"
-                >
-                  <format.icon className="w-3.5 h-3.5" />
-                  <span className="text-xs">{format.name}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <span className="rounded-md border border-[color:rgba(22,163,74,.3)] bg-[color:rgba(22,163,74,.12)] px-2 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--status-success)]">
+            LOCAL
+          </span>
         </div>
-
-        {/* Trust indicator */}
-        <div className="absolute bottom-3 right-3 flex items-center gap-1.5 text-emerald-400/60 text-xs">
-          <Sparkles className="w-3 h-3" />
-          <span>100% Local</span>
-        </div>
-      </div>
+      </button>
 
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3 text-red-400 text-sm">
+        <div className="rounded-lg border border-[color:rgba(220,38,38,.4)] bg-[color:rgba(220,38,38,.1)] px-3 py-2 text-sm text-[var(--status-danger)]">
           {error}
         </div>
       )}

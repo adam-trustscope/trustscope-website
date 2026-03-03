@@ -3,88 +3,43 @@ import { MetadataRoute } from 'next';
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://trustscope.ai';
 
-  // Core pages
-  const corePages = [
+  const pages = [
     '',
-    '/pricing',
     '/scanner',
-    '/switch',
-    '/comply',
+    '/pricing',
+    '/developers',
+    '/features',
     '/secure',
     '/cost',
-    '/build',
-    '/about',
-    '/contact',
-    '/blog',
-    '/changelog',
-  ];
-
-  // Solutions pages
-  const solutionPages = [
-    '/solutions',
-    '/solutions/stop-runaway-costs',
-    '/solutions/prevent-data-leaks',
-    '/solutions/debug-agents',
-    '/solutions/pass-audits',
-  ];
-
-  // Compliance framework pages
-  const compliancePages = [
+    '/switch',
+    '/incidents',
     '/compliance',
+    '/compliance/aiuc-1',
     '/compliance/soc2',
     '/compliance/eu-ai-act',
     '/compliance/nist',
     '/compliance/iso42001',
-  ];
-
-  // Integration pages
-  const integrationPages = [
-    '/integrations',
+    '/about',
+    '/contact',
     '/langchain',
-    '/llamaindex',
     '/crewai',
     '/autogen',
     '/openai-agents',
     '/google-adk',
+    '/llamaindex',
     '/semantic-kernel',
     '/direct-api',
-  ];
-
-  // Feature pages
-  const featurePages = [
-    '/features',
-    '/features/traces',
-  ];
-
-  // Legal pages
-  const legalPages = [
     '/privacy',
     '/terms',
     '/security',
     '/dpa',
+    '/verify',
   ];
 
-  // Other pages
-  const otherPages = [
-    '/leadership',
-    '/incidents',
-    '/developers',
-  ];
-
-  const allPages = [
-    ...corePages,
-    ...solutionPages,
-    ...compliancePages,
-    ...integrationPages,
-    ...featurePages,
-    ...legalPages,
-    ...otherPages,
-  ];
-
-  return allPages.map((path) => ({
+  return pages.map((path) => ({
     url: `${baseUrl}${path}`,
     lastModified: new Date(),
     changeFrequency: path === '' ? 'daily' : 'weekly',
-    priority: path === '' ? 1 : path.includes('/compliance') || path.includes('/solutions') ? 0.8 : 0.6,
+    priority: path === '' ? 1 : path.includes('/compliance') ? 0.8 : 0.6,
   }));
 }

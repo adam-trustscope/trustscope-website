@@ -1,6 +1,6 @@
 'use client';
 
-import { Download, FileText, Shield, ArrowRight } from 'lucide-react';
+import { Download, FileText, Shield } from 'lucide-react';
 
 interface ExportButtonsProps {
   onDownloadRedacted: () => void;
@@ -10,84 +10,42 @@ interface ExportButtonsProps {
 
 export default function ExportButtons({ onDownloadRedacted, onDownloadReport, disabled }: ExportButtonsProps) {
   return (
-    <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-      <h3 className="text-lg font-semibold mb-2">Export Options</h3>
-      <p className="text-sm text-slate-400 mb-6">
-        Download your results. Redacted files have all sensitive data replaced with safe placeholders.
+    <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 md:p-6">
+      <h3 className="text-base font-semibold">Export analysis artifacts</h3>
+      <p className="mt-1 text-sm text-[var(--text-muted)]">
+        Share redacted data safely or generate a report for engineering and compliance review.
       </p>
 
-      <div className="grid md:grid-cols-2 gap-4">
-        {/* Redacted File */}
+      <div className="mt-4 grid gap-3 md:grid-cols-2">
         <button
           onClick={onDownloadRedacted}
           disabled={disabled}
-          className={`
-            flex flex-col items-start gap-3 p-4 rounded-xl text-left
-            bg-blue-600/20 border border-blue-500/30 hover:bg-blue-600/30 transition-colors
-            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
-          `}
+          className="rounded-xl border border-[color:rgba(37,99,235,.4)] bg-[color:rgba(37,99,235,.12)] p-4 text-left transition-all duration-150 hover:bg-[color:rgba(37,99,235,.16)] disabled:opacity-50"
         >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-blue-400" />
-            </div>
-            <div>
-              <p className="font-semibold text-white">Download Redacted File</p>
-              <p className="text-xs text-blue-300">Safe to share</p>
-            </div>
+          <div className="mb-2 flex items-center gap-2 text-[var(--text-primary)]">
+            <Shield className="h-4 w-4 text-[var(--interactive)]" />
+            <span className="text-sm font-semibold">Redacted JSON</span>
           </div>
-          <p className="text-sm text-slate-400">
-            Get your original file with all PII and secrets replaced with placeholders like [SSN REDACTED], [API-KEY REDACTED].
-          </p>
-          <div className="flex items-center gap-1 text-blue-400 text-sm font-medium">
-            <Download className="w-4 h-4" />
-            Download .json
-          </div>
+          <p className="text-xs text-[var(--text-muted)]">PII and secrets replaced with placeholders.</p>
+          <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-[var(--interactive)]">
+            <Download className="h-3.5 w-3.5" /> Download
+          </span>
         </button>
 
-        {/* PDF Report */}
         <button
           onClick={onDownloadReport}
           disabled={disabled}
-          className={`
-            flex flex-col items-start gap-3 p-4 rounded-xl text-left
-            bg-white/5 border border-white/10 hover:bg-white/10 transition-colors
-            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
-          `}
+          className="rounded-xl border border-[var(--border)] bg-[var(--bg)] p-4 text-left transition-all duration-150 hover:border-[var(--border-hover)] hover:bg-[var(--surface-hover)] disabled:opacity-50"
         >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-              <FileText className="w-5 h-5 text-slate-400" />
-            </div>
-            <div>
-              <p className="font-semibold text-white">Download PDF Report</p>
-              <p className="text-xs text-slate-500">For documentation</p>
-            </div>
+          <div className="mb-2 flex items-center gap-2 text-[var(--text-primary)]">
+            <FileText className="h-4 w-4 text-[var(--text-secondary)]" />
+            <span className="text-sm font-semibold">PDF Report</span>
           </div>
-          <p className="text-sm text-slate-400">
-            Get a formatted report showing all findings, severity levels, and recommendations for remediation.
-          </p>
-          <div className="flex items-center gap-1 text-slate-400 text-sm font-medium">
-            <Download className="w-4 h-4" />
-            Download .pdf
-          </div>
+          <p className="text-xs text-[var(--text-muted)]">Findings, severity, and recommended actions.</p>
+          <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-[var(--text-secondary)]">
+            <Download className="h-3.5 w-3.5" /> Download
+          </span>
         </button>
-      </div>
-
-      {/* CTA */}
-      <div className="mt-6 pt-6 border-t border-white/10">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm text-slate-400">Want automatic redaction and monitoring?</p>
-          </div>
-          <a
-            href="https://app.trustscope.ai"
-            className="flex items-center gap-2 text-blue-400 hover:text-blue-300 text-sm font-medium"
-          >
-            Try TrustScope Cloud
-            <ArrowRight className="w-4 h-4" />
-          </a>
-        </div>
       </div>
     </div>
   );

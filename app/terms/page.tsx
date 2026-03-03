@@ -30,7 +30,7 @@ export default function TermsPage() {
                   <li>Detection engines for security and compliance risks</li>
                   <li>Policy enforcement and blocking</li>
                   <li>Audit trail generation with cryptographic verification</li>
-                  <li>Compliance evidence exports and Evidence Packs</li>
+                  <li>Audit trail exports and compliance exports</li>
                 </ul>
               </section>
 
@@ -84,12 +84,12 @@ export default function TermsPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-semibold mb-4">7. Evidence Packs Disclaimer</h2>
+                <h2 className="text-2xl font-semibold mb-4">7. Audit Trail Disclaimer</h2>
                 <p className="text-slate-400">
-                  TrustScope generates evidence artifacts mapped to compliance frameworks. 
-                  <strong className="text-slate-300"> Evidence Packs are auditor-consumable, not 
-                  auditor-ready.</strong> We generate evidence; compliance determination requires qualified 
-                  assessors. Framework mappings include rationale but may not reflect official regulatory 
+                  TrustScope generates audit trail artifacts mapped to compliance frameworks.
+                  <strong className="text-slate-300"> Audit trails are auditor-consumable, not
+                  auditor-ready.</strong> We generate evidence; compliance determination requires qualified
+                  assessors. Framework mappings include rationale but may not reflect official regulatory
                   guidance.
                 </p>
               </section>

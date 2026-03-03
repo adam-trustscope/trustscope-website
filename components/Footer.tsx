@@ -1,159 +1,89 @@
 import Link from 'next/link'
-import { Github, Twitter, Linkedin } from 'lucide-react'
+import { Github, Linkedin, Twitter } from 'lucide-react'
 
-const footerLinks = {
-  product: [
-    { name: 'Overview', href: '/' },
-    { name: 'Model Migration', href: '/switch' },
-    { name: 'Compliance', href: '/comply' },
-    { name: 'Security', href: '/secure' },
-    { name: 'Cost Management', href: '/cost' },
-    { name: 'For Developers', href: '/build' },
+const footer = {
+  platform: [
+    { name: 'Visibility', href: '/visibility' },
+    { name: 'Enforcement', href: '/enforcement' },
+    { name: 'Evidence', href: '/evidence' },
+    { name: 'Incidents', href: '/incidents' },
+    { name: 'Safe Mode', href: '/safe-mode' },
+    { name: 'Features', href: '/features' },
     { name: 'Pricing', href: '/pricing' },
   ],
-  resources: [
-    { name: 'Documentation', href: 'https://docs.trustscope.ai', external: true },
-    { name: 'API Reference', href: 'https://docs.trustscope.ai/api', external: true },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Status Page', href: 'https://status.trustscope.ai', external: true },
-    { name: 'Changelog', href: '/changelog' },
-  ],
-  solutions: [
-    { name: 'Overview', href: '/solutions' },
-    { name: 'Stop Runaway Costs', href: '/solutions/stop-runaway-costs' },
-    { name: 'Prevent Data Leaks', href: '/solutions/prevent-data-leaks' },
-    { name: 'Debug Agents', href: '/solutions/debug-agents' },
-    { name: 'Pass Audits', href: '/solutions/pass-audits' },
-  ],
   compliance: [
-    { name: 'Framework Overview', href: '/compliance' },
+    { name: 'Overview', href: '/compliance' },
+    { name: 'AIUC-1', href: '/compliance/aiuc-1' },
     { name: 'SOC 2', href: '/compliance/soc2' },
     { name: 'EU AI Act', href: '/compliance/eu-ai-act' },
     { name: 'NIST AI RMF', href: '/compliance/nist' },
     { name: 'ISO 42001', href: '/compliance/iso42001' },
   ],
+  resources: [
+    { name: 'Docs', href: 'https://docs.trustscope.ai' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'Changelog', href: '/changelog' },
+    { name: 'Developers', href: '/developers' },
+    { name: 'Scanner', href: '/scanner' },
+    { name: 'Model Compare', href: '/switch' },
+  ],
   company: [
     { name: 'About', href: '/about' },
     { name: 'Contact', href: '/contact' },
-    { name: 'Privacy Policy', href: '/privacy' },
-    { name: 'Terms of Service', href: '/terms' },
     { name: 'Security', href: '/security' },
+    { name: 'Privacy', href: '/privacy' },
+    { name: 'Terms', href: '/terms' },
     { name: 'DPA', href: '/dpa' },
   ],
 }
 
 export default function Footer() {
+  const sections = [
+    { title: 'Platform', links: footer.platform },
+    { title: 'Compliance', links: footer.compliance },
+    { title: 'Resources', links: footer.resources },
+    { title: 'Company', links: footer.company },
+  ]
+
   return (
-    <footer className="bg-slate-900/50 border-t border-slate-800">
-      <div className="section-container py-16">
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
-          {/* Brand Column */}
+    <footer className="mt-20 border-t border-[var(--border)] bg-[color:rgba(17,17,19,.8)]">
+      <div className="section-container py-14">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-5">
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="flex items-center mb-4">
-              <img src="/logo.png" alt="TrustScope" className="h-14" />
+            <Link href="/" className="inline-flex items-center">
+              <img src="/brand/logo-horizontal-white.png" alt="TrustScope" className="h-7 w-auto" />
             </Link>
-            <p className="text-slate-500 text-xs mb-4">
-              Know. Control. Prove.
-            </p>
-            <div className="flex gap-4">
-              <a href="https://twitter.com/trustscope" className="text-slate-500 hover:text-white transition-colors">
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a href="https://github.com/trustscope" className="text-slate-500 hover:text-white transition-colors">
-                <Github className="w-5 h-5" />
-              </a>
-              <a href="https://linkedin.com/company/trustscope" className="text-slate-500 hover:text-white transition-colors">
-                <Linkedin className="w-5 h-5" />
-              </a>
+            <p className="mt-3 text-xs text-[var(--text-muted)]">Know. Control. Prove.</p>
+            <div className="mt-4 flex gap-3 text-[var(--text-muted)]">
+              <a href="https://twitter.com/trustscope" aria-label="Twitter" className="hover:text-[var(--text-primary)]"><Twitter className="h-5 w-5" /></a>
+              <a href="https://github.com/trustscope" aria-label="GitHub" className="hover:text-[var(--text-primary)]"><Github className="h-5 w-5" /></a>
+              <a href="https://linkedin.com/company/trustscope" aria-label="LinkedIn" className="hover:text-[var(--text-primary)]"><Linkedin className="h-5 w-5" /></a>
+            </div>
+            <div className="mt-4 space-y-1 text-[10px] text-[var(--text-subtle)]">
+              <div>800+ patent claims</div>
+              <div>Apache-2.0 CLI</div>
+              <div>SOC 2 in progress</div>
             </div>
           </div>
 
-          {/* Product */}
-          <div>
-            <h4 className="font-semibold text-sm mb-4 text-slate-300">Product</h4>
-            <ul className="space-y-3">
-              {footerLinks.product.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-slate-500 hover:text-white text-sm transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Resources */}
-          <div>
-            <h4 className="font-semibold text-sm mb-4 text-slate-300">Resources</h4>
-            <ul className="space-y-3">
-              {footerLinks.resources.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-slate-500 hover:text-white text-sm transition-colors"
-                    {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Solutions */}
-          <div>
-            <h4 className="font-semibold text-sm mb-4 text-slate-300">Solutions</h4>
-            <ul className="space-y-3">
-              {footerLinks.solutions.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} className="text-slate-500 hover:text-white text-sm transition-colors">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Frameworks */}
-          <div>
-            <h4 className="font-semibold text-sm mb-4 text-slate-300">Frameworks</h4>
-            <ul className="space-y-3">
-              {footerLinks.compliance.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} className="text-slate-500 hover:text-white text-sm transition-colors">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company */}
-          <div>
-            <h4 className="font-semibold text-sm mb-4 text-slate-300">Company</h4>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} className="text-slate-500 hover:text-white text-sm transition-colors">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {sections.map((section) => (
+            <div key={section.title}>
+              <h4 className="mb-3 text-sm font-semibold text-[var(--text-secondary)]">{section.title}</h4>
+              <ul className="space-y-2">
+                {section.links.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href} className="text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)]">
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-slate-500 text-sm">
-            © 2026 TrustScope, Inc. All rights reserved.
-          </p>
-          <div className="flex items-center gap-4 text-sm text-slate-500">
-            <span>Evidence Infrastructure for AI Agents</span>
-          </div>
+        <div className="mt-12 border-t border-[var(--border)] pt-6 text-sm text-[var(--text-subtle)]">
+          © 2026 TrustScope, Inc. All rights reserved.
         </div>
       </div>
     </footer>

@@ -8,20 +8,20 @@ interface ScanProgressProps {
 }
 
 const PHASE_CONFIG: Record<ScanPhase, { icon: typeof FileSearch; color: string }> = {
-  detecting: { icon: FileSearch, color: 'text-blue-400' },
-  extracting: { icon: FileSearch, color: 'text-blue-400' },
-  classifying: { icon: Brain, color: 'text-purple-400' },
-  scanning_statistical: { icon: RefreshCw, color: 'text-cyan-400' },
-  scanning_pii: { icon: Shield, color: 'text-blue-400' },
-  scanning_secrets: { icon: Key, color: 'text-red-400' },
-  scanning_injection: { icon: Shield, color: 'text-pink-400' },
-  scanning_jailbreak: { icon: Shield, color: 'text-rose-400' },
-  scanning_commands: { icon: Shield, color: 'text-amber-400' },
-  scanning_toxicity: { icon: MessageSquare, color: 'text-orange-400' },
-  scanning_cost: { icon: DollarSign, color: 'text-yellow-400' },
-  scanning_loops: { icon: RefreshCw, color: 'text-purple-400' },
-  redacting: { icon: FileCheck, color: 'text-emerald-400' },
-  complete: { icon: FileCheck, color: 'text-emerald-400' },
+  detecting: { icon: FileSearch, color: 'text-[var(--interactive)]' },
+  extracting: { icon: FileSearch, color: 'text-[var(--interactive)]' },
+  classifying: { icon: Brain, color: 'text-[var(--text-secondary)]' },
+  scanning_statistical: { icon: RefreshCw, color: 'text-[var(--text-secondary)]' },
+  scanning_pii: { icon: Shield, color: 'text-[var(--interactive)]' },
+  scanning_secrets: { icon: Key, color: 'text-[var(--status-danger)]' },
+  scanning_injection: { icon: Shield, color: 'text-[var(--status-danger)]' },
+  scanning_jailbreak: { icon: Shield, color: 'text-[var(--status-warning)]' },
+  scanning_commands: { icon: Shield, color: 'text-[var(--status-warning)]' },
+  scanning_toxicity: { icon: MessageSquare, color: 'text-[var(--status-warning)]' },
+  scanning_cost: { icon: DollarSign, color: 'text-[var(--status-warning)]' },
+  scanning_loops: { icon: RefreshCw, color: 'text-[var(--interactive)]' },
+  redacting: { icon: FileCheck, color: 'text-[var(--status-success)]' },
+  complete: { icon: FileCheck, color: 'text-[var(--status-success)]' },
 };
 
 export default function ScanProgress({ progress }: ScanProgressProps) {
@@ -29,47 +29,44 @@ export default function ScanProgress({ progress }: ScanProgressProps) {
   const Icon = config.icon;
 
   return (
-    <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-      {/* Phase indicator */}
-      <div className="flex items-center gap-4 mb-4">
-        <div className={`w-12 h-12 rounded-full flex items-center justify-center bg-white/10`}>
+    <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6">
+      <div className="mb-4 flex items-center gap-4">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--surface-hover)]">
           {progress.phase === 'complete' ? (
-            <Icon className={`w-6 h-6 ${config.color}`} />
+            <Icon className={`h-6 w-6 ${config.color}`} />
           ) : (
-            <Loader2 className={`w-6 h-6 ${config.color} animate-spin`} />
+            <Loader2 className={`h-6 w-6 ${config.color} animate-spin`} />
           )}
         </div>
         <div className="flex-1">
-          <p className={`font-semibold ${config.color}`}>{progress.phaseLabel}</p>
-          <p className="text-sm text-slate-500">
+          <p className={`text-sm font-semibold uppercase tracking-[0.08em] ${config.color}`}>{progress.phaseLabel}</p>
+          <p className="mt-1 text-sm text-[var(--text-muted)]">
             {progress.phase === 'complete'
-              ? 'Scan finished'
+              ? 'Analysis finished'
               : `Processing trace ${progress.processed.toLocaleString()} of ${progress.total.toLocaleString()}`
             }
           </p>
         </div>
         {progress.findingsCount > 0 && (
-          <div className="text-right">
-            <p className="text-2xl font-bold text-amber-400">{progress.findingsCount}</p>
-            <p className="text-xs text-slate-500">findings</p>
+          <div className="rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-right">
+            <p className="text-xl font-bold text-[var(--status-warning)]">{progress.findingsCount}</p>
+            <p className="text-[11px] text-[var(--text-muted)]">events</p>
           </div>
         )}
       </div>
 
-      {/* Progress bar */}
-      <div className="relative h-2 bg-white/10 rounded-full overflow-hidden">
+      <div className="relative h-2 overflow-hidden rounded-full bg-[var(--surface-hover)]">
         <div
           className={`absolute inset-y-0 left-0 rounded-full transition-all duration-300 ease-out ${
             progress.phase === 'complete'
-              ? 'bg-emerald-500'
-              : 'bg-gradient-to-r from-blue-500 to-purple-500'
+              ? 'bg-[var(--status-success)]'
+              : 'bg-[var(--interactive)]'
           }`}
           style={{ width: `${progress.percentage}%` }}
         />
       </div>
 
-      {/* Percentage */}
-      <div className="flex items-center justify-between mt-2 text-sm text-slate-500">
+      <div className="mt-2 flex items-center justify-between text-sm text-[var(--text-muted)]">
         <span>{progress.percentage}% complete</span>
         <span>100% local processing</span>
       </div>

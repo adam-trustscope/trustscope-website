@@ -80,23 +80,23 @@ export default function SecurityPage() {
                   <ul className="space-y-2 text-slate-400 text-sm">
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-emerald-500" />
-                      <strong>Render</strong> — SOC 2 Type II certified compute
+                      <strong>Render</strong> — managed compute infrastructure
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-emerald-500" />
-                      <strong>Neon</strong> — SOC 2 Type II certified PostgreSQL
+                      <strong>Neon</strong> — managed PostgreSQL infrastructure
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-emerald-500" />
-                      <strong>Vercel</strong> — SOC 2 Type II certified edge network
+                      <strong>Vercel</strong> — edge deployment infrastructure
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-emerald-500" />
-                      <strong>Clerk</strong> — SOC 2, HIPAA-eligible authentication
+                      <strong>Clerk</strong> — authentication and session management
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-emerald-500" />
-                      <strong>Stripe</strong> — PCI DSS Level 1 billing
+                      <strong>Stripe</strong> — payments and billing infrastructure
                     </li>
                   </ul>
                 </div>
@@ -123,7 +123,7 @@ export default function SecurityPage() {
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-emerald-500" />
-                      BYOK (Bring Your Own Key) available for Enterprise
+                      BYOK (Bring Your Own Key) available for Govern tier
                     </li>
                   </ul>
                 </div>
@@ -183,7 +183,7 @@ export default function SecurityPage() {
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5" />
-                  <span>Data retention follows your subscription tier (3 days to 7 years)</span>
+                  <span>Data retention follows your subscription tier (30 days to 7 years)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5" />
